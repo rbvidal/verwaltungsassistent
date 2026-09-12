@@ -1,0 +1,2297 @@
+[
+ {
+  "street": "Alt Zepernick",
+  "houseNumber": "19",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.655333,
+  "lon": 13.544129,
+  "district": "Barnim"
+ },
+ {
+  "street": "An der Stadtmauer",
+  "houseNumber": "15",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6775585,
+  "lon": 13.5895271,
+  "district": "Barnim"
+ },
+ {
+  "street": "Bernauer Straße",
+  "houseNumber": "13",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6591977,
+  "lon": 13.5526107,
+  "district": "Barnim"
+ },
+ {
+  "street": "Bugstraße",
+  "houseNumber": "1",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6716879,
+  "lon": 13.5582121,
+  "district": "Barnim"
+ },
+ {
+  "street": "Börnicker Chaussee",
+  "houseNumber": "1-2",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6769692,
+  "lon": 13.5963808,
+  "district": "Barnim"
+ },
+ {
+  "street": "Eichendorffstraße",
+  "houseNumber": "2",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6648106,
+  "lon": 13.5534001,
+  "district": "Barnim"
+ },
+ {
+  "street": "Friedenstaler Platz",
+  "houseNumber": "32",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.671576,
+  "lon": 13.5531558,
+  "district": "Barnim"
+ },
+ {
+  "street": "Grünewaldstraße",
+  "houseNumber": "47",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.665488,
+  "lon": 13.5241587,
+  "district": "Barnim"
+ },
+ {
+  "street": "Havelstraße",
+  "houseNumber": "2a",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6609316,
+  "lon": 13.5416833,
+  "district": "Barnim"
+ },
+ {
+  "street": "Heinestraße",
+  "houseNumber": "23",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6527146,
+  "lon": 13.5223236,
+  "district": "Barnim"
+ },
+ {
+  "street": "Jenisseistraße",
+  "houseNumber": "2",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6718012,
+  "lon": 13.5593068,
+  "district": "Barnim"
+ },
+ {
+  "street": "Knobelsdorffstraße",
+  "houseNumber": "15",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6654037,
+  "lon": 13.5235844,
+  "district": "Barnim"
+ },
+ {
+  "street": "Ladeburger Straße",
+  "houseNumber": "21",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6834869,
+  "lon": 13.5841753,
+  "district": "Barnim"
+ },
+ {
+  "street": "Poststraße",
+  "houseNumber": "7",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6562876,
+  "lon": 13.5339713,
+  "district": "Barnim"
+ },
+ {
+  "street": "Schadowstraße",
+  "houseNumber": "14",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6662583,
+  "lon": 13.5253045,
+  "district": "Barnim"
+ },
+ {
+  "street": "Schadowstraße",
+  "houseNumber": "34",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6658955,
+  "lon": 13.5250194,
+  "district": "Barnim"
+ },
+ {
+  "street": "Schadowstraße",
+  "houseNumber": "44",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6656473,
+  "lon": 13.5247187,
+  "district": "Barnim"
+ },
+ {
+  "street": "Schönerlinder Straße",
+  "houseNumber": "116",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6551992,
+  "lon": 13.5176897,
+  "district": "Barnim"
+ },
+ {
+  "street": "Schönower Straße",
+  "houseNumber": "43",
+  "postalCode": "16341",
+  "city": "Panketal",
+  "lat": 52.6585685,
+  "lon": 13.5336304,
+  "district": "Barnim"
+ },
+ {
+  "street": "Weißenseer Straße",
+  "houseNumber": "7",
+  "postalCode": "16321",
+  "city": "Bernau bei Berlin",
+  "lat": 52.6757455,
+  "lon": 13.583078,
+  "district": "Barnim"
+ },
+ {
+  "street": "Alte Potsdamer Straße",
+  "houseNumber": "22",
+  "postalCode": "14776",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4060131,
+  "lon": 12.5754676,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Am Alten Gutshof",
+  "houseNumber": "20",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4203085,
+  "lon": 12.4972222,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Am Alten Gutshof",
+  "houseNumber": "44",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4203913,
+  "lon": 12.4987271,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Am Hauptbahnhof",
+  "houseNumber": "9",
+  "postalCode": "14776",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4004813,
+  "lon": 12.5657504,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Begonienweg",
+  "houseNumber": "7",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4234155,
+  "lon": 12.4993254,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Begonienweg",
+  "houseNumber": "10",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4231321,
+  "lon": 12.4997795,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Brahmsstraße",
+  "houseNumber": "37",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4314658,
+  "lon": 12.5159777,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Friedrich-Franz-Straße",
+  "houseNumber": "4",
+  "postalCode": "14770",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4138476,
+  "lon": 12.5246426,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Gördenallee",
+  "houseNumber": "5",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4274312,
+  "lon": 12.5000664,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Gördenallee",
+  "houseNumber": "15a",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4271077,
+  "lon": 12.5015836,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Krokusring",
+  "houseNumber": "15",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4224554,
+  "lon": 12.5053536,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Lupinenweg",
+  "houseNumber": "19",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4218459,
+  "lon": 12.5036585,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Magdeburger Landstraße",
+  "houseNumber": "228",
+  "postalCode": "14770",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4141809,
+  "lon": 12.5021943,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Malvenbogen",
+  "houseNumber": "2",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4217646,
+  "lon": 12.5044085,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Malvenbogen",
+  "houseNumber": "61",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4234441,
+  "lon": 12.5042623,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Max-Herm-Straße",
+  "houseNumber": "7",
+  "postalCode": "",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4327553,
+  "lon": 12.5208809,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Max-Herm-Straße",
+  "houseNumber": "23",
+  "postalCode": "",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.432658,
+  "lon": 12.5201306,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Mendelssohnstraße",
+  "houseNumber": "25",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.427813,
+  "lon": 12.5039268,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Myrtenweg",
+  "houseNumber": "31",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4238792,
+  "lon": 12.4995328,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Pflegerdorf",
+  "houseNumber": "2",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4236342,
+  "lon": 12.4959876,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Pflegerdorf",
+  "houseNumber": "10",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4228474,
+  "lon": 12.4967576,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Pflegerdorf",
+  "houseNumber": "57",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4217047,
+  "lon": 12.4971108,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Potsdamer Straße",
+  "houseNumber": "2",
+  "postalCode": "14776",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4064411,
+  "lon": 12.5681744,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Primelweg",
+  "houseNumber": "17",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4226851,
+  "lon": 12.4994792,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Quenzweg",
+  "houseNumber": "8",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.420028,
+  "lon": 12.4963436,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Quenzweg",
+  "houseNumber": "17",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4227841,
+  "lon": 12.495968,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "69A",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.43088,
+  "lon": 12.517853,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "84",
+  "postalCode": "",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4319101,
+  "lon": 12.5204983,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "104",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4317878,
+  "lon": 12.5180428,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "124",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4311949,
+  "lon": 12.5161625,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Sankt-Annen-Straße",
+  "houseNumber": "14",
+  "postalCode": "14776",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4071415,
+  "lon": 12.5660453,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Schneeglöckchenring",
+  "houseNumber": "2",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4213286,
+  "lon": 12.5008046,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Tschirchdamm",
+  "houseNumber": "1",
+  "postalCode": "",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4320534,
+  "lon": 12.5218874,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Veilchenweg",
+  "houseNumber": "2",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4258282,
+  "lon": 12.503772,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Veilchenweg",
+  "houseNumber": "24",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4242608,
+  "lon": 12.5015459,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Veilchenweg",
+  "houseNumber": "32",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4237672,
+  "lon": 12.5006698,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Veilchenweg",
+  "houseNumber": "60",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.424802,
+  "lon": 12.4985732,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Veilchenweg",
+  "houseNumber": "118",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4214905,
+  "lon": 12.4987449,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Warschauer Straße",
+  "houseNumber": "23",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4304696,
+  "lon": 12.5312476,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Zu den Eichen",
+  "houseNumber": "21",
+  "postalCode": "14772",
+  "city": "Brandenburg an der Havel",
+  "lat": 52.4250442,
+  "lon": 12.4978287,
+  "district": "Brandenburg an der Havel"
+ },
+ {
+  "street": "Alte Trift",
+  "houseNumber": "3",
+  "postalCode": "15712",
+  "city": "Königs Wusterhausen",
+  "lat": 52.303291,
+  "lon": 13.6992488,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Bahnhofstraße",
+  "houseNumber": "10",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.296507,
+  "lon": 13.6282499,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Bahnhofstraße",
+  "houseNumber": "15b",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.29644,
+  "lon": 13.6304351,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Bahnhofstraße",
+  "houseNumber": "22",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2966349,
+  "lon": 13.6272665,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Bahnhofsvorplatz",
+  "houseNumber": "2",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2963871,
+  "lon": 13.6309016,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Dorfstraße",
+  "houseNumber": "21a",
+  "postalCode": "15738",
+  "city": "Zeuthen",
+  "lat": 52.3402115,
+  "lon": 13.6113762,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Friedrich-Engels-Straße",
+  "houseNumber": "11a",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2934194,
+  "lon": 13.6282514,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Friedrich-Engels-Straße",
+  "houseNumber": "12e",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2931627,
+  "lon": 13.6284608,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Grünauer Straße",
+  "houseNumber": "2",
+  "postalCode": "12529",
+  "city": "Schönefeld",
+  "lat": 52.3653901,
+  "lon": 13.5572409,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Jahnstraße",
+  "houseNumber": "4",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2930266,
+  "lon": 13.6275613,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Jahnstraße",
+  "houseNumber": "9",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2927441,
+  "lon": 13.629095,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Jahnstraße",
+  "houseNumber": "10",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2927884,
+  "lon": 13.6286656,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "10b",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2929832,
+  "lon": 13.6267684,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "12c",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2934298,
+  "lon": 13.6268751,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "14a",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2938617,
+  "lon": 13.6269978,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "15c",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2942341,
+  "lon": 13.627114,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Kirchplatz",
+  "houseNumber": "18",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.3001535,
+  "lon": 13.6251442,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Maxim-Gorki-Straße",
+  "houseNumber": "6",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2944056,
+  "lon": 13.6301402,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Maxim-Gorki-Straße",
+  "houseNumber": "13",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.293327,
+  "lon": 13.629814,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Richard-Sorge-Straße",
+  "houseNumber": "30",
+  "postalCode": "15745",
+  "city": "Wildau",
+  "lat": 52.3124545,
+  "lon": 13.6324295,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Schloßplatz",
+  "houseNumber": "8",
+  "postalCode": "15711",
+  "city": "Königs Wusterhausen",
+  "lat": 52.2997072,
+  "lon": 13.6242869,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Zeppelinring",
+  "houseNumber": "5",
+  "postalCode": "15749",
+  "city": "Mittenwalde",
+  "lat": 52.2731769,
+  "lon": 13.5872748,
+  "district": "Dahme-Spreewald"
+ },
+ {
+  "street": "Adlerstraße",
+  "houseNumber": "48",
+  "postalCode": "14612",
+  "city": "Falkensee",
+  "lat": 52.5593396,
+  "lon": 13.0757769,
+  "district": "Havelland"
+ },
+ {
+  "street": "Artilleriepark",
+  "houseNumber": "5",
+  "postalCode": "14624",
+  "city": "Dallgow-Döberitz",
+  "lat": 52.5334587,
+  "lon": 13.05972,
+  "district": "Havelland"
+ },
+ {
+  "street": "Coburger Straße",
+  "houseNumber": "8",
+  "postalCode": "14612",
+  "city": "Falkensee",
+  "lat": 52.5599526,
+  "lon": 13.0806109,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eichenring",
+  "houseNumber": "1b",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5367461,
+  "lon": 12.9924477,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eichenring",
+  "houseNumber": "3c",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5365161,
+  "lon": 12.9931522,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eichenring",
+  "houseNumber": "4d",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5371017,
+  "lon": 12.9934802,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eichenring",
+  "houseNumber": "7a",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5363016,
+  "lon": 12.9948298,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eichenring",
+  "houseNumber": "10b",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5371371,
+  "lon": 12.995508,
+  "district": "Havelland"
+ },
+ {
+  "street": "Elfenring",
+  "houseNumber": "1",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5410218,
+  "lon": 13.0103398,
+  "district": "Havelland"
+ },
+ {
+  "street": "Elfenring",
+  "houseNumber": "3",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5410434,
+  "lon": 13.011008,
+  "district": "Havelland"
+ },
+ {
+  "street": "Elfenring",
+  "houseNumber": "8",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5410427,
+  "lon": 13.0123223,
+  "district": "Havelland"
+ },
+ {
+  "street": "Ernst-Thälmann-Platz",
+  "houseNumber": "6",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5450706,
+  "lon": 12.994943,
+  "district": "Havelland"
+ },
+ {
+  "street": "Ernst-Thälmann-Platz",
+  "houseNumber": "13",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5446723,
+  "lon": 12.9956871,
+  "district": "Havelland"
+ },
+ {
+  "street": "Ernst-Thälmann-Platz",
+  "houseNumber": "18",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5443325,
+  "lon": 12.9952903,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eulenspiegelring",
+  "houseNumber": "3",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5401536,
+  "lon": 13.0137933,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eulenspiegelring",
+  "houseNumber": "8",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5410607,
+  "lon": 13.0141153,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eulenspiegelring",
+  "houseNumber": "12",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5415698,
+  "lon": 13.013924,
+  "district": "Havelland"
+ },
+ {
+  "street": "Eulenspiegelring",
+  "houseNumber": "17",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5408021,
+  "lon": 13.0132602,
+  "district": "Havelland"
+ },
+ {
+  "street": "Heroldplatz",
+  "houseNumber": "23",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5405795,
+  "lon": 12.9847145,
+  "district": "Havelland"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "2",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5413754,
+  "lon": 12.9920266,
+  "district": "Havelland"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "8",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5408695,
+  "lon": 12.9922096,
+  "district": "Havelland"
+ },
+ {
+  "street": "Nauener Straße",
+  "houseNumber": "77-79",
+  "postalCode": "14612",
+  "city": "Falkensee",
+  "lat": 52.5811726,
+  "lon": 13.0746469,
+  "district": "Havelland"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "53",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5405529,
+  "lon": 13.0099707,
+  "district": "Havelland"
+ },
+ {
+  "street": "Rosa-Luxemburg-Allee",
+  "houseNumber": "63",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5404787,
+  "lon": 13.0116395,
+  "district": "Havelland"
+ },
+ {
+  "street": "Ruhrstraße",
+  "houseNumber": "4",
+  "postalCode": "14612",
+  "city": "Falkensee",
+  "lat": 52.5754261,
+  "lon": 13.0792815,
+  "district": "Havelland"
+ },
+ {
+  "street": "Schulstraße",
+  "houseNumber": "21",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5421886,
+  "lon": 12.9857477,
+  "district": "Havelland"
+ },
+ {
+  "street": "Steinstraße",
+  "houseNumber": "1b",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5416867,
+  "lon": 13.0072,
+  "district": "Havelland"
+ },
+ {
+  "street": "Steinstraße",
+  "houseNumber": "1g",
+  "postalCode": "14641",
+  "city": "Wustermark",
+  "lat": 52.5416587,
+  "lon": 13.007631,
+  "district": "Havelland"
+ },
+ {
+  "street": "Triftstraße",
+  "houseNumber": "64",
+  "postalCode": "14624",
+  "city": "Dallgow-Döberitz",
+  "lat": 52.5475508,
+  "lon": 13.0479839,
+  "district": "Havelland"
+ },
+ {
+  "street": "Albert-Buchmann-Straße",
+  "houseNumber": "11",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7488565,
+  "lon": 13.2415476,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "André-Pican-Straße",
+  "houseNumber": "41B",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.747355,
+  "lon": 13.2559456,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Artur-Becker-Straße",
+  "houseNumber": "1",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7415751,
+  "lon": 13.234339,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Bagnoletstraße",
+  "houseNumber": "10",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7416183,
+  "lon": 13.2369933,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "1",
+  "postalCode": "16556",
+  "city": "Hohen Neuendorf",
+  "lat": 52.7142146,
+  "lon": 13.2759867,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "209",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7262311,
+  "lon": 13.2475506,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Bernauer Straße",
+  "houseNumber": "10",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7555057,
+  "lon": 13.2392993,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Bernauer Straße",
+  "houseNumber": "39",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.756027,
+  "lon": 13.2433777,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Bernauer Straße",
+  "houseNumber": "54B",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7568527,
+  "lon": 13.2453668,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Bernauer Straße",
+  "houseNumber": "162",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7655359,
+  "lon": 13.2750605,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Eichenhof",
+  "houseNumber": "1",
+  "postalCode": "16767",
+  "city": "Leegebruch",
+  "lat": 52.7241294,
+  "lon": 13.1912429,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Eichenhof",
+  "houseNumber": "6",
+  "postalCode": "16767",
+  "city": "Leegebruch",
+  "lat": 52.7243083,
+  "lon": 13.1929152,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Ernst-Schneller-Straße",
+  "houseNumber": "1B",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7602784,
+  "lon": 13.2589931,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Friedensstraße",
+  "houseNumber": "2",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7504283,
+  "lon": 13.224523,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Friedensstraße",
+  "houseNumber": "6-8",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7504419,
+  "lon": 13.2250555,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Friedrich-Engels-Straße",
+  "houseNumber": "10b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7417026,
+  "lon": 13.2328773,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Gutsplatz",
+  "houseNumber": "1",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7419733,
+  "lon": 13.2615134,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Hammer Straße",
+  "houseNumber": "8",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7416532,
+  "lon": 13.2359971,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Hammer Straße",
+  "houseNumber": "13",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7421601,
+  "lon": 13.2361705,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Havelstraße",
+  "houseNumber": "31",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7518018,
+  "lon": 13.2362829,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Keithstraße",
+  "houseNumber": "1",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7972693,
+  "lon": 13.278611,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Lehnitzstraße",
+  "houseNumber": "21a",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7540081,
+  "lon": 13.2427868,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "1a",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7605292,
+  "lon": 13.2585191,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "2a",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7607307,
+  "lon": 13.258412,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "3a",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7611416,
+  "lon": 13.2582095,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "4b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7615073,
+  "lon": 13.258367,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "5b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7603168,
+  "lon": 13.257834,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "6b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7608178,
+  "lon": 13.257615,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "7b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7613255,
+  "lon": 13.2574766,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mathias-Thesen-Straße",
+  "houseNumber": "8b",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7612632,
+  "lon": 13.2570665,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Melniker Straße",
+  "houseNumber": "18",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7420449,
+  "lon": 13.2379414,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Mittelstraße",
+  "houseNumber": "9a",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7542397,
+  "lon": 13.2455544,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Rungestraße",
+  "houseNumber": "36",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7595649,
+  "lon": 13.239514,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Schloßplatz",
+  "houseNumber": "1",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7548876,
+  "lon": 13.2370964,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Spitzwegstraße",
+  "houseNumber": "6",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7250902,
+  "lon": 13.2500829,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Vughter Straße",
+  "houseNumber": "5",
+  "postalCode": "16515",
+  "city": "Oranienburg",
+  "lat": 52.7439435,
+  "lon": 13.2355793,
+  "district": "Oberhavel"
+ },
+ {
+  "street": "Albert-Einstein-Straße",
+  "houseNumber": "8",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3877954,
+  "lon": 13.0652977,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Albert-Einstein-Straße",
+  "houseNumber": "12",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3874409,
+  "lon": 13.0652833,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Albert-Einstein-Straße",
+  "houseNumber": "20",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3871478,
+  "lon": 13.0651375,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Alt Nowawes",
+  "houseNumber": "63",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3960823,
+  "lon": 13.0899028,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Am Kanal",
+  "houseNumber": "57",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.39775,
+  "lon": 13.0637479,
+  "district": "Potsdam"
+ },
+ {
+  "street": "An der Vorderkappe",
+  "houseNumber": "1",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3848127,
+  "lon": 13.054653,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Brauhausberg",
+  "houseNumber": "25",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3867788,
+  "lon": 13.0640461,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Brauhausberg",
+  "houseNumber": "30",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3874741,
+  "lon": 13.0643504,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Brauhausberg",
+  "houseNumber": "35",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3881887,
+  "lon": 13.0648279,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Breite Straße",
+  "houseNumber": "27",
+  "postalCode": "14471",
+  "city": "Potsdam",
+  "lat": 52.3967065,
+  "lon": 13.0466154,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Dortustraße",
+  "houseNumber": "51",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.3991043,
+  "lon": 13.0534887,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Dortustraße",
+  "houseNumber": "68b",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4017912,
+  "lon": 13.0545602,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Drevesstraße",
+  "houseNumber": "26",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3788332,
+  "lon": 13.0778347,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Drevesstraße",
+  "houseNumber": "39",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3782768,
+  "lon": 13.0789652,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Edisonallee",
+  "houseNumber": "20-24",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3921646,
+  "lon": 13.0825989,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Friedrich-Ebert-Straße",
+  "houseNumber": "29",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4030885,
+  "lon": 13.0581256,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Friedrich-Ebert-Straße",
+  "houseNumber": "98",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4006728,
+  "lon": 13.0575622,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Friedrich-Ebert-Straße",
+  "houseNumber": "102",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4001796,
+  "lon": 13.0575532,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Gartenstraße",
+  "houseNumber": "25",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3834448,
+  "lon": 13.1063459,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Geschwister-Scholl-Straße",
+  "houseNumber": "8",
+  "postalCode": "14471",
+  "city": "Potsdam",
+  "lat": 52.3940083,
+  "lon": 13.0360427,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Großbeerenstraße",
+  "houseNumber": "187",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3833958,
+  "lon": 13.1197903,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Großbeerenstraße",
+  "houseNumber": "125-135",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3857516,
+  "lon": 13.1082673,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Grünstraße",
+  "houseNumber": "19",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3849019,
+  "lon": 13.1112224,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Hans-Marchwitza-Ring",
+  "houseNumber": "7",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3943352,
+  "lon": 13.0793109,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Heideweg",
+  "houseNumber": "12",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3877203,
+  "lon": 13.1055713,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Heideweg",
+  "houseNumber": "36",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.388887,
+  "lon": 13.1020221,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Heinrich-Mann-Allee",
+  "houseNumber": "51",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3799353,
+  "lon": 13.0781437,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Jägerstraße",
+  "houseNumber": "1",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4027841,
+  "lon": 13.0551929,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Jägerstraße",
+  "houseNumber": "34",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.401724,
+  "lon": 13.0557629,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Jägerstraße",
+  "houseNumber": "41",
+  "postalCode": "",
+  "city": "Potsdam",
+  "lat": 52.402665,
+  "lon": 13.0554887,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Karl-Liebknecht-Straße",
+  "houseNumber": "22",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3940598,
+  "lon": 13.093037,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "34",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.4063369,
+  "lon": 13.1059032,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Kleewall",
+  "houseNumber": "10",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3833954,
+  "lon": 13.1040512,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Kopernikusstraße",
+  "houseNumber": "2",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3911162,
+  "lon": 13.0955821,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Kottmeierstraße",
+  "houseNumber": "8",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3773926,
+  "lon": 13.0780986,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Kunersdorfer Straße",
+  "houseNumber": "5",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3788051,
+  "lon": 13.0787773,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "19",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3845182,
+  "lon": 13.0548343,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "25",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.383967,
+  "lon": 13.0545725,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "32",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3840972,
+  "lon": 13.0551184,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "37",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3844846,
+  "lon": 13.0560881,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "52",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3866922,
+  "lon": 13.0579544,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Leiterstraße",
+  "houseNumber": "9C",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3817184,
+  "lon": 13.0497187,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Lindenstraße",
+  "houseNumber": "22",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.3990775,
+  "lon": 13.0512075,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Paetowstraße",
+  "houseNumber": "4",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3827618,
+  "lon": 13.0531663,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Paetowstraße",
+  "houseNumber": "7",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3825797,
+  "lon": 13.0535261,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Paul-Neumann-Straße",
+  "houseNumber": "5",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3915427,
+  "lon": 13.1041104,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Pestalozzistraße",
+  "houseNumber": "28",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3900129,
+  "lon": 13.1046497,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Plantagenstraße",
+  "houseNumber": "13",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3948464,
+  "lon": 13.1024673,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Potsdamer Straße",
+  "houseNumber": "164",
+  "postalCode": "14469",
+  "city": "Potsdam",
+  "lat": 52.4166292,
+  "lon": 13.0200398,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Rudolf-Breitscheid-Straße",
+  "houseNumber": "31",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3917643,
+  "lon": 13.0923255,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Rudolf-Breitscheid-Straße",
+  "houseNumber": "118",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3938125,
+  "lon": 13.1107065,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Schiffbauergasse",
+  "houseNumber": "4f",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.4022715,
+  "lon": 13.0732816,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Siefertstraße",
+  "houseNumber": "2",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.3971176,
+  "lon": 13.0562028,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "140a",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3921325,
+  "lon": 13.1288868,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "142c",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.392423,
+  "lon": 13.1291785,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "146b",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3922127,
+  "lon": 13.1304649,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "150a",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3920079,
+  "lon": 13.1293872,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "152c",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3927901,
+  "lon": 13.1309649,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Stahnsdorfer Straße",
+  "houseNumber": "156b",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3924082,
+  "lon": 13.1312182,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Templiner Straße",
+  "houseNumber": "8",
+  "postalCode": "14473",
+  "city": "Potsdam",
+  "lat": 52.3835236,
+  "lon": 13.0522611,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Wall am Kiez",
+  "houseNumber": "1",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.3951375,
+  "lon": 13.0484038,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Wetzlarer Straße",
+  "houseNumber": "16",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3825837,
+  "lon": 13.1189708,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Wetzlarer Straße",
+  "houseNumber": "54",
+  "postalCode": "14482",
+  "city": "Potsdam",
+  "lat": 52.3818244,
+  "lon": 13.117274,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Yorckstraße",
+  "houseNumber": "22",
+  "postalCode": "14467",
+  "city": "Potsdam",
+  "lat": 52.3972482,
+  "lon": 13.0564916,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Zeppelinstraße",
+  "houseNumber": "152",
+  "postalCode": "14471",
+  "city": "Potsdam",
+  "lat": 52.3939244,
+  "lon": 13.0382211,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Zum Jagenstein",
+  "houseNumber": "3",
+  "postalCode": "14478",
+  "city": "Potsdam",
+  "lat": 52.3681208,
+  "lon": 13.0883124,
+  "district": "Potsdam"
+ },
+ {
+  "street": "Aalweg",
+  "houseNumber": "6",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.4022735,
+  "lon": 12.9175908,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Adolf-Grimme-Ring",
+  "houseNumber": "8",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4033413,
+  "lon": 13.2197201,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Adolf-Grimme-Ring",
+  "houseNumber": "8",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4033413,
+  "lon": 13.2197201,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Alpenstraße",
+  "houseNumber": "44",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3550783,
+  "lon": 12.921301,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Am Markt",
+  "houseNumber": "24",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3791171,
+  "lon": 12.9411448,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Am Zernsee",
+  "houseNumber": "1",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3930115,
+  "lon": 12.92798,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Auf dem Strengfeld",
+  "houseNumber": "6",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3628131,
+  "lon": 12.9335417,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Bachstraße",
+  "houseNumber": "4",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3812392,
+  "lon": 12.9230818,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Beelitzer Weg",
+  "houseNumber": "73",
+  "postalCode": "14552",
+  "city": "Michendorf",
+  "lat": 52.3000894,
+  "lon": 13.0402711,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Berliner Chaussee",
+  "houseNumber": "64",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3565508,
+  "lon": 12.9596703,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "88",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3711315,
+  "lon": 12.9197608,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Bliesendorfer Dorfstraße",
+  "houseNumber": "3",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.337212,
+  "lon": 12.8475747,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Brandenburger Straße",
+  "houseNumber": "151",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3749698,
+  "lon": 12.932786,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Busendorfer Straße",
+  "houseNumber": "18",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3359631,
+  "lon": 12.8500818,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Derwitzer Chaussee",
+  "houseNumber": "3",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3972513,
+  "lon": 12.8252807,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Dr.-Külz-Straße",
+  "houseNumber": "27/28",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3644839,
+  "lon": 12.9096103,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Eisenbahnstraße",
+  "houseNumber": "107",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3928748,
+  "lon": 12.9269844,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Forstweg",
+  "houseNumber": "11",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3484426,
+  "lon": 12.9129338,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Förster-Funke-Allee",
+  "houseNumber": "104",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4042032,
+  "lon": 13.2199734,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Gluckstraße",
+  "houseNumber": "9",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3821653,
+  "lon": 12.9236537,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Gluckstraße",
+  "houseNumber": "10",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3820326,
+  "lon": 12.9237802,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Havelstraße",
+  "houseNumber": "11",
+  "postalCode": "14513",
+  "city": "Teltow",
+  "lat": 52.3984815,
+  "lon": 13.25053,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Immenstraße",
+  "houseNumber": "5",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3616088,
+  "lon": 12.9004751,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "58-60",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4133634,
+  "lon": 13.2242146,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Klaistower Straße",
+  "houseNumber": "38",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3476946,
+  "lon": 12.901891,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Klaistower Straße",
+  "houseNumber": "94",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3566256,
+  "lon": 12.9086954,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Marienstraße",
+  "houseNumber": "8",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3844273,
+  "lon": 12.9199708,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Meiereifeld",
+  "houseNumber": "30",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4095767,
+  "lon": 13.2286526,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Mozartstraße",
+  "houseNumber": "11",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3812291,
+  "lon": 12.9238242,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Mühlensteig",
+  "houseNumber": "2",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3613976,
+  "lon": 12.9083023,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Plantagenplatz",
+  "houseNumber": "1",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3771794,
+  "lon": 12.9325773,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Potsdamer Straße",
+  "houseNumber": "80",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3650948,
+  "lon": 12.9399167,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Rheinstraße",
+  "houseNumber": "10C",
+  "postalCode": "14513",
+  "city": "Teltow",
+  "lat": 52.3991418,
+  "lon": 13.2455256,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Scheunhornweg",
+  "houseNumber": "15",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3744954,
+  "lon": 12.9376964,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Schubertstraße",
+  "houseNumber": "1",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3824133,
+  "lon": 12.9241963,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Schubertstraße",
+  "houseNumber": "8",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3815057,
+  "lon": 12.9250722,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Uferstraße",
+  "houseNumber": "10",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3808642,
+  "lon": 12.9394034,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Uhlenhorst",
+  "houseNumber": "21",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.4143101,
+  "lon": 13.2264549,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Unter den Linden",
+  "houseNumber": "10",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3766995,
+  "lon": 12.93445,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Zehlendorfer Damm",
+  "houseNumber": "121",
+  "postalCode": "14532",
+  "city": "Kleinmachnow",
+  "lat": 52.405824,
+  "lon": 13.234512,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Ziemensstraße",
+  "houseNumber": "103",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.3580943,
+  "lon": 12.9086347,
+  "district": "Potsdam-Mittelmark"
+ },
+ {
+  "street": "Zum Havelstrand",
+  "houseNumber": "12",
+  "postalCode": "14542",
+  "city": "Werder (Havel)",
+  "lat": 52.4050726,
+  "lon": 12.9174284,
+  "district": "Potsdam-Mittelmark"
+ }
+]

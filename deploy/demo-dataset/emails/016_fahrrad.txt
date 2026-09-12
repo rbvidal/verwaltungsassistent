@@ -1,0 +1,15 @@
+From: Christoph Lang <christoph.lang@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Fahrradfund – welches Amt ist zuständig?
+Date: 2026-09-02T00:00:00+02:00
+Message-ID: demo-catalog-16
+
+--- body ab hier ---
+Betreff: Fundfahrrad
+
+Guten Tag,
+
+ich habe ein Fahrrad gefunden und möchte es abgeben. Wo ist das Fundbüro und was muss ich beachten?
+
+Mit freundlichen Grüßen
+Christoph Lang

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, '500 — Serverfehler', 'none', null)}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="error-page">
+            <h1>Interner Serverfehler</h1>
+            <p>Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.</p>
+            <a th:href="@{/dashboard}" class="btn btn--primary">Zurück zum Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>

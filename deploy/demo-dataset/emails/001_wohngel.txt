@@ -1,0 +1,15 @@
+From: Erika Schulze <erika.schulze@example.de>
+To: demo01@verwaltungsassistent.local
+Subject: Wohngeldantrag – welche Unterlagen fehlen noch?
+Date: 2026-09-03T16:00:00+02:00
+Message-ID: demo-catalog-01
+
+--- body ab hier ---
+Betreff: Wohngeldantrag
+
+Sehr geehrte Damen und Herren,
+
+ich habe vor zwei Wochen meinen Antrag auf Wohngeld in der Stadtverwaltung eingereicht. Können Sie bitte prüfen, ob noch Unterlagen fehlen? Mein Mietvertrag und die Einkommensnachweise der letzten drei Monate liegen bei.
+
+Mit freundlichen Grüßen
+Erika Schulze, Potsdam-Babelsberg

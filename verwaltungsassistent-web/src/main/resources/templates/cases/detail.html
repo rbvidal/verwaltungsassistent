@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content" th:object="${case}">
+        <div class="case-detail">
+
+            <!-- Persistenter Arbeits-/Hinweis-Baustein (Systemempfehlung,
+                 Arbeitszustand) DIREKT unter der temporären Erfolgsmeldung
+                 (Layout) und VOR dem Fall-Kopf: Die Empfehlung bleibt sichtbar,
+                 wenn die grüne Flash-Meldung nach wenigen Sekunden ausgeblendet
+                 wird (Phase 2C.4). -->
+            <div th:if="${!supervisory and casePlanningAlert != null}"
+                 class="message"
+                 th:classappend="'message--' + ${casePlanningAlert.variant()}"
+                 role="status"
+                 style="margin-bottom: 0.75rem;">
+                <strong th:text="${caseIsRecommended ? 'Systemempfehlung' : (casePlanningAlert.variant() == 'success' ? 'Vollständig bearbeitbar' : casePlanningAlert.headline())}">Planung</strong>
+                <span th:if="${caseRecommendationLevel != null}" class="badge badge--success"
+                      style="font-size: 0.6875rem; margin-left: 0.4rem;"
+                      th:text="${caseRecommendationLevel}">Sehr hohe Empfehlung</span>
+                <!-- Sekundäre Empfehlungsdetails (Priorität · Position): bewusst
+                     klein und zurückhaltend — nicht die Hauptaussage. -->
+                <p style="font-size: 0.75rem; margin: 0.35rem 0 0; color: var(--color-text-muted);"
+                   th:text="${casePlanningAlert.detail()}">Empfehlungsdetails</p>
+                <p th:if="${casePlanningAlert.reasons() != null and !casePlanningAlert.reasons().isEmpty()}"
+                   style="font-size: 0.8125rem; margin: 0.35rem 0 0; opacity: 0.9;">
+                    <strong th:text="${caseIsRecommended ? 'Warum dieser Vorgang? ' : 'Gründe: '}"></strong>
+                    <span th:text="${#strings.listJoin(casePlanningAlert.reasons(), ' · ')}">Gründe</span>
+                </p>
+            </div>
+
+            <!-- Case header card + phase progress (replaced by HTMX on phase advance) -->
+            <th:block th:replace="~{cases/detail-fragments :: phaseState}"></th:block>
+
+            <!-- Arbeitszustand (Phase 2A): pausieren/fortsetzen + Wartehinweis.
+                 Pausierte Zeit zählt NICHT als Bearbeitungszeit. Wartet der
+                 Vorgang auf Unterlagen, werden die Unterlagen explizit
+                 genannt — mit ehrlicher Unterscheidung: BESTÄTIGT fehlend
+                 (aus der Analyse) vs. noch zu prüfen (typischerweise
+                 erforderlich, kein Nachweis des Fehlens). Abgeschlossene
+                 Vorgänge bieten keine Pause-/Fortsetzen-Aktionen. -->
+            <div th:if="${caseWorkInfo != null and caseWorkInfo.paused() and case.statusLabel() != 'Geschlossen'}"
+                 class="message message--info" role="status"
+                 style="margin-top: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+                <div>
+                    <strong>⏸ Vorgang pausiert</strong>
+                    <span th:text="'· Wartet seit ' + ${caseWorkInfo.waitingSince() != null ? caseWorkInfo.waitingSince() : '—'} + ' auf ' + ${caseWorkInfo.waitingType() == 'DOCUMENTS' ? 'Unterlagen' : caseWorkInfo.waitingType() == 'CITIZEN' ? 'Rückmeldung der Bürgerin bzw. des Bürgers' : caseWorkInfo.waitingType() == 'EXTERNAL' ? 'Rückmeldung einer anderen Behörde' : 'sonstige Rückmeldung'}">Wartehinweis</span>
+                    <span th:if="${caseWorkInfo.waitingNote() != null and !#strings.isEmpty(caseWorkInfo.waitingNote())}"
+                          th:text="' (' + ${caseWorkInfo.waitingNote()} + ')'">Hinweis</span>
+                    <div th:if="${caseWorkInfo.waitingType() == 'DOCUMENTS' and ((confirmedMissingDocuments != null and !confirmedMissingDocuments.isEmpty()) or (typicalMissingDocuments != null and !typicalMissingDocuments.isEmpty()))}"
+                         style="margin: 0.4rem 0 0; display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.8125rem;">
+                        <span th:if="${confirmedMissingDocuments != null and !confirmedMissingDocuments.isEmpty()}"
+                              style="font-weight: 600;">Fehlende Unterlagen</span>
+                        <span th:each="m : ${confirmedMissingDocuments}" th:text="'🟠 ' + ${m}">Unterlage</span>
+                        <span th:if="${typicalMissingDocuments != null and !typicalMissingDocuments.isEmpty()}"
+                              style="font-weight: 600; margin-top: 0.2rem;">Noch zu prüfen – typischerweise erforderlich</span>
+                        <span th:each="m : ${typicalMissingDocuments}" th:text="'⚪ ' + ${m}">Unterlage</span>
+                        <span style="margin-top: 0.25rem;">
+                            <button type="button" class="btn btn--sm" data-tab-target="documents"
+                                    onclick="document.getElementById('tab-documents').click();">Dokumente ansehen</button>
+                        </span>
+                    </div>
+                </div>
+                <form th:if="${!supervisory}"
+                      th:action="@{/cases/{id}/work/resume(id=${caseId})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn--sm btn--primary">Bearbeitung fortsetzen</button>
+                </form>
+            </div>
+            <div th:if="${!supervisory and caseWorkInfo != null and !caseWorkInfo.paused() and case.statusLabel() != 'Geschlossen'}"
+                 x-data="{ pauseOpen: false }"
+                 style="margin-top: 0.75rem;">
+                <button type="button" class="btn btn--sm" @click="pauseOpen = true">Vorgang pausieren</button>
+                <div class="modal-overlay" x-cloak x-show="pauseOpen" x-trap.noscroll="pauseOpen"
+                     @keydown.escape.window="pauseOpen = false" @click.self="pauseOpen = false"
+                     role="dialog" aria-modal="true" aria-label="Vorgang pausieren">
+                    <div class="modal-dialog" style="max-width: 480px;">
+                        <div class="modal__header">
+                            <h2 class="modal__title">Vorgang pausieren</h2>
+                            <button class="modal__close" @click="pauseOpen = false" aria-label="Schließen">&times;</button>
+                        </div>
+                        <form th:action="@{/cases/{id}/work/pause(id=${caseId})}" method="post">
+                            <div class="modal__body">
+                                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.75rem;">
+                                    Warum kann der Vorgang derzeit nicht weiterbearbeitet werden?
+                                </p>
+                                <label style="display: block; font-size: 0.8125rem; margin-bottom: 0.35rem;">
+                                    <input type="radio" name="type" value="DOCUMENTS" checked> Unterlagen von Bürger/in
+                                </label>
+                                <label style="display: block; font-size: 0.8125rem; margin-bottom: 0.35rem;">
+                                    <input type="radio" name="type" value="CITIZEN"> Antwort von Bürger/in
+                                </label>
+                                <label style="display: block; font-size: 0.8125rem; margin-bottom: 0.35rem;">
+                                    <input type="radio" name="type" value="EXTERNAL"> Rückmeldung einer anderen Behörde
+                                </label>
+                                <label style="display: block; font-size: 0.8125rem; margin-bottom: 0.35rem;">
+                                    <input type="radio" name="type" value="OTHER"> Sonstiges
+                                </label>
+                                <input type="text" name="note" placeholder="Optionaler Hinweis …"
+                                       class="form-field__input" style="width: 100%; margin-top: 0.5rem; padding: 0.4rem 0.6rem; font-size: 0.8125rem;">
+                            </div>
+                            <div class="modal__actions">
+                                <button type="submit" class="btn btn--primary">Pausieren</button>
+                                <button type="button" class="btn" @click="pauseOpen = false">Abbrechen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Optionales Komplexitäts-Feedback nach Abschluss (nicht-blockierend,
+                 freiwillig, ohne Einfluss auf Priorität oder Leistungswerte). -->
+            <th:block th:if="${!supervisory}">
+            <div th:if="${complexityFeedbackOpen}" class="message message--neutral" role="status"
+                 style="margin-top: 0.75rem;">
+                <strong>Wie komplex war dieser Vorgang?</strong>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.25rem 0 0;">
+                    Ihre Einschätzung (1 = sehr einfach … 10 = sehr komplex) hilft, Bearbeitungszeiten
+                    realistischer einzuschätzen. Freiwillig und ohne Einfluss auf die Priorität.
+                </p>
+                <form th:action="@{/cases/{id}/close/feedback(id=${caseId})}" method="post"
+                      style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.6rem; align-items: center;">
+                    <button th:each="v : ${#numbers.sequence(1, 10)}" type="submit" name="value"
+                            th:value="${v}" th:text="${v}" class="btn btn--sm">1</button>
+                    <button type="submit" class="btn btn--sm">Überspringen</button>
+                </form>
+            </div>
+            </th:block>
+
+            <!-- Tab bar: navigation + panels (overview preloaded, others lazy-loaded) -->
+            <th:block th:replace="~{fragments/components :: tabBar(
+                tabs=${detailTabs}, activeTab='overview', panelId='case-detail',
+                fallbackContent=~{cases/detail-fragments :: overview})}">
+            </th:block>
+
+            <!-- Assignee (Zuständigkeit) -->
+            <div style="margin-top: 1.5rem; padding: 0.75rem 1rem; border: 1px solid var(--color-border, #ddd); border-radius: 6px;
+                        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--color-text-muted);">Zuständig:</span>
+                    <strong style="font-size: 0.875rem; margin-left: 0.375rem;"
+                            th:text="${case.ownerName() != null and !case.ownerName().isBlank() ? case.ownerName() : '—'}">—</strong>
+                </div>
+                <!-- Abgeschlossener Vorgang: keine Übergabe (der Endpoint
+                     lehnt CLOSED ohnehin ab) — Zuständigkeit bleibt lesbar. -->
+                <form th:if="${!supervisory and case.statusLabel() != 'Geschlossen'}"
+                      th:action="@{/cases/{id}/assign(id=*{id()})}" method="post"
+                      style="display: flex; gap: 0.375rem; align-items: center; flex-wrap: wrap;">
+                    <select name="assignee" class="form-field__input" style="max-width: 220px; padding: 0.3rem 0.5rem; font-size: 0.8125rem;">
+                        <option value="">Benutzer wählen …</option>
+                        <option th:each="u : ${assignableUsers}"
+                                th:value="${u.email}"
+                                th:text="${u.displayName != null and !u.displayName.isBlank() ? u.displayName + ' (' + u.email + ')' : u.email}">Benutzer</option>
+                    </select>
+                    <button type="submit" class="btn" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Fall übergeben</button>
+                </form>
+                <a th:href="@{/cases/{id}/history(id=*{id()})}" class="btn" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Bearbeitungshistorie</a>
+            </div>
+
+            <!-- Cross-cutting actions: ein abgeschlossener Fall bietet keine
+                 Vorbereitungs-Aktion mehr — nur lesende Ansicht und die
+                 EXPLIZITE Wiederaufnahme. Die Wiederaufnahme selbst erscheint
+                 GENAU EINMAL: als serverseitig erzeugte Aktion im
+                 Abschluss-Abschnitt (phaseSection) — diese Aktionsleiste ist
+                 keine zweite Quelle derselben Aktion. Das Leitungs-Konto
+                 (read-only) bekommt nur dann einen Entscheidungs-Link, wenn es
+                 dort etwas zu sehen gibt (Analyse/Entscheidung) — es wird nie
+                 auf eine noch ausstehende Bearbeitungs-Aktion verwiesen. -->
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border); display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                <!-- Entscheidung vorbereiten ist erst nach einer abgeschlossenen
+                     KI-Analyse sinnvoll (caseHasUsableAnalysis). Ohne Analyse
+                     wird die Aktion als deaktivierter Button mit Erklärung
+                     gezeigt statt in eine leere Vorbereitungs-Seite zu führen;
+                     die Analyse wird im Entscheidungs-Workspace gestartet
+                     (dort ist die Aktion im leeren Zustand verfügbar). -->
+                <a th:if="${caseHasUsableAnalysis or decisionDocumented}"
+                   th:href="@{/cases/{id}/decision(id=*{id()})}"
+                   class="btn"
+                   th:classappend="${case.statusLabel() == 'Geschlossen'} ? '' : 'btn--primary'"
+                   th:text="${case.statusLabel() == 'Geschlossen' or decisionDocumented or supervisory ? 'Entscheidung ansehen' : 'Entscheidung vorbereiten'}">
+                    Entscheidung ansehen
+                </a>
+                <th:block th:if="${!supervisory and !caseHasUsableAnalysis and !decisionDocumented}">
+                    <button type="button" class="btn" disabled
+                            title="Erst KI-Analyse durchführen: Die Entscheidungsanalyse kann erst nach Abschluss der Fallanalyse vorbereitet werden. Starten Sie die Analyse im Entscheidungs-Workspace des Falls."
+                            style="opacity: 0.55; cursor: not-allowed;">
+                        Entscheidung vorbereiten
+                    </button>
+                </th:block>
+                <a th:href="@{/cases/{id}/draft(id=*{id()})}" class="btn">
+                    Antwortentwurf
+                    <span th:if="${hasAnswerDraft}" class="badge badge--success" style="font-size: 0.625rem; margin-left: 0.25rem;">vorhanden</span>
+                    <span th:unless="${hasAnswerDraft}" class="badge badge--neutral" style="font-size: 0.625rem; margin-left: 0.25rem;">offen</span>
+                </a>
+                <a th:href="@{/assistant(caseId=*{id()})}" th:if="${!demoMode}" class="btn">In Assistent öffnen</a>
+                <!-- Geovorgänge: kein Archivieren (serverseitig gesperrt). -->
+                <form th:action="@{/cases/{id}/archive(id=*{id()})}" method="post"
+                      th:if="${!supervisory and (caseIsGeo == null or !caseIsGeo) and case.statusLabel() != 'Archiviert'}">
+                    <button type="submit" class="btn" style="font-size: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border);">Archivieren</button>
+                </form>
+                <form th:action="@{/cases/{id}/restore(id=*{id()})}" method="post"
+                      th:if="${!supervisory and case.statusLabel() == 'Archiviert'}">
+                    <button type="submit" class="btn btn--primary" style="font-size: 0.75rem;">Wiederherstellen</button>
+                </form>
+            </div>
+
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,15 @@
+From: Daniel Roth <daniel.roth@example.de>
+To: info@verwaltungs-demo.de
+Subject: Gewerbeanmeldung in Falkensee
+Date: 2026-09-02T08:00:00+02:00
+Message-ID: demo-catalog-14
+
+--- body ab hier ---
+Betreff: Gewerbeanmeldung
+
+Guten Tag,
+
+ich möchte zum 1. Oktober ein kleines Gewerbe anmelden. Welche Unterlagen benötige ich und kann ich den Termin online vereinbaren?
+
+Viele Grüße
+Daniel Roth, Falkensee

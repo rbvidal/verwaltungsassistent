@@ -1,0 +1,371 @@
+# ============================================================
+# Verwaltungsassistent Domain Knowledge Configuration
+# ============================================================
+# Externalized domain terminology, weights, and classification
+# parameters. DomainClassifier consumes this via DomainKnowledge.
+#
+# To add a new domain term: add an entry under the appropriate
+# domain with a phrase and weight. No Java code change needed.
+# ============================================================
+
+platform:
+  ai:
+    domain:
+      # ── Algorithm configuration ──
+      compound-embedding-penalty: 0.85
+      minimum-primary-confidence: 0.15
+      minimum-secondary-confidence: 0.20
+
+      # ── Short generic terms that must match at word boundaries ──
+      # Prevents false positives from compound words like
+      # "Bauingenieur" triggering BUILDING.
+      word-boundary-terms:
+        - bau
+        - reise
+        - hotel
+        - bahn
+        - flug
+        - lohn
+
+      # ── Domain terminology ──
+      domains:
+        PROCUREMENT:
+          terms:
+            - phrase: "beschaffung"
+              weight: 10.0
+            - phrase: "vergabeverfahren"
+              weight: 10.0
+            - phrase: "direktauftrag"
+              weight: 10.0
+            - phrase: "direktaufträge"
+              weight: 10.0
+            - phrase: "ausschreibung"
+              weight: 10.0
+            - phrase: "beschränkte ausschreibung"
+              weight: 10.0
+            - phrase: "verhandlungsvergabe"
+              weight: 10.0
+            - phrase: "vergaberecht"
+              weight: 10.0
+            - phrase: "vergabevermerk"
+              weight: 10.0
+            - phrase: "angebotsvergleich"
+              weight: 10.0
+            - phrase: "vergabe"
+              weight: 8.0
+            - phrase: "vergab"
+              weight: 8.0
+            - phrase: "beschaffen"
+              weight: 8.0
+            - phrase: "rahmenvertrag"
+              weight: 8.0
+            - phrase: "lieferung"
+              weight: 8.0
+            - phrase: "einkauf"
+              weight: 8.0
+            - phrase: "lieferant"
+              weight: 8.0
+            - phrase: "auftragswert"
+              weight: 8.0
+            - phrase: "schwellenwert"
+              weight: 8.0
+            - phrase: "wertgrenzen"
+              weight: 8.0
+            - phrase: "gwb"
+              weight: 8.0
+            - phrase: "vgv"
+              weight: 8.0
+            - phrase: "uvgo"
+              weight: 8.0
+            - phrase: "vob"
+              weight: 8.0
+            - phrase: "berlavg"
+              weight: 8.0
+            - phrase: "lho"
+              weight: 8.0
+            - phrase: "procurement"
+              weight: 8.0
+            - phrase: "tender"
+              weight: 8.0
+            - phrase: "direct award"
+              weight: 8.0
+            - phrase: "direct procurement"
+              weight: 8.0
+            - phrase: "supplier"
+              weight: 8.0
+            - phrase: "contract award"
+              weight: 8.0
+            - phrase: "auftrag"
+              weight: 5.0
+            - phrase: "freihändig"
+              weight: 5.0
+            - phrase: "freihaendig"
+              weight: 5.0
+            - phrase: "angebot"
+              weight: 5.0
+            - phrase: "vertrag"
+              weight: 5.0
+            - phrase: "ausschreiben"
+              weight: 5.0
+            - phrase: "vergabestelle"
+              weight: 5.0
+            - phrase: "beschaffungsordnung"
+              weight: 5.0
+            - phrase: "it-auftrag"
+              weight: 5.0
+            - phrase: "rahmenvereinbarung"
+              weight: 5.0
+            - phrase: "bieter"
+              weight: 5.0
+            - phrase: "buy"
+              weight: 5.0
+            - phrase: "purchase"
+              weight: 5.0
+            - phrase: "procure"
+              weight: 5.0
+            - phrase: "purchasing"
+              weight: 5.0
+            - phrase: "computer"
+              weight: 5.0
+            - phrase: "laptop"
+              weight: 5.0
+            - phrase: "printer"
+              weight: 5.0
+            - phrase: "monitor"
+              weight: 5.0
+            - phrase: "software"
+              weight: 5.0
+            - phrase: "hardware"
+              weight: 5.0
+            - phrase: "license"
+              weight: 5.0
+            - phrase: "licence"
+              weight: 5.0
+            - phrase: "euro"
+              weight: 5.0
+            - phrase: "€"
+              weight: 5.0
+            - phrase: "amount"
+              weight: 5.0
+            - phrase: "value"
+              weight: 5.0
+
+        BUILDING:
+          terms:
+            - phrase: "baugenehmigung"
+              weight: 10.0
+            - phrase: "baugenehmigungsverfahren"
+              weight: 10.0
+            - phrase: "bauantrag"
+              weight: 10.0
+            - phrase: "bauvoranfrage"
+              weight: 10.0
+            - phrase: "bauvorlageberechtigung"
+              weight: 10.0
+            - phrase: "abstandsfläche"
+              weight: 8.0
+            - phrase: "abstandsflächen"
+              weight: 8.0
+            - phrase: "abstandsflaeche"
+              weight: 8.0
+            - phrase: "abstandsflaechen"
+              weight: 8.0
+            - phrase: "bebauungsplan"
+              weight: 8.0
+            - phrase: "bauordnungsrecht"
+              weight: 8.0
+            - phrase: "baulast"
+              weight: 8.0
+            - phrase: "einfamilienhaus"
+              weight: 8.0
+            - phrase: "carport"
+              weight: 8.0
+            - phrase: "garage"
+              weight: 8.0
+            - phrase: "wohngebäude"
+              weight: 8.0
+            - phrase: "wohngebaeude"
+              weight: 8.0
+            - phrase: "baunvo"
+              weight: 8.0
+            - phrase: "baunutzungsverordnung"
+              weight: 8.0
+            - phrase: "bauvorlv"
+              weight: 8.0
+            - phrase: "bauo"
+              weight: 8.0
+            - phrase: "baugb"
+              weight: 8.0
+            - phrase: "bau"
+              weight: 5.0
+            - phrase: "erschließung"
+              weight: 5.0
+            - phrase: "nutzungsänderung"
+              weight: 5.0
+            - phrase: "vorbescheid"
+              weight: 5.0
+            - phrase: "teilungsgenehmigung"
+              weight: 5.0
+            - phrase: "grenzbebauung"
+              weight: 5.0
+            - phrase: "geschossflächenzahl"
+              weight: 5.0
+            - phrase: "grundflächenzahl"
+              weight: 5.0
+
+        HR:
+          terms:
+            - phrase: "tv-l"
+              weight: 10.0
+            - phrase: "entgeltgruppe"
+              weight: 10.0
+            - phrase: "tarifvertrag"
+              weight: 10.0
+            - phrase: "urlvo"
+              weight: 10.0
+            - phrase: "urlaubsverordnung"
+              weight: 10.0
+            - phrase: "elternzeit"
+              weight: 10.0
+            - phrase: "urlaub"
+              weight: 8.0
+            - phrase: "erholungsurlaub"
+              weight: 8.0
+            - phrase: "sonderurlaub"
+              weight: 8.0
+            - phrase: "arbeitszeit"
+              weight: 8.0
+            - phrase: "azvo"
+              weight: 8.0
+            - phrase: "kernarbeitszeit"
+              weight: 8.0
+            - phrase: "gleitzeit"
+              weight: 8.0
+            - phrase: "homeoffice"
+              weight: 8.0
+            - phrase: "mobiles arbeiten"
+              weight: 8.0
+            - phrase: "mobile arbeit"
+              weight: 8.0
+            - phrase: "teilzeit"
+              weight: 8.0
+            - phrase: "kündigung"
+              weight: 8.0
+            - phrase: "kuendigung"
+              weight: 8.0
+            - phrase: "befristung"
+              weight: 8.0
+            - phrase: "personalrat"
+              weight: 8.0
+            - phrase: "personalreferat"
+              weight: 8.0
+            - phrase: "personalabteilung"
+              weight: 8.0
+            - phrase: "personalwesen"
+              weight: 8.0
+            - phrase: "dienstvereinbarung"
+              weight: 8.0
+            - phrase: "stellenausschreibung"
+              weight: 8.0
+            - phrase: "datenschutz"
+              weight: 8.0
+            - phrase: "dsgvo"
+              weight: 8.0
+            - phrase: "it-sicherheit"
+              weight: 8.0
+            - phrase: "personenbezogen"
+              weight: 8.0
+            - phrase: "personenbezogene daten"
+              weight: 8.0
+            - phrase: "gehalt"
+              weight: 5.0
+            - phrase: "entgelt"
+              weight: 5.0
+            - phrase: "vergütung"
+              weight: 5.0
+            - phrase: "verguetung"
+              weight: 5.0
+            - phrase: "lohn"
+              weight: 5.0
+            - phrase: "beurteilung"
+              weight: 5.0
+            - phrase: "beförderung"
+              weight: 5.0
+            - phrase: "befoerderung"
+              weight: 5.0
+            - phrase: "eg "
+              weight: 5.0
+            - phrase: "stufe"
+              weight: 5.0
+
+        GEWERBE:
+          terms:
+            - phrase: "gewerbeanmeldung"
+              weight: 10.0
+            - phrase: "gewerbe anmelden"
+              weight: 10.0
+            - phrase: "gewerbeamt"
+              weight: 10.0
+            - phrase: "gaststättenerlaubnis"
+              weight: 10.0
+            - phrase: "gewerbe"
+              weight: 8.0
+            - phrase: "imbiss"
+              weight: 8.0
+            - phrase: "gaststätte"
+              weight: 8.0
+            - phrase: "gastronomie"
+              weight: 8.0
+            - phrase: "lebensmittelbetrieb"
+              weight: 8.0
+            - phrase: "anmeldung"
+              weight: 6.0
+
+        TRAVEL:
+          terms:
+            - phrase: "dienstreise"
+              weight: 10.0
+            - phrase: "reisekosten"
+              weight: 10.0
+            - phrase: "tagegeld"
+              weight: 10.0
+            - phrase: "verpflegungspauschale"
+              weight: 10.0
+            - phrase: "übernachtungspauschale"
+              weight: 10.0
+            - phrase: "uebernachtungspauschale"
+              weight: 10.0
+            - phrase: "brkg"
+              weight: 10.0
+            - phrase: "lrkg"
+              weight: 10.0
+            - phrase: "trennungsgeld"
+              weight: 10.0
+            - phrase: "umzugskosten"
+              weight: 10.0
+            - phrase: "kilometerpauschale"
+              weight: 8.0
+            - phrase: "reisetag"
+              weight: 8.0
+            - phrase: "abwesenheit"
+              weight: 8.0
+            - phrase: "dienstreiseantrag"
+              weight: 8.0
+            - phrase: "reisekostenabrechnung"
+              weight: 8.0
+            - phrase: "hotel"
+              weight: 5.0
+            - phrase: "übernachtung"
+              weight: 5.0
+            - phrase: "uebernachtung"
+              weight: 5.0
+            - phrase: "kilometer"
+              weight: 5.0
+            - phrase: "reise"
+              weight: 5.0
+            - phrase: "fahrtkosten"
+              weight: 5.0
+            - phrase: "bahn"
+              weight: 5.0
+            - phrase: "flug"
+              weight: 5.0

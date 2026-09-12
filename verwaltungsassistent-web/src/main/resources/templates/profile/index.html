@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Profil</h1>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 420px; margin-top: 1rem;">
+                <div style="border: 1px solid var(--color-border, #ddd); border-radius: 6px; padding: 0.75rem;">
+                    <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Name</div>
+                    <div style="font-weight: 600;" th:text="${displayName}">—</div>
+                </div>
+                <div style="border: 1px solid var(--color-border, #ddd); border-radius: 6px; padding: 0.75rem;">
+                    <div style="font-size: 0.6875rem; color: var(--color-text-muted);">E-Mail</div>
+                    <div style="font-weight: 600;" th:text="${email}">—</div>
+                </div>
+                <div style="border: 1px solid var(--color-border, #ddd); border-radius: 6px; padding: 0.75rem;">
+                    <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Rollen</div>
+                    <div>
+                        <span th:each="r : ${roles}" class="badge badge--neutral"
+                              style="font-size: 0.6875rem; margin-right: 0.25rem;" th:text="${r}">—</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

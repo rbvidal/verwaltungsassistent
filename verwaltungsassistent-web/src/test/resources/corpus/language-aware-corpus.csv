@@ -1,0 +1,53 @@
+id|language|category|question|expectedDomain|expectedIntentType|expectedParams|expectedRoute|expectedDecision|expectedLanguage
+NUM-DE-001|DE|NUMBER_FORMAT|Was kostet ein Auftrag über 8.000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|de
+NUM-DE-002|DE|NUMBER_FORMAT|Was kostet ein Auftrag über 8.000,50 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag|de
+NUM-DE-003|DE|NUMBER_FORMAT|Was kostet ein Auftrag über 8 000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|de
+NUM-EN-001|EN|NUMBER_FORMAT|What is the procedure for an order of 8,000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|en
+NUM-EN-002|EN|NUMBER_FORMAT|What is the procedure for an order of 8,000.50 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag|en
+NUM-EN-003|EN|NUMBER_FORMAT|What is the procedure for an order of 8000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|en
+NUM-PT-001|PT|NUMBER_FORMAT|Qual é o procedimento para uma contratação de 8.000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|pt
+NUM-PT-002|PT|NUMBER_FORMAT|Qual é o procedimento para uma contratação de 8.000,50 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag|pt
+NUM-PT-003|PT|NUMBER_FORMAT|Qual é o procedimento para uma contratação de 8 000 EUR?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|pt
+NUM-FR-001|FR|NUMBER_FORMAT|Quelle est la procédure pour une commande de 8 000 EUR ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag|fr
+NUM-FR-002|FR|NUMBER_FORMAT|Quelle est la procédure pour une commande de 8 000,50 EUR ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag|fr
+EQ-TRAV-DE|DE|EQUIVALENCE|Wie hoch ist das Tagegeld bei einer Dienstreise von 12 Stunden?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|de
+EQ-TRAV-EN|EN|EQUIVALENCE|What is the daily allowance for a 12-hour business trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|en
+EQ-TRAV-PT|PT|EQUIVALENCE|Qual é a ajuda de custo para uma viagem de trabalho de 12 horas?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|pt
+EQ-TRAV-FR|FR|EQUIVALENCE|Quelle est l'indemnité de déplacement pour un voyage professionnel de 12 heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|fr
+EQ-SAL-DE|DE|EQUIVALENCE|Wie hoch ist das Gehalt in EG 9b Stufe 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00|de
+EQ-SAL-EN|EN|EQUIVALENCE|What is the salary at EG 9b level 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00|en
+EQ-SAL-PT|PT|EQUIVALENCE|Qual é o salário na faixa EG 9b nível 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00|pt
+EQ-SAL-FR|FR|EQUIVALENCE|Quel est le salaire au grade EG 9b échelon 5 ?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00|fr
+EQ-PRO-DE|DE|EQUIVALENCE|Welche Vergabeart gilt bei einer Beschaffung von 8.500 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8500|RULE_ENGINE|Direktauftrag|de
+EQ-PRO-EN|EN|EQUIVALENCE|Which procurement procedure applies for a purchase of 8,500 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8500|RULE_ENGINE|Direktauftrag|en
+EQ-PRO-PT|PT|EQUIVALENCE|Qual procedimento se aplica a uma compra de 8.500 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8500|RULE_ENGINE|Direktauftrag|pt
+EQ-PRO-FR|FR|EQUIVALENCE|Quelle procédure s'applique pour un achat de 8 500 euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8500|RULE_ENGINE|Direktauftrag|fr
+EQ-RET-DE|DE|EQUIVALENCE|Welche Unterlagen brauche ich für einen Bauantrag in Berlin?|BUILDING|GENERAL||NO_RULE||de
+EQ-RET-EN|EN|EQUIVALENCE|Which documents do I need for a building application in Berlin?|BUILDING|GENERAL||NO_RULE||en
+EQ-RET-PT|PT|EQUIVALENCE|Que documentos são necessários para um pedido de construção em Berlim?|BUILDING|GENERAL||NO_RULE||pt
+EQ-RET-FR|FR|EQUIVALENCE|Quels documents faut-il pour une demande de permis de construire à Berlin ?|BUILDING|GENERAL||NO_RULE||fr
+AMB2-DE-001|DE|AMBIGUOUS|Was ist mit 8.000?|GENERAL|GENERAL||NO_RULE||de
+AMB2-DE-002|DE|AMBIGUOUS|Und bei 3.000?|GENERAL|GENERAL||NO_RULE||de
+AMB2-DE-003|DE|AMBIGUOUS|Was gilt bei 12?|GENERAL|GENERAL||NO_RULE||de
+AMB2-FR-001|FR|AMBIGUOUS|Et pour 8.000 ?|GENERAL|GENERAL||NO_RULE||fr
+AMB2-FR-002|FR|AMBIGUOUS|Qu'est-ce qui s'applique à 12 ?|GENERAL|GENERAL||NO_RULE||fr
+AMB2-EN-001|EN|AMBIGUOUS|What about 8,000?|GENERAL|GENERAL||NO_RULE||en
+AMB2-EN-002|EN|AMBIGUOUS|And at 3,000?|GENERAL|GENERAL||NO_RULE||en
+AMB2-EN-003|EN|AMBIGUOUS|What applies at 12?|GENERAL|GENERAL||NO_RULE||en
+AMB2-PT-001|PT|AMBIGUOUS|E quanto a 8.000?|GENERAL|GENERAL||NO_RULE||pt
+AMB2-PT-002|PT|AMBIGUOUS|E 3.000?|GENERAL|GENERAL||NO_RULE||pt
+VOC-DE-001|DE|VOCABULARY|Wie hoch ist das Tagegeld bei 12 Stunden Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|de
+VOC-DE-002|DE|VOCABULARY|Wie hoch ist die Verpflegungspauschale bei einer 12-stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|de
+VOC-DE-003|DE|VOCABULARY|Welche Reisekosten entstehen bei 12 Stunden Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|de
+VOC-DE-004|DE|VOCABULARY|Was bedeutet Tagegeld?|GENERAL|GENERAL||NO_RULE||de
+VOC-EN-001|EN|VOCABULARY|How much per diem do I get for a 12-hour trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|en
+VOC-EN-002|EN|VOCABULARY|What is the meal allowance for 12 hours of travel?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|en
+VOC-EN-003|EN|VOCABULARY|What does per diem mean?|GENERAL|GENERAL||NO_RULE||en
+VOC-PT-001|PT|VOCABULARY|Quanto recebo de subsídio de alimentação numa viagem de trabalho de 12 horas?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|pt
+VOC-PT-002|PT|VOCABULARY|Quanto é a ajuda de custo por 12 horas fora em serviço?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|pt
+VOC-FR-001|FR|VOCABULARY|Quelle indemnité repas pour un voyage professionnel de 12 heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|fr
+VOC-FR-002|FR|VOCABULARY|À combien s'élève l'indemnité de déplacement pour 12 heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12|fr
+MIS-DE-001|DE|SALARY|Was verdient EG 9b?|HR|SALARY_LOOKUP|salaryGrade=EG 9b|NO_RULE||de
+MIS-EN-001|EN|SALARY|How much does grade EG 9b earn?|HR|SALARY_LOOKUP|salaryGrade=EG 9b|NO_RULE||en
+MIS-PT-001|PT|SALARY|Quanto ganha a faixa EG 9b?|HR|SALARY_LOOKUP|salaryGrade=EG 9b|NO_RULE||pt
+MIS-FR-001|FR|SALARY|Quel est le salaire du grade EG 9b ?|HR|SALARY_LOOKUP|salaryGrade=EG 9b|NO_RULE||fr

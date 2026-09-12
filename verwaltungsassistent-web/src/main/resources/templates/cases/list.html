@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, 'Fälle', 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content">
+        <div class="cases-page">
+
+            <!-- Toolbar: New Case button + Refresh + Search -->
+            <div class="cases-toolbar">
+                <a th:href="@{/cases/new}" class="btn btn--primary" th:if="${!supervisory}"
+                   sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')">
+                    <span class="material-symbols-outlined" aria-hidden="true">add_circle</span>Neuer Fall
+                </a>
+                <!-- Aktualisieren (Phase 2D.12): lädt die Warteschlange neu —
+                     jede Listen-Anfrage berechnet die Reihenfolge serverseitig
+                     neu (Empfehlung zuerst), die Zuordnungen bleiben dabei
+                     unverändert. URL-treuer Reload (Filter bleiben erhalten). -->
+                <button type="button" class="btn" onclick="location.reload()" th:if="${!supervisory}"
+                        title="Vorgänge aktualisieren — die Reihenfolge wird neu berechnet, Zuordnungen bleiben unverändert.">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem; vertical-align: middle;">refresh</span>
+                    Vorgänge aktualisieren
+                </button>
+                <th:block th:replace="~{fragments/components :: searchBox(
+                    name='q', placeholder='Fälle durchsuchen...',
+                    baseUrl='/cases', targetId='case-list-container',
+                    showIcon=true, showClear=true)}">
+                </th:block>
+            </div>
+
+            <th:block th:if="${!supervisory}"
+                      th:replace="~{fragments/components :: infoMessage(
+                'Ihre Arbeitsliste: oben stehen die Vorgänge, die das System als Nächstes empfiehlt (Reihenfolge wird bei jeder Aktualisierung neu berechnet — Empfehlung, keine automatische Zuordnung). „Vorgänge aktualisieren“ lädt den aktuellen Stand neu.')}">
+            </th:block>
+            <th:block th:if="${supervisory}"
+                      th:replace="~{fragments/components :: infoMessage(
+                'Vorgänge im Team: Sie sehen alle Vorgänge der Verwaltung — zugewiesene, nicht zugewiesene und abgeschlossene. Das Leitungs-Konto ist schreibgeschützt.')}">
+            </th:block>
+
+            <th:block th:replace="~{::caseList}"></th:block>
+
+        </div>
+    </th:block>
+
+    <!-- caseList: sidebar + table; swapped as one unit so the selected
+         filter state is re-rendered together with the result list -->
+    <th:block th:fragment="caseList">
+        <div class="cases-layout" id="case-list-container">
+            <!-- Sidebar: status filters -->
+            <aside class="cases-sidebar" aria-label="Fall-Filter">
+                <h3 class="cases-sidebar__heading">Status</h3>
+                <ul class="cases-sidebar__filters">
+                    <li>
+                        <a th:href="@{/cases}"
+                           th:classappend="${currentStatus == null or currentStatus == ''} ? 'cases-sidebar__filter--active' : ''"
+                           class="cases-sidebar__filter"
+                           hx-get="/cases"
+                           hx-target="#case-list-container"
+                           hx-swap="outerHTML"
+                           hx-push-url="true">
+                            Alle
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cases(status='ACTIVE')}"
+                           th:classappend="${currentStatus == 'ACTIVE'} ? 'cases-sidebar__filter--active' : ''"
+                           class="cases-sidebar__filter"
+                           hx-get="/cases?status=ACTIVE"
+                           hx-target="#case-list-container"
+                           hx-swap="outerHTML"
+                           hx-push-url="true">
+                            Aktiv
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cases(status='DRAFT')}"
+                           th:classappend="${currentStatus == 'DRAFT'} ? 'cases-sidebar__filter--active' : ''"
+                           class="cases-sidebar__filter"
+                           hx-get="/cases?status=DRAFT"
+                           hx-target="#case-list-container"
+                           hx-swap="outerHTML"
+                           hx-push-url="true">
+                            Entwurf
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cases(status='CLOSED')}"
+                           th:classappend="${currentStatus == 'CLOSED'} ? 'cases-sidebar__filter--active' : ''"
+                           class="cases-sidebar__filter"
+                           hx-get="/cases?status=CLOSED"
+                           hx-target="#case-list-container"
+                           hx-swap="outerHTML"
+                           hx-push-url="true">
+                            Geschlossen
+                        </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/cases(status='ARCHIVED')}"
+                           th:classappend="${currentStatus == 'ARCHIVED'} ? 'cases-sidebar__filter--active' : ''"
+                           class="cases-sidebar__filter"
+                           hx-get="/cases?status=ARCHIVED"
+                           hx-target="#case-list-container"
+                           hx-swap="outerHTML"
+                           hx-push-url="true">
+                            Archiviert
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Main: data table -->
+            <div class="cases-main">
+                <th:block th:replace="~{cases/fragments :: caseTable}"></th:block>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "benchmark": "verifier",
+    "benchmark_version": "1.0.0",
+    "model": "qwen2.5:7b",
+    "timestamp": "2026-09-07T13:18:06+00:00",
+    "host": {
+      "python": "3.13.15",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "host": "DESKTOP-5981MAQ",
+      "cpu": "Intel64 Family 6 Model 85 Stepping 4, GenuineIntel"
+    },
+    "num_ctx": 8192,
+    "temperature": 0.0,
+    "think": false,
+    "ollama_version": null,
+    "gpu": {
+      "available": true,
+      "name": "Quadro P5000",
+      "note": null
+    }
+  },
+  "total_cases": 3,
+  "completed_cases": 3,
+  "execution_errors": 0,
+  "parse_errors": 0,
+  "overall_accuracy_pct": 100.0,
+  "normal_accuracy_pct": 100.0,
+  "adversarial_accuracy_pct": null,
+  "confusion_matrix": {
+    "SUPPORTED": {
+      "SUPPORTED": 3,
+      "CONTRADICTED": 0,
+      "UNSUPPORTED": 0,
+      "PARSE_ERROR": 0
+    },
+    "CONTRADICTED": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNSUPPORTED": 0,
+      "PARSE_ERROR": 0
+    },
+    "UNSUPPORTED": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNSUPPORTED": 0,
+      "PARSE_ERROR": 0
+    },
+    "PARSE_ERROR": {
+      "SUPPORTED": 0,
+      "CONTRADICTED": 0,
+      "UNSUPPORTED": 0,
+      "PARSE_ERROR": 0
+    }
+  },
+  "incorrect_cases": [],
+  "mean_latency_s": 6.251,
+  "median_latency_s": 3.622,
+  "mean_generation_tok_per_s": 35.34,
+  "median_generation_tok_per_s": 35.16,
+  "mean_output_tokens": 40.0,
+  "total_wall_time_s": 18.76
+}

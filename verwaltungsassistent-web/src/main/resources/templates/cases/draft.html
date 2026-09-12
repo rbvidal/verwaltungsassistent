@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Antwortentwurf</h1>
+                    <a th:href="@{/cases/{id}(id=${caseId})}" class="btn" style="font-size: 0.8125rem;">← Zum Fall</a>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <strong th:text="${caseName}">Fallname</strong>
+                    <span th:if="${workspaceCode != null and !workspaceCode.isEmpty()}"
+                          th:text="' · Aktenzeichen ' + ${workspaceCode}">CODE</span>
+                </p>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+                    Entwurf einer Antwort an die Bürgerin bzw. den Bürger auf Grundlage der
+                    Entscheidungsvorlage. Der Entwurf wird nicht automatisch versendet.
+                </p>
+            </div>
+
+            <!-- Serverseitige Ablehnung bei abgeschlossenem Vorgang (Phase 2D.7):
+                 Flash nach dem Redirect — die Seite bleibt ehrlich über die Ursache. -->
+            <div th:if="${draftError != null}" class="message message--error" role="alert"
+                 th:text="${draftError}" style="margin-bottom: 1rem;"></div>
+
+            <!-- No analysis yet. Sachbearbeitung: Hinweis auf die offene
+                 Vorbereitungs-Aktion. Leitungs-/Superadmin-Konto (read-only):
+                 neutraler Text OHNE operativen Link (Phase 2D.13). -->
+            <div th:if="${!hasAnalysis and draft == null and (caseClosed == null or !caseClosed)}"
+                 class="message message--warning" role="status"
+                 style="margin-bottom: 1rem;">
+                <span th:if="${supervisory}">
+                    Für diesen Fall liegt noch keine Entscheidungsvorlage vor.
+                    Die erforderliche Fallanalyse wurde noch nicht durch die Sachbearbeitung durchgeführt.
+                </span>
+                <span th:unless="${supervisory}">
+                    Für diesen Fall liegt noch keine Entscheidungsvorlage vor. Bitte führen Sie zuerst die
+                    Analyse unter <a th:href="@{/cases/{id}/decision(id=${caseId})}">Entscheidung vorbereiten</a> durch.
+                </span>
+            </div>
+            <div th:if="${!hasAnalysis and draft == null and caseClosed != null and caseClosed}"
+                 class="message message--neutral" role="status" style="margin-bottom: 1rem;">
+                Der Vorgang ist abgeschlossen — für diesen Vorgang wurde kein Antwortentwurf erstellt.
+            </div>
+
+            <!-- No draft yet -->
+            <div th:if="${hasAnalysis and draft == null and (caseClosed == null or !caseClosed)}" style="margin-bottom: 1rem;">
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Es ist noch kein Antwortentwurf vorhanden. Der Entwurf wird aus der
+                    Entscheidungsvorlage und der Kommunikation des Vorgangs erstellt und
+                    kann anschließend bearbeitet werden.
+                </p>
+                <form th:if="${!supervisory}" th:action="@{/cases/{id}/draft/generate(id=${caseId})}" method="post">
+                    <!-- Erstellungs-Anweisung (Phase 2C.1): beeinflusst den Entwurf
+                         deterministisch (z. B. Frist-Satz bei Unterlagen-Anforderung)
+                         und wird mit dem Entwurf gespeichert — nie automatisch versendet. -->
+                    <label for="draft-instruction" style="display: block; font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.375rem;">
+                        Hinweise für den Entwurf (optional)
+                    </label>
+                    <textarea id="draft-instruction" name="instruction" rows="2"
+                              class="form-field__input"
+                              style="width: 100%; resize: vertical; font-family: inherit; line-height: 1.5; margin-bottom: 0.75rem;"
+                              placeholder="z. B. Bitte erklären, welche Unterlagen noch fehlen und bis wann sie nachgereicht werden müssen."></textarea>
+                    <button type="submit" class="btn btn--primary">Antwortentwurf erstellen</button>
+                </form>
+            </div>
+            <!-- Abgeschlossener Vorgang ohne Entwurf (Phase 2D.7): lesender
+                 Hinweis statt Erzeugen-Aktion — Änderungen erst nach Wiederaufnahme. -->
+            <div th:if="${hasAnalysis and draft == null and caseClosed != null and caseClosed}"
+                 class="message message--neutral" role="status" style="margin-bottom: 1rem;">
+                Der Vorgang ist abgeschlossen — ein Antwortentwurf kann erst nach einer
+                Wiederaufnahme des Vorgangs erstellt werden.
+            </div>
+
+            <div th:if="${draftSaved}" class="message message--success" role="status"
+                 style="margin-bottom: 0.75rem;">
+                Entwurf wurde gespeichert.
+            </div>
+
+            <!-- Draft exists: Zustand + Herkunft + bearbeitbarer Text (Phase 2D.5) -->
+            <div th:if="${draft != null}">
+                <!-- Zustand (lokale Entwurfs-Stände, gleiche Begriffe wie im
+                     E-Mail-Arbeitsbereich): KI-ENTWURF (unverändert) /
+                     MANUELL BEARBEITET / ENTWURF GEPRÜFT. -->
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.75rem;">
+                    <span class="badge badge--success">Entwurf vorhanden</span>
+                    <span class="badge badge--neutral" style="font-size: 0.6875rem;">Nur Entwurf · kein Versand</span>
+                    <span th:if="${draft.reviewed()}" class="badge badge--success" style="font-size: 0.6875rem;">Entwurf geprüft · lokal</span>
+                    <span th:if="${!draft.reviewed() and draft.edited()}" class="badge badge--warning"
+                          style="font-size: 0.6875rem;">Manuell bearbeitet</span>
+                    <span th:if="${!draft.reviewed() and !draft.edited()}" class="badge badge--info"
+                          style="font-size: 0.6875rem;">KI-Entwurf</span>
+                    <span th:if="${draft.updatedAt() != null}" class="badge badge--neutral" style="font-size: 0.6875rem;"
+                          th:text="'Zuletzt bearbeitet: ' + ${draft.updatedAt()} + (${draft.updatedBy() != null and !draft.updatedBy().isEmpty()} ? ' (' + ${draft.updatedBy()} + ')' : '')">STAND</span>
+                </div>
+
+                <!-- Herkunft (Frage 8): worauf beruht der Entwurf — Analyse,
+                     Belege/Empfehlung der Entscheidungsvorlage UND der
+                     Entscheidungsstand der Sachbearbeitung (2D.3). -->
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.35rem;
+                          display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                    <span th:text="'Grundlage: KI-Analyse #' + ${draft.analysisVersion()} + ' — Belege, Feststellungen und Empfehlung der Entscheidungsvorlage.'">Grundlage</span>
+                    <a th:href="@{/cases/{id}/decision(id=${caseId})}" class="doc-title-link">Entscheidung &amp; Belege ansehen</a>
+                </p>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                    <span th:if="${decisionInfo != null}" class="badge badge--success" style="font-size: 0.6875rem;"
+                          th:text="'Entscheidung der Sachbearbeitung dokumentiert: ' + ${decisionInfo.confirmedByName()} + ' · ' + ${decisionInfo.confirmedAt()} + ' · Analyse #' + ${decisionInfo.analysisVersion()}">Entscheidung dokumentiert</span>
+                    <span th:if="${decisionInfo == null}" class="badge badge--warning" style="font-size: 0.6875rem;"
+                          title="Die KI-Empfehlung allein ist keine Entscheidung — dokumentieren Sie Ihre Entscheidung im Analyseergebnis.">
+                        Entscheidung der Sachbearbeitung noch nicht dokumentiert
+                    </span>
+                </div>
+
+                <div th:if="${draft.limitedCoverage()}" class="message message--warning" role="status"
+                     style="margin-bottom: 0.75rem;">
+                    Eingeschränkte Quellenlage: Der Entwurf basiert auf einer Analyse, deren Aussagen
+                    nicht vollständig durch Quellen belegt sind. Die Inhalte sind vor dem Versand
+                    besonders sorgfältig zu prüfen.
+                </div>
+
+                <!-- Erstellungs-Hinweise der Mitarbeiterin: gespeichert, sichtbar,
+                     nie automatisch versendet. -->
+                <div th:if="${draft.instruction() != null and !#strings.isEmpty(draft.instruction())}"
+                     class="message message--info" role="status" style="margin-bottom: 0.75rem;">
+                    <strong>Hinweise bei der Erstellung:</strong>
+                    <span th:text="${draft.instruction()}">Hinweis</span>
+                </div>
+
+                <!-- Prüf-Vermerk: nur für den geprüften Stand; eine Bearbeitung
+                     danach setzt ihn zurück (siehe Server-Logik). -->
+                <div th:if="${draft.reviewed() and draft.reviewedBy() != null and !draft.reviewedBy().isEmpty()}"
+                     style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.6rem;"
+                     th:text="'Geprüft von ' + ${draft.reviewedBy()} + ' am ' + ${draft.reviewedAt()} + ' — interner Vermerk für die Aktenlage.'">Geprüft</div>
+
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.6rem;">
+                    Lokaler Textvorschlag auf Grundlage der Entscheidungsvorlage und der abgerufenen Belege —
+                    er wird <strong>nicht automatisch versendet</strong>. Bitte prüfen und bearbeiten;
+                    „Entwurf geprüft“ ist nur ein interner Vermerk für die Aktenlage.
+                </p>
+
+                <!-- Bearbeiten/Speichern: nur Sachbearbeitung, nur bei offenem
+                     Vorgang (Phase 2D.7: abgeschlossener Vorgang = lesend). Das
+                     Textfeld liegt im Formular, damit "Speichern" (form=draft-form)
+                     den Text übermittelt; Prüfen/Export liegen daneben in der
+                     Aktionsleiste (keine verschachtelten Formulare). -->
+                <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}" id="draft-form"
+                      th:action="@{/cases/{id}/draft/save(id=${caseId})}" method="post">
+                    <label for="draft-text" style="font-size: 0.875rem; font-weight: 600; display: block; margin-bottom: 0.375rem;">
+                        Antwortentwurf (bearbeitbar)
+                    </label>
+                    <textarea id="draft-text" name="draftText" rows="18"
+                              class="form-field__input"
+                              th:text="${draft.text()}"
+                              style="width: 100%; resize: vertical; font-family: inherit; line-height: 1.6; white-space: pre-wrap;">Entwurf</textarea>
+                </form>
+                <textarea th:if="${supervisory or (caseClosed != null and caseClosed)}" rows="18" readonly
+                          th:text="${draft.text()}"
+                          class="form-field__input"
+                          style="width: 100%; resize: vertical; font-family: inherit; line-height: 1.6; white-space: pre-wrap;">Entwurf</textarea>
+
+                <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+                    <button th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                            type="submit" form="draft-form" class="btn btn--primary">Speichern</button>
+                    <form th:if="${!supervisory and !draft.reviewed() and (caseClosed == null or !caseClosed)}"
+                          th:action="@{/cases/{id}/draft/review(id=${caseId})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn"
+                                title="Interner Vermerk: Sie haben den Entwurf geprüft — kein Versand.">Entwurf geprüft</button>
+                    </form>
+                    <a th:href="@{/cases/{id}/draft/export-pdf(id=${caseId})}" class="btn" target="_blank">
+                        Entwurf als PDF exportieren
+                    </a>
+                </div>
+                <p th:if="${supervisory}" style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.6rem 0 0;">
+                    Leitungs-Konto: Entwürfe werden nur lesend eingesehen.
+                </p>
+                <p th:if="${!supervisory and caseClosed != null and caseClosed}"
+                   style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.6rem 0 0;">
+                    Der Vorgang ist abgeschlossen — der Entwurf wird nur noch lesend angezeigt.
+                    Änderungen sind erst nach einer Wiederaufnahme des Vorgangs möglich.
+                </p>
+
+                <div class="message message--info" role="status" style="margin-top: 1.25rem;">
+                    Dieser Antwortentwurf wurde maschinell erstellt und ist vor dem Versand durch eine
+                    zuständige Person zu prüfen und freizugeben. Es wird keine E-Mail automatisch versendet.
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

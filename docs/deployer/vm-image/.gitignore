@@ -1,0 +1,20 @@
+# Large generated build artifacts — not for git
+verwaltungsassistent-ubuntu-22.04.qcow2
+SHA256SUMS.corpus
+
+# Build work area (raw/qcow2 work images, logs, keys, installers, HTTP server state)
+staging/*
+!staging/artifacts/
+
+# Big binary inputs for provisioning (Docker images, Ollama bundle, app JAR)
+staging/artifacts/verwaltungsassistent-images.tar
+staging/artifacts/ollama-linux-amd64.tar.zst
+staging/artifacts/ollama-linux-amd64.tgz
+staging/artifacts/verwaltungsassistent.jar
+staging/artifacts/build-key.pub
+
+# Python bytecode from the seed-ISO generator
+seed/__pycache__/
+
+# Generated corpus package (build output of build-vm-image.sh)
+*-demo-corpus-*.tar.zst

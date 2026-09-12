@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Neuer Geovorgang</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Legen Sie einen neuen Geovorgang an — mit Standort aus der Kartenauswahl,
+                    bearbeitbaren Fallangaben und optionalem Foto. Der Geovorgang kann auch
+                    ohne Foto angelegt werden.
+                </p>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.75rem; border-bottom: 2px solid var(--color-border, #ddd); padding-bottom: 0.5rem;">
+                    <a th:href="@{/geoinformation/map}" class="btn" style="font-size: 0.8125rem;">Stadtkarte</a>
+                    <a th:href="@{/geoinformation/photos}" class="btn" style="font-size: 0.8125rem;">Geotagged Fotos</a>
+                    <a th:href="@{/geoinformation/geo-cases}" class="btn btn--primary" style="font-size: 0.8125rem;">Geovorgänge</a>
+                </div>
+            </div>
+
+            <form th:action="@{/geoinformation/geo-cases/create}" method="post" enctype="multipart/form-data"
+                  style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+
+                <!-- A. Adresse -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">A. Adresse</h2>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                        Wird aus dem gewählten Kartenpunkt aufgelöst und kann frei geändert werden.
+                    </p>
+                    <label class="filter-bar__label" for="address">Adresse</label>
+                    <input type="text" id="address" name="address" class="form-field__input"
+                           style="width: 100%; margin-bottom: 0.5rem;"
+                           th:value="${address != null ? address : ''}"
+                           placeholder="z. B. Friedrich-Ebert-Straße 79, 14469 Potsdam">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 0.5rem;">
+                        <div>
+                            <label class="filter-bar__label" for="street">Straße</label>
+                            <input type="text" id="street" name="street" class="form-field__input" style="width: 100%;"
+                                   th:value="${street != null ? street : ''}">
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="houseNumber">Hausnummer</label>
+                            <input type="text" id="houseNumber" name="houseNumber" class="form-field__input" style="width: 100%;"
+                                   th:value="${houseNumber != null ? houseNumber : ''}">
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="postalCode">PLZ</label>
+                            <input type="text" id="postalCode" name="postalCode" class="form-field__input" style="width: 100%;"
+                                   th:value="${postalCode != null ? postalCode : ''}">
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="city">Ort</label>
+                            <input type="text" id="city" name="city" class="form-field__input" style="width: 100%;"
+                                   th:value="${city != null ? city : ''}">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- B. Koordinaten + Karte -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">B. Koordinaten</h2>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                        Klicken Sie auf die Karte, um den Standort festzulegen — Koordinaten und Adresse
+                        werden übernommen.
+                    </p>
+                    <div id="new-geo-map" style="height: 320px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius);"></div>
+                    <!-- OSM/ODbL-Attribution (Pflicht bei Kartendaten von OpenStreetMap) -->
+                    <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin: 0.5rem 0 0; line-height: 1.5;">
+                        Kartendaten: © OpenStreetMap-Mitwirkende (ODbL). Das Straßennetz der
+                        Straßenkarte umfasst die Demo-Stadt Werder (Havel) — lokal gebündelt,
+                        keine vollständige Straßenabdeckung Brandenburgs.
+                    </p>
+                    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem;">
+                        <label class="filter-bar__label" for="lat">Latitude</label>
+                        <input type="number" step="any" id="lat" name="lat" class="form-field__input" style="width: 140px;"
+                               th:value="${lat != null ? lat : ''}" required>
+                        <label class="filter-bar__label" for="lon">Longitude</label>
+                        <input type="number" step="any" id="lon" name="lon" class="form-field__input" style="width: 140px;"
+                               th:value="${lon != null ? lon : ''}" required>
+                        <span id="new-geo-jurisdiction" style="font-size: 0.8125rem; color: var(--color-text-muted);"
+                              th:text="${geoDistrict != null ? 'Zuständigkeitsgebiet: ' + geoDistrict + ' · ' + geoAuthority : ''}">—</span>
+                    </div>
+                    <p id="new-geo-address-status" role="status"
+                       style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.5rem 0 0;">
+                        Klicken Sie auf eine Straße, um die Adresse zu übernehmen.
+                    </p>
+                </section>
+
+                <!-- C. Vorgangsdaten -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">C. Vorgangsdaten</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label class="filter-bar__label" for="workspaceCode">Vorgangsnummer</label>
+                            <input type="text" id="workspaceCode" class="form-field__input" style="width: 100%;"
+                                   th:value="${workspaceCode}" readonly>
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="status">Status</label>
+                            <select id="status" name="status" class="form-field__input" style="width: 100%;">
+                                <option th:each="s : ${geoStatuses}" th:value="${s.value()}"
+                                        th:text="${s.label()}" th:selected="${s.value() == 'DRAFT'}">Entwurf</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="createdAt">Angelegt am</label>
+                            <input type="text" id="createdAt" class="form-field__input" style="width: 100%;"
+                                   th:value="${createdAt}" readonly>
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="createdBy">Erfasst von</label>
+                            <input type="text" id="createdBy" class="form-field__input" style="width: 100%;"
+                                   th:value="${currentUserName != null and currentUserName != '' ? currentUserName + ' (' + currentUser + ')' : currentUser}" readonly>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="filter-bar__label" for="gpsSource">GPS-Quelle</label>
+                            <input type="text" id="gpsSource" class="form-field__input" style="width: 100%;"
+                                   value="Kartenauswahl / Manuell auf Karte ausgewählt" readonly>
+                            <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin: 0.15rem 0 0;">
+                                Der Standort stammt aus der Kartenauswahl — kein EXIF eines Fotos.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- D. Fallangaben -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">D. Fallangaben</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label class="filter-bar__label" for="name">Bezeichnung / Betreff *</label>
+                            <input type="text" id="name" name="name" required class="form-field__input" style="width: 100%;"
+                                   placeholder="z. B. Müllablagerung an der Uferpromenade">
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="category">Kategorie</label>
+                            <select id="category" name="category" class="form-field__input" style="width: 100%;">
+                                <option value="">— Bitte wählen —</option>
+                                <option th:each="c : ${geoCategories}" th:value="${c}" th:text="${c}">Kategorie</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="priority">Priorität</label>
+                            <select id="priority" name="priority" class="form-field__input" style="width: 100%;">
+                                <option th:each="p : ${geoPriorities}" th:value="${p}"
+                                        th:text="${p == 'NIEDRIG' ? 'Niedrig' : (p == 'MITTEL' ? 'Mittel' : 'Hoch')}"
+                                        th:selected="${p == 'MITTEL'}">Mittel</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="filter-bar__label" for="assignee">Verantwortlicher Mitarbeiter</label>
+                            <select id="assignee" name="assignee" class="form-field__input" style="width: 100%;">
+                                <option th:each="m : ${mitarbeiter}" th:value="${m.email()}"
+                                        th:text="${m.displayName()} + (${m.email() != null ? ' (' + m.email() + ')' : ''})"
+                                        th:selected="${m.email() == currentUser}">Mitarbeiter</option>
+                            </select>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label class="filter-bar__label" for="remark">Bemerkung</label>
+                            <textarea id="remark" name="remark" rows="8" class="form-field__input"
+                                      style="width: 100%; resize: vertical;"
+                                      placeholder="Freitext-Feststellung der Sachbearbeitung …"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- E. Bearbeitungshistorie (wird beim Anlegen erzeugt) -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">E. Mitarbeitende / Bearbeitungshistorie</h2>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                        Beim Anlegen wird die Historie mit den folgenden Ereignissen geführt:
+                        Statusänderungen und Zuweisungen werden dort ebenfalls festgehalten.
+                    </p>
+                    <div class="activity-table" style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.6rem 0.85rem;">
+                        <div style="font-size: 0.8125rem; display: flex; gap: 0.75rem; align-items: center;">
+                            <span class="badge badge--info" style="font-size: 0.6875rem;">Erstellung</span>
+                            <span th:text="'Geovorgang wird von ' + ${currentUserName != null and currentUserName != '' ? currentUserName : currentUser} + ' angelegt.'">Erstellt von …</span>
+                            <span th:text="${createdAt}" style="color: var(--color-text-muted); font-size: 0.75rem;">Datum</span>
+                        </div>
+                        <div th:if="${status == 'ACTIVE'}" style="font-size: 0.8125rem; display: flex; gap: 0.75rem; align-items: center; margin-top: 0.4rem;">
+                            <span class="badge badge--neutral" style="font-size: 0.6875rem;">Statusänderung</span>
+                            <span>Status: Entwurf → In Bearbeitung</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- H. Foto (optional) -->
+                <section class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Foto (optional)</h2>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                        Der Geovorgang kann auch ohne Foto angelegt werden. Ein Foto kann später
+                        über die Geotagged-Fotos-Seite zugeordnet werden.
+                    </p>
+                    <input type="file" name="photo" accept="image/jpeg,image/png" class="form-field__input">
+                    <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin: 0.25rem 0 0;">
+                        Unterstützte Formate: JPG/JPEG und PNG. GPS wird aus den EXIF-Daten des Fotos gelesen.
+                    </p>
+                </section>
+
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <button type="submit" class="btn btn--primary">Geovorgang anlegen</button>
+                    <a th:href="@{/geoinformation/geo-cases}" class="btn">Abbrechen</a>
+                </div>
+            </form>
+        </div>
+
+        <script th:src="@{/js/geo-map.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var __geoAddresses = /*[[${demoAddresses}]]*/ [];
+
+            function initNewGeoMap(lat, lon) {
+                var el = document.getElementById('new-geo-map');
+                if (!el) return null;
+                var map = L.map(el, { zoomControl: true, attributionControl: false });
+                // Interaktive STRAẞENKARTE (lokales OSM-Straßennetz + Adresspunkte):
+                // Klick setzt Koordinaten, Adresse und Zuständigkeit.
+                geoMap.setViewType(map, 'strassen', { dots: true });
+                var marker = null;
+                function placeMarker(lat, lon) {
+                    if (marker) map.removeLayer(marker);
+                    marker = L.marker([lat, lon]).addTo(map);
+                    document.getElementById('lat').value = lat.toFixed(6);
+                    document.getElementById('lon').value = lon.toFixed(6);
+                    resolveAddress(lat, lon);
+                    resolveJurisdiction(lat, lon);
+                }
+                map.on('click', function (evt) {
+                    placeMarker(evt.latlng.lat, evt.latlng.lng);
+                });
+                if (lat && lon) {
+                    map.setView([lat, lon], 15);
+                    placeMarker(lat, lon);
+                } else {
+                    // Ohne vorgewählte Koordinaten: auf das Straßennetz der
+                    // Demo-Region zoomen, damit der Klick sinnvoll ist.
+                    map.setView([52.39, 13.06], 11);
+                }
+                return map;
+            }
+
+            function resolveAddress(lat, lon) {
+                fetch('/geoinformation/api/reverse?lat=' + lat + '&lon=' + lon)
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        var status = document.getElementById('new-geo-address-status');
+                        if (data && data.found && data.street) {
+                            document.getElementById('street').value = data.street || '';
+                            document.getElementById('houseNumber').value = data.houseNumber || '';
+                            document.getElementById('postalCode').value = data.postalCode || '';
+                            document.getElementById('city').value = data.city || '';
+                            document.getElementById('address').value = data.address || '';
+                            if (status) status.textContent = '';
+                            return;
+                        }
+                        // Keine Hausnummer: nächste erfasste Straße als Hinweis.
+                        if (data && data.streetOnly && data.street) {
+                            document.getElementById('street').value = data.street;
+                            document.getElementById('houseNumber').value = '';
+                            document.getElementById('postalCode').value = '';
+                            document.getElementById('city').value = '';
+                            document.getElementById('address').value = data.street;
+                            if (status) status.textContent = data.message || '';
+                            return;
+                        }
+                        if (status) status.textContent = data && data.message
+                            ? data.message : 'Keine Adresse im lokalen Adressbestand.';
+                    })
+                    .catch(function () {
+                        var status = document.getElementById('new-geo-address-status');
+                        if (status) status.textContent = 'Adresse nicht ermittelbar.';
+                    });
+            }
+
+            function resolveJurisdiction(lat, lon) {
+                fetch('/geoinformation/api/jurisdiction?lat=' + lat + '&lon=' + lon)
+                    .then(function (r) { return r.json(); })
+                    .then(function (j) {
+                        var el = document.getElementById('new-geo-jurisdiction');
+                        el.textContent = j.resolved
+                            ? 'Zuständigkeitsgebiet: ' + j.district + ' · ' + j.authority
+                            : 'Zuständigkeit nicht bestimmbar';
+                    })
+                    .catch(function () {});
+            }
+
+            initNewGeoMap(/*[[${lat != null ? lat : null}]]*/ null, /*[[${lon != null ? lon : null}]]*/ null);
+            /*]]>*/
+        </script>
+    </th:block>
+</body>
+</html>

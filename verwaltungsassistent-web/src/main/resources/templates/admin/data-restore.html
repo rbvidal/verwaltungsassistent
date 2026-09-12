@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Datenwiederherstellung</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Sichern und Wiederherstellen der Wissensbestände. Beide Vorgänge sind
+                    destruktiv und werden erst nach einer ausdrücklichen Bestätigung ausgeführt.
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+            <div th:if="${dataRestoreError != null}" class="message message--error" role="alert"
+                 th:text="${dataRestoreError}" style="margin-bottom: 1rem;"></div>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 1. Datensicherung (backup)                    -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.35rem;">Datensicherung</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Erstellt Sicherungen der Wissensbestände in den etablierten Sicherungsformaten.
+                    Die Sicherungsdateien werden im Sicherungsverzeichnis abgelegt und können über
+                    „Daten wiederherstellen“ eingespielt werden.
+                </p>
+
+                <div class="admin-card-grid" style="margin-bottom: 1rem;">
+                    <div class="admin-card">
+                        <h3 style="font-size: 0.9375rem; font-weight: 600;">PostgreSQL-Datenbank</h3>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.35rem 0 0.75rem;">
+                            Sicherung der relationalen Anwendungsdaten.
+                        </p>
+                        <form th:action="@{/admin/data-restore/backup/postgres}" method="post"
+                              hx-post="/admin/data-restore/backup/postgres" hx-target="#backup-result"
+                              hx-indicator="#backup-spinner">
+                            <button type="submit" class="btn btn--primary" style="font-size: 0.8125rem;">Datenbank sichern</button>
+                        </form>
+                    </div>
+                    <div class="admin-card">
+                        <h3 style="font-size: 0.9375rem; font-weight: 600;">Neo4j-Wissensgraph</h3>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.35rem 0 0.75rem;">
+                            Sicherung des Wissensgraphen.
+                        </p>
+                        <form th:action="@{/admin/data-restore/backup/neo4j}" method="post"
+                              hx-post="/admin/data-restore/backup/neo4j" hx-target="#backup-result"
+                              hx-indicator="#backup-spinner">
+                            <button type="submit" class="btn btn--primary" style="font-size: 0.8125rem;">Neo4j sichern</button>
+                        </form>
+                    </div>
+                    <div class="admin-card">
+                        <h3 style="font-size: 0.9375rem; font-weight: 600;">Qdrant-Vektordaten</h3>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.35rem 0 0.75rem;">
+                            Sicherung der Vektordaten und Collections.
+                        </p>
+                        <form th:action="@{/admin/data-restore/backup/qdrant}" method="post"
+                              hx-post="/admin/data-restore/backup/qdrant" hx-target="#backup-result"
+                              hx-indicator="#backup-spinner">
+                            <button type="submit" class="btn btn--primary" style="font-size: 0.8125rem;">Qdrant sichern</button>
+                        </form>
+                    </div>
+                </div>
+
+                <form th:action="@{/admin/data-restore/backup/all}" method="post"
+                      hx-post="/admin/data-restore/backup/all" hx-target="#backup-result"
+                      hx-indicator="#backup-spinner" style="margin-bottom: 0.75rem;">
+                    <button type="submit" class="btn" style="font-size: 0.8125rem;">Alle Daten sichern</button>
+                    <span id="backup-spinner" class="htmx-indicator" style="font-size: 0.8125rem; color: var(--color-text-muted); margin-left: 0.75rem;">
+                        Sicherung wird erstellt …
+                    </span>
+                </form>
+
+                <div id="backup-result">
+                    <th:block th:replace="~{admin/data-restore-fragments :: backupHistory(${backups})}"></th:block>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 2. Datenwiederherstellung                     -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.35rem;">Daten wiederherstellen</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Wählen Sie die Sicherungsdateien der etablierten Sicherungsformate aus:
+                    den PostgreSQL-Dump (pg_dump, custom-Format) und den Neo4j-Dump
+                    (neo4j-admin database dump). Die Dateien werden nacheinander wiederhergestellt
+                    und der Status beider Systeme wird einzeln angezeigt.
+                </p>
+
+                <form th:action="@{/admin/data-restore/restore}" method="post" enctype="multipart/form-data"
+                      hx-post="/admin/data-restore/restore" hx-target="#data-restore-result"
+                      hx-encoding="multipart/form-data" hx-indicator="#restore-spinner"
+                      style="display: flex; flex-direction: column; gap: 1rem;">
+
+                    <div style="display: flex; gap: 1.25rem; flex-wrap: wrap;">
+                        <div class="form-field admin-card" style="flex: 1; min-width: 240px;">
+                            <label for="pgDump" class="form-field__label">PostgreSQL-Dump</label>
+                            <input type="file" id="pgDump" name="pgDump" accept=".dump,.sql"
+                                   class="form-field__input">
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Sicherungsdatei aus pg_dump (custom-Format, z. B. postgres-20260827-2200.dump).
+                            </p>
+                        </div>
+                        <div class="form-field admin-card" style="flex: 1; min-width: 240px;">
+                            <label for="neo4jDump" class="form-field__label">Neo4j-Dump</label>
+                            <input type="file" id="neo4jDump" name="neo4jDump" accept=".dump"
+                                   class="form-field__input">
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Sicherungsdatei aus neo4j-admin database dump (z. B. neo4j-20260827-2200.dump).
+                            </p>
+                        </div>
+                        <div class="form-field admin-card" style="flex: 1; min-width: 240px;">
+                            <label for="qdrantSnapshot" class="form-field__label">Qdrant-Sicherung</label>
+                            <input type="file" id="qdrantSnapshot" name="qdrantSnapshot" accept=".snapshot"
+                                   class="form-field__input">
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Vektordaten-Snapshot (z. B. qdrant-20260827-2200.snapshot).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="message message--info" role="status">
+                        <strong style="font-size: 0.875rem;">Ein Sicherungssatz besteht aus drei Dateien.</strong>
+                        <p style="font-size: 0.8125rem; margin-top: 0.35rem;">
+                            PostgreSQL-Dump, Neo4j-Dump und Qdrant-Sicherung müssen aus
+                            <strong>demselben Sicherungszeitpunkt</strong> stammen (identischer Zeitstempel im
+                            Dateinamen). Die Wiederherstellung wird abgelehnt, wenn eine Datei fehlt oder die
+                            Zeitstempel nicht übereinstimmen — andernfalls bliebe der Vektorindex inkonsistent
+                            (verwaiste Vektoren ohne zugehörige Dokument-Metadaten).
+                        </p>
+                    </div>
+
+                    <div class="message message--warning" role="alert">
+                        <strong style="font-size: 0.875rem;">Achtung: Vorhandene Daten werden überschrieben.</strong>
+                        <p style="font-size: 0.8125rem; margin-top: 0.35rem;">
+                            Beim Wiederherstellen werden die derzeit vorhandenen Daten durch die
+                            ausgewählten Sicherungsdaten ersetzt. Dieser Vorgang kann nicht einfach
+                            rückgängig gemacht werden. Bitte prüfen Sie die ausgewählten Dateien sorgfältig.
+                        </p>
+                    </div>
+
+                    <label style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.8125rem;">
+                        <input type="checkbox" id="restore-confirmed" name="confirmed" value="on">
+                        <span>Ich habe verstanden, dass die vorhandenen Daten überschrieben werden.</span>
+                    </label>
+
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <button type="submit" id="restore-btn" class="btn btn--primary" disabled
+                                style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                            Daten wiederherstellen
+                        </button>
+                        <span id="restore-spinner" class="htmx-indicator"
+                              style="font-size: 0.8125rem; color: var(--color-text-muted);">Wird ausgeführt …</span>
+                    </div>
+                </form>
+
+                <div id="data-restore-result" style="margin-top: 1rem;"></div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 2. ALLE DATEN LÖSCHEN (separate, high risk)   -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section decision-package__section--danger">
+                <h2 style="font-size: 1.0625rem; font-weight: 700; color: var(--color-error-700, #b91c1c); margin-bottom: 0.35rem;">
+                    Alle Daten löschen
+                </h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Entfernt sämtliche gespeicherten Daten und Suchindizes (Textabschnitte,
+                    Vektoren, Wissensgraph, Indexierungsaufträge). Die hochgeladenen
+                    Originaldokumente bleiben vollständig erhalten.
+                </p>
+
+                <form th:action="@{/admin/data-restore/delete-all}" method="post"
+                      hx-post="/admin/data-restore/delete-all" hx-target="#data-delete-result"
+                      hx-indicator="#delete-spinner"
+                      style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div class="message message--error" role="alert">
+                        <strong style="font-size: 0.875rem; color: var(--color-error-700, #b91c1c);">
+                            ACHTUNG — ALLE INDEX- UND DATENBANKDATEN LÖSCHEN
+                        </strong>
+                        <p style="font-size: 0.8125rem; margin-top: 0.35rem;">
+                            Dieser Vorgang löscht die derzeit gespeicherten Daten und Suchindizes.
+                            Die hochgeladenen Originaldokumente bleiben erhalten. Die Dokumente
+                            müssen anschließend erneut indiziert werden. Dieser Vorgang kann nicht
+                            einfach rückgängig gemacht werden.
+                        </p>
+                    </div>
+
+                    <label style="display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.8125rem;">
+                        <input type="checkbox" id="delete-confirmed" name="confirmed" value="on">
+                        <span>Ich habe verstanden, dass alle Index- und Datenbankdaten gelöscht werden und die Dokumente anschließend erneut indiziert werden müssen.</span>
+                    </label>
+
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <button type="submit" id="delete-btn" class="btn" disabled
+                                style="font-size: 0.875rem; padding: 0.5rem 1rem; background: var(--color-error-700, #b91c1c); color: #fff; border-color: var(--color-error-700, #b91c1c);">
+                            ALLE DATEN LÖSCHEN
+                        </button>
+                        <span id="delete-spinner" class="htmx-indicator"
+                              style="font-size: 0.8125rem; color: var(--color-text-muted);">Wird ausgeführt …</span>
+                    </div>
+                </form>
+
+                <div id="data-delete-result" style="margin-top: 1rem;"></div>
+            </section>
+        </div>
+
+        <script>
+            (function () {
+                function syncRestore() {
+                    var pg = document.getElementById('pgDump');
+                    var neo4j = document.getElementById('neo4jDump');
+                    var confirmed = document.getElementById('restore-confirmed');
+                    var btn = document.getElementById('restore-btn');
+                    btn.disabled = !(pg.files.length > 0 && neo4j.files.length > 0 && confirmed.checked);
+                }
+                function syncDelete() {
+                    var confirmed = document.getElementById('delete-confirmed');
+                    document.getElementById('delete-btn').disabled = !confirmed.checked;
+                }
+                document.getElementById('pgDump').addEventListener('change', syncRestore);
+                document.getElementById('neo4jDump').addEventListener('change', syncRestore);
+                document.getElementById('restore-confirmed').addEventListener('change', syncRestore);
+                document.getElementById('delete-confirmed').addEventListener('change', syncDelete);
+                // Disable the buttons while an operation is running (htmx indicator)
+                document.body.addEventListener('htmx:beforeRequest', function (evt) {
+                    if (evt.target.matches('form[action*="data-restore"]')) {
+                        var btn = evt.target.querySelector('button[type="submit"]');
+                        if (btn) btn.disabled = true;
+                    }
+                });
+                // Re-evaluate after the request finished (failed validation must
+                // not leave the button disabled when files are still valid).
+                document.body.addEventListener('htmx:afterRequest', function (evt) {
+                    if (evt.target.matches('form[action*="data-restore"]')) {
+                        syncRestore();
+                        syncDelete();
+                    }
+                });
+            })();
+        </script>
+    </th:block>
+</body>
+</html>

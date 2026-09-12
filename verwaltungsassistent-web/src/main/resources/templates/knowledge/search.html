@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'knowledge', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Wissensbasis</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Durchsuchen Sie alle indexierten Dokumente nach relevanten Vorschriften, Regelungen und Fachinformationen.
+                </p>
+            </div>
+
+            <!-- Search Form: the question gets the full width, the controls
+                 live in a second box below it. -->
+            <form th:action="@{/knowledge}" method="get"
+                  hx-get="/knowledge" hx-target="#search-results-container" hx-trigger="submit"
+                  style="margin-bottom: 1.5rem;">
+                <div class="search-box search-box--wide" style="margin-bottom: 0.75rem;">
+                    <textarea name="q" class="search-box__input" rows="3"
+                              th:text="${query}"
+                              placeholder="Welche Verpflegungspauschale gilt bei einer 12-stündigen Dienstreise?"
+                              autofocus></textarea>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap;
+                            padding: 0.875rem 1rem; border: 1px solid var(--color-border-subtle);
+                            border-radius: var(--radius); background: var(--color-surface-row);">
+                    <div class="filter-bar__field" style="flex: 1 1 16%; min-width: 150px; margin: 0;">
+                        <label class="filter-bar__label">Dokumenttyp</label>
+                        <select name="documentType" class="filter-bar__select"
+                                hx-get="/knowledge" hx-target="#search-results-container"
+                                hx-trigger="change">
+                            <option value="">Alle Typen</option>
+                            <option th:each="dt : ${documentTypes}" th:value="${dt.name()}"
+                                    th:selected="${documentType == dt.name()}"
+                                    th:text="${documentTypeLabels[dt.name()]}">PDF</option>
+                        </select>
+                    </div>
+                    <div class="filter-bar__field" style="flex: 1 1 16%; min-width: 150px; margin: 0;">
+                        <label class="filter-bar__label">Kategorie</label>
+                        <select name="category" class="filter-bar__select"
+                                hx-get="/knowledge" hx-target="#search-results-container"
+                                hx-trigger="change">
+                            <option value="">Alle Kategorien</option>
+                            <option th:each="c : ${categories}" th:value="${c.name()}"
+                                    th:selected="${category == c.name()}"
+                                    th:text="${categoryLabels[c.name()]}">Category</option>
+                        </select>
+                    </div>
+                    <div class="filter-bar__field" style="flex: 1 1 16%; min-width: 150px; margin: 0;">
+                        <label class="filter-bar__label">Suchmodus</label>
+                        <select name="mode" class="filter-bar__select"
+                                hx-get="/knowledge" hx-target="#search-results-container"
+                                hx-trigger="change">
+                            <option value="HYBRID" th:selected="${searchMode == 'HYBRID'}">Hybrid (empfohlen)</option>
+                            <option value="SEMANTIC" th:selected="${searchMode == 'SEMANTIC'}">Semantisch</option>
+                            <option value="KEYWORD" th:selected="${searchMode == 'KEYWORD'}">Textsuche</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn--primary" style="margin-left: auto;">
+                        <span class="material-symbols-outlined" aria-hidden="true">search</span>Suchen
+                    </button>
+                </div>
+            </form>
+
+            <!-- Progress: orange Statusleiste + dunkles Terminal, während die
+                 Suche läuft. Wird per htmx-Ereignissen ein-/ausgeblendet. -->
+            <div id="kb-progress" style="display: none; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                    <div style="flex: 1; height: 6px; border-radius: 3px; background: var(--color-border-subtle); overflow: hidden;">
+                        <div id="kb-progress-bar" style="height: 100%; width: 0%;
+                             background: linear-gradient(90deg, #F1B260, #e08a2e); border-radius: 3px;
+                             transition: width 0.4s ease;"></div>
+                    </div>
+                    <span id="kb-progress-label" style="font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap;">
+                        Suche läuft …
+                    </span>
+                </div>
+                <div id="kb-terminal" style="background: #14161c; border-radius: 8px; padding: 0.75rem 1rem;
+                        font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 0.8rem;
+                        color: #9aa5b1; line-height: 1.7;">
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Die Anfrage wird entgegengenommen …</div>
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Frage wird analysiert …</div>
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Volltextsuche läuft …</div>
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Semantische Suche läuft …</div>
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Treffer werden zusammengeführt …</div>
+                    <div class="kb-term-line"><span style="color:#5C976E;">✓</span> Relevanz wird geprüft …</div>
+                </div>
+            </div>
+            <script>
+                (function () {
+                    var kbTimers = [];
+                    var kbLines = [];
+                    function kbReset() {
+                        kbLines = Array.from(document.querySelectorAll('#kb-terminal .kb-term-line'));
+                        kbTimers.forEach(clearTimeout);
+                        kbTimers = [];
+                        kbLines.forEach(function (l, i) {
+                            l.style.opacity = i === 0 ? 1 : 0.25;
+                        });
+                        var bar = document.getElementById('kb-progress-bar');
+                        if (bar) { bar.style.width = '8%'; }
+                        var label = document.getElementById('kb-progress-label');
+                        if (label) { label.textContent = 'Suche läuft …'; }
+                    }
+                    function kbAnimate() {
+                        var bar = document.getElementById('kb-progress-bar');
+                        var steps = [0.2, 0.4, 0.6, 0.8, 0.95];
+                        kbLines.forEach(function (l, i) {
+                            kbTimers.push(setTimeout(function () {
+                                l.style.opacity = 1;
+                                if (bar) { bar.style.width = (steps[i] * 100) + '%'; }
+                            }, 350 * (i + 1)));
+                        });
+                        kbTimers.push(setTimeout(function () {
+                            if (bar) { bar.style.width = '100%'; }
+                            var label = document.getElementById('kb-progress-label');
+                            if (label) { label.textContent = 'Ergebnisse werden geladen …'; }
+                        }, 350 * (kbLines.length + 1)));
+                    }
+                    document.body.addEventListener('htmx:beforeRequest', function (e) {
+                        if (!e.target.closest('form[action="/knowledge"]')) return;
+                        document.getElementById('kb-progress').style.display = 'block';
+                        kbReset();
+                        kbAnimate();
+                    });
+                    document.body.addEventListener('htmx:afterRequest', function (e) {
+                        if (!e.target.closest('form[action="/knowledge"]')) return;
+                        kbTimers.forEach(clearTimeout);
+                        kbTimers = [];
+                        document.getElementById('kb-progress').style.display = 'none';
+                    });
+                })();
+            </script>
+
+            <!-- Results -->
+            <div id="search-results-container">
+                <th:block th:replace="~{knowledge/fragments :: searchResults}"></th:block>
+            </div>
+
+            <!-- Document overview: which documents are in the knowledge base -->
+            <section style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                    <h2 style="font-size: 1rem; font-weight: 600;">Dokumente in der Wissensbasis</h2>
+                    <span style="font-size: 0.8125rem; color: var(--color-text-muted);"
+                          th:text="${#lists.size(kbDocuments)} + ' Dokumente'">0 Dokumente</span>
+                </div>
+
+                <th:block th:if="${kbDocuments != null and !kbDocuments.isEmpty()}">
+                    <div class="data-table-container" style="max-height: 24rem; overflow-y: auto;">
+                        <table class="data-table" role="table">
+                            <thead>
+                            <tr>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'title'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='title', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Dokument
+                                       <span th:if="${kbSort == 'title'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'type'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='type', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Typ
+                                       <span th:if="${kbSort == 'type'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'category'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='category', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Bereich
+                                       <span th:if="${kbSort == 'category'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'status'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='status', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Status
+                                       <span th:if="${kbSort == 'status'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'chunks'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='chunks', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Chunks
+                                       <span th:if="${kbSort == 'chunks'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                                <th th:with="next=${kbDir == 'asc'} ? 'desc' : 'asc'"
+                                    th:classappend="${kbSort == 'createdAt'} ? 'kb-sort-active' : ''">
+                                    <a th:href="@{/knowledge(q=${query}, kbSort='createdAt', kbDir=${next})}"
+                                       style="text-decoration: none; color: inherit;">Erfasst
+                                       <span th:if="${kbSort == 'createdAt'}" th:text="${kbDir == 'asc' ? '↑' : '↓'}"></span>
+                                    </a>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="d : ${kbDocuments}">
+                                <td>
+                                    <a th:href="@{/documents/{id}(id=${d.id()})}" th:text="${d.title()}"
+                                       style="font-weight: 500;">Titel</a>
+                                </td>
+                                <td>
+                                    <span class="badge badge--neutral" th:text="${d.type()}" style="font-size: 0.6875rem;">Typ</span>
+                                </td>
+                                <td th:text="${d.category()}" style="font-size: 0.8125rem;">Bereich</td>
+                                <td>
+                                    <span class="badge" th:classappend="'badge--' + ${d.statusVariant()}"
+                                          th:text="${d.statusLabel()}" style="font-size: 0.6875rem;">Status</span>
+                                </td>
+                                <td th:text="${d.chunkCount()}" style="font-size: 0.8125rem;">0</td>
+                                <td th:text="${d.createdAt()}" style="font-size: 0.8125rem; color: var(--color-text-muted);">Datum</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </th:block>
+
+                <th:block th:unless="${kbDocuments != null and !kbDocuments.isEmpty()}">
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                        Noch keine Dokumente indexiert. Dokumente können unter
+                        <a th:href="@{/documents/upload}" style="color: var(--color-primary);">Dokumente → Hochladen</a>
+                        zur Wissensbasis hinzugefügt werden.
+                    </p>
+                </th:block>
+            </section>
+        </div>
+    </th:block>
+</body>
+</html>

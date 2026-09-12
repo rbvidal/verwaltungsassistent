@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--
+     sidebar — application navigation: left sidebar (brand, navigation,
+     system health, user card). All routes, role gating and the Alpine
+     user-menu behavior are unchanged from the previous top navigation.
+-->
+<th:block th:fragment="sidebar">
+    <aside class="app-sidebar">
+        <!-- Brand -->
+        <div class="sidebar__brand">
+            <a class="sidebar__brand-link" th:href="@{/dashboard}">
+                <img class="sidebar__brand-icon" th:src="@{/brand-icon.png}" alt="Verwaltungsassistent">
+                <div>
+                    <span class="sidebar__brand-name">Verwaltungsassistent</span>
+                    <span class="sidebar__brand-sub">Stadtverwaltung · v<span th:text="${appVersion}">1.0.0-RC2</span></span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="sidebar__nav" sec:authorize="isAuthenticated()">
+            <a class="sidebar__nav-link" th:href="@{/dashboard}"
+               th:classappend="${#strings.startsWith(currentUri, '/dashboard')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">space_dashboard</span>
+                <span class="sidebar__nav-label">Dashboard</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/cases}"
+               th:classappend="${#strings.startsWith(currentUri, '/cases')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">folder_open</span>
+                <span class="sidebar__nav-label">Fälle</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/emails}"
+               th:classappend="${#strings.startsWith(currentUri, '/emails')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">mail</span>
+                <span class="sidebar__nav-label">E-Mails</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/documents}" th:if="${!demoMode}"
+               th:classappend="${#strings.startsWith(currentUri, '/documents')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">description</span>
+                <span class="sidebar__nav-label">Dokumente</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/knowledge}" th:if="${!demoMode}"
+               th:classappend="${#strings.startsWith(currentUri, '/knowledge')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">menu_book</span>
+                <span class="sidebar__nav-label">Wissensbasis</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/assistant}" th:if="${!demoMode}"
+               th:classappend="${#strings.startsWith(currentUri, '/assistant')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">psychology</span>
+                <span class="sidebar__nav-label">Assistent</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/decisions}" th:if="${!demoMode}"
+               sec:authorize="hasAnyRole('USER','ANALYST','AUDITOR','ADMIN')"
+               th:classappend="${#strings.startsWith(currentUri, '/decisions')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">gavel</span>
+                <span class="sidebar__nav-label">Entscheidungen</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/audit}" th:if="${!demoMode}"
+               sec:authorize="hasAnyRole('AUDITOR','ADMIN')"
+               th:classappend="${#strings.startsWith(currentUri, '/audit')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">shield_lock</span>
+                <span class="sidebar__nav-label">Audit</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/geoinformation}" th:if="${!demoMode}"
+               sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')"
+               th:classappend="${#strings.startsWith(currentUri, '/geoinformation')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">map</span>
+                <span class="sidebar__nav-label">Geoinformation</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/corpus}" th:if="${!demoMode}"
+               sec:authorize="hasAnyRole('AUDITOR','ADMIN')"
+               th:classappend="${#strings.startsWith(currentUri, '/corpus')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">explore</span>
+                <span class="sidebar__nav-label">Beispiele</span>
+            </a>
+            <a class="sidebar__nav-link" th:href="@{/admin}" th:if="${!demoMode}"
+               sec:authorize="hasRole('ADMIN')"
+               th:classappend="${#strings.startsWith(currentUri, '/admin')} ? 'active' : ''">
+                <span class="sidebar__nav-icon material-symbols-outlined">settings</span>
+                <span class="sidebar__nav-label">Administration</span>
+            </a>
+        </nav>
+
+        <!-- Footer: system health + user -->
+        <div class="sidebar__footer" sec:authorize="isAuthenticated()">
+            <div class="sidebar__health">
+                <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <span class="status-dot status-dot--green"></span>
+                    Ollama KI-Kern
+                </span>
+                <span class="sidebar__health-model" th:text="${ollamaModel}">qwen2.5:14b</span>
+            </div>
+            <div class="sidebar__user" x-data="{ userMenuOpen: false }">
+                <div class="sidebar__user-main" @click="userMenuOpen = !userMenuOpen"
+                     @click.away="userMenuOpen = false">
+                    <span class="sidebar__user-avatar"
+                          th:text="${#strings.toUpperCase(#strings.substring(#authentication.principal.email, 0, 1))}">M</span>
+                    <div style="min-width: 0;">
+                        <span class="sidebar__user-name" sec:authentication="principal.email">user@example.com</span>
+                        <span style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+                            <span class="sidebar__user-role" th:text="${roleDisplayLabel}">Sachbearbeitung</span>
+                            <span th:if="${supervisory}" class="sidebar__user-chip"
+                                  th:text="${superadmin} ? 'SUPERADMIN' : 'LEITUNG'">LEITUNG</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="sidebar__user-dropdown" x-show="userMenuOpen" x-transition x-cloak>
+                    <a th:href="@{/profile}" th:if="${!demoMode}">Profil</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">Abmelden</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar__footer" sec:authorize="isAnonymous()">
+            <div class="sidebar__anon">
+                <a th:href="@{/login}">Anmelden</a>
+                <a th:href="@{/register}" th:if="${!demoMode}">Registrieren</a>
+            </div>
+        </div>
+    </aside>
+
+</th:block>
+
+<!--
+     topbar — application top bar (view title + global search). Rendered by
+     the layout INSIDE .app-main so it spans the full main column width.
+-->
+<th:block th:fragment="topbar(pageTitle)">
+    <header class="app-topbar" x-data>
+        <div class="topbar__title">
+            <span class="topbar__eyebrow">Kommunaler Verwaltungsassistent</span>
+            <h2 class="topbar__title-text" th:text="${pageTitle} ?: 'Verwaltungsassistent'">Verwaltungsassistent</h2>
+        </div>
+        <div class="topbar__actions">
+            <button type="button" class="topbar-search" id="topbar-search"
+                    title="Globale Suche (Strg+K)">
+                <span class="material-symbols-outlined" style="font-size: 17px;">search</span>
+                <span class="topbar-search__label">Akten, Gesetze &amp; Vorgänge…</span>
+                <kbd class="topbar-search__kbd">Strg K</kbd>
+            </button>
+        </div>
+    </header>
+</th:block>
+
+</html>

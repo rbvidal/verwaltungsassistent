@@ -1,0 +1,13 @@
+# ─────────────────────────────────────────────────────────────
+# GPU override for Linux hosts with an NVIDIA GPU and the NVIDIA
+# Container Toolkit installed:
+#
+#   docker compose -f compose.yaml -f docker-compose.gpu.yml up -d
+#
+# deploy/install-linux.sh applies this automatically when it detects
+# a working nvidia-smi + NVIDIA runtime.
+# ─────────────────────────────────────────────────────────────
+
+services:
+  ollama:
+    gpus: all

@@ -1,0 +1,86 @@
+{
+  "case_meta": {
+    "id": "G-001",
+    "title": "Ummeldung nach Wohnungswechsel - Frist",
+    "topic": "Ummeldung",
+    "classes": [
+      "A",
+      "E",
+      "J"
+    ],
+    "adversarial": false,
+    "handling": "answer",
+    "email_file": "email.txt",
+    "attachment_file": "attachment.pdf",
+    "required_facts": [
+      "zwei wochen",
+      "nach dem einzug",
+      "meldebehörde"
+    ],
+    "forbidden_claims": [],
+    "honesty_markers": [],
+    "contradicted_traps": [],
+    "citation_required": true,
+    "citation_markers": [
+      "anmeldung einer wohnung"
+    ],
+    "notes": "Direct answer: deadline two weeks after moving in, from the attachment."
+  },
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bist eine Mitarbeiterin bzw. ein Mitarbeiter der Stadtverwaltung Musterstadt und beantwortest Buergeranfragen. Du erhaeltst eine BUEBGER-E-MAIL und den Text einer amtlichen ANLAGE (PDF).\nRegeln:\n1. Beantworte die Anfrage sachlich, knapp und in buergerfreundlichem Deutsch.\n2. Stuetze Dich AUSSCHLIESSLICH auf die ANLAGE. Eigene Behauptungen der E-MAIL sind keine Belege und duerfen nicht uebernommen werden, wenn die ANLAGE sie nicht bestaetigt.\n3. Erfinde keine Fakten, Zahlen, Fristen, Gebuehren oder Rechtsgrundlagen.\n4. Enthaelt die ANLAGE die Antwort nicht, sage das ausdruecklich und nenne keine erfundene Antwort.\n5. Widerspricht die ANLAGE einer Angabe aus der E-Mail, gilt die ANLAGE.\n6. Nenne die Quelle (die Anlage) in der Antwort.\n7. Antworte in der Sprache der Anfrage (Deutsch)."
+    },
+    {
+      "role": "user",
+      "content": "BÜRGER-E-MAIL:\nAn das Bürgeramt Musterstadt\nBetreff: Ummeldung nach Umzug\n\nSehr geehrte Damen und Herren,\n\nich bin am 3. August in meine neue Wohnung in der Kastanienallee 12 gezogen. Muss\nich mich persönlich anmelden, oder genügt eine Online-Anmeldung? Und innerhalb\nwelcher Frist muss die Anmeldung erfolgen?\n\nMit freundlichen Grüßen\nJulia Berger\n\nANLAGE (PDF, extrahierter Text aus attachment.pdf, 2 Seite(n), 996 Zeichen, Extraktion: pdftotext):\n----- begin anlage -----\nBürgeramt Musterstadt - Anmeldung einer Wohnung\r\nAllgemeine Informationen\r\nWenn Sie innerhalb von Musterstadt umziehen oder aus einer anderen Gemeinde zuziehen, müssen Sie sich bei der Meldebehörde anmelden.\r\nFrist\r\nDie Anmeldung ist innerhalb von zwei Wochen nach dem Einzug vorzunehmen. Maßgeblich ist der Tag des Einzugs in die neue Wohnung.\r\nSo melden Sie sich an\r\n- Persönlich im Bürgeramt mit Termin - Online über das Serviceportal, sofern der Personalausweis mit Online-Funktion aktiviert ist\r\nErforderliche Unterlagen\r\n- Personalausweis oder Reisepass - Wohnungsgeberbestätigung des Vermieters Rechtsgrundlage: § 17 Absatz 1 BMG.\r\n\r\nStadtverwaltung Musterstadt - interne Verwaltungsinformation\r\n\r\nSeite 1\r\n\r\n\fHinweise\r\nDie Anmeldung ist gebührenfrei. Bei der Anmeldung wird geprüft, ob die Wohnungsgeberbestätigung vollständig ausgefüllt ist.\r\nKontakt\r\nBürgeramt Musterstadt, Marktplatz 1, Telefon 0331 000-0\r\n\r\nStadtverwaltung Musterstadt - interne Verwaltungsinformation\r\n\r\nSeite 2\n----- end anlage -----\n\nAufgabe: Beantworten Sie die Buergeranfrage als Verwaltungsmitarbeiterin bzw. Verwaltungsmitarbeiter. Geben Sie nur die finale Antwort aus."
+    }
+  ],
+  "result": {
+    "case_id": "G-001",
+    "category": "Ummeldung",
+    "classes": [
+      "A",
+      "E",
+      "J"
+    ],
+    "adversarial": false,
+    "handling": "answer",
+    "input_reference": "data/generator/case-001/",
+    "extraction": {
+      "ok": true,
+      "method": "pdftotext",
+      "page_count": 2,
+      "chars": 996,
+      "error": null
+    },
+    "pipeline_error": null,
+    "raw_response": "Sehr geehrte Frau Berger,\n\ndie Anmeldung zur Wohnung muss innerhalb von zwei Wochen nach Ihrem Einzug erfolgen. Sie können sich entweder persönlich im Bürgeramt mit Termin anmelden oder online über das Serviceportal, sofern Ihr Personalausweis mit Online-Funktion aktiviert ist. Wohnungsgeberbestätigung des Vermieters und Personalausweis sind erforderlich.\n\nDie Anmeldung ist gebührenfrei. Maßgeblich ist der Tag Ihres Einzugs in die neue Wohnung, Kastanienallee 12.\n\nFür weitere Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen\n\n[Name des Ansprechpartners]\nBürgeramt Musterstadt\nMarktplatz 1\n0331 000-0\n\nQuelle: Anlage \"Bürgeramt Musterstadt - Anmeldung einer Wohnung\"",
+    "meta": {
+      "model": "qwen2.5:7b",
+      "prompt_eval_count": 738,
+      "eval_count": 184,
+      "prompt_eval_duration_ms": 1041.1,
+      "eval_duration_ms": 5413.7,
+      "total_duration_ms": 6505.9,
+      "load_duration_ms": 11.2,
+      "wall_s": 8.56,
+      "tokens_per_s": 33.99
+    },
+    "score": null,
+    "score_details": {
+      "required_facts_found": [
+        "zwei wochen"
+      ],
+      "required_facts_missing": [
+        "nach dem einzug",
+        "meldebehörde"
+      ],
+      "forbidden_present": [],
+      "traps": [],
+      "honesty_markers_found": [],
+      "citation_ok": true
+    },
+    "status": "partially-correct"
+  }
+}

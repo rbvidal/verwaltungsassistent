@@ -1,0 +1,15 @@
+From: Ines Fuchs <ines.fuchs@example.de>
+To: demo10@verwaltungsassistent.local
+Subject: Wohnmobil parkt seit Wochen im Wohngebiet
+Date: 2026-09-01T12:00:00+02:00
+Message-ID: demo-catalog-19
+
+--- body ab hier ---
+Betreff: Ruhender Verkehr
+
+Sehr geehrte Damen und Herren,
+
+vor unserem Haus parkt seit Wochen ein Wohnmobil. Es versperrt die Sicht und nimmt dauerhaft den Parkplatz ein.
+
+Mit freundlichen Grüßen
+Ines Fuchs

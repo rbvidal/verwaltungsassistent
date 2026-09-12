@@ -1,0 +1,160 @@
+Verwaltungsassistent Ubuntu 22.04 VM Appliance — Build-Report
+=============================================
+Build date: 2026-08-16 (overnight unattended build)
+
+1. WAS GEBAUT WURDE
+-----------------------------------------------------------------
+Ein echtes, bootbares Ubuntu-22.04-VM-Image (QCOW2) mit der
+Verwaltungsassistent-/Verwaltungsassistent-Anwendung als Laufzeit-Appliance:
+
+    verwaltungsassistent-ubuntu-22.04.qcow2        (10.1 GiB belegt, 30 GiB virtuell)
+    verwaltungsassistent-demo-corpus-1.0.0.tar.zst (separates Korpus-Paket, 18 PDFs)
+    SHA256SUMS / image-manifest.txt / README.md / build-vm-image.sh
+    seed/ (cloud-init NoCloud), staging/artifacts/ (Appliance-Dateien)
+
+2. EXAKTES IMAGE-FORMAT
+-----------------------------------------------------------------
+QCOW2 compat 1.1, zlib-komprimiert, virtuelle Größe 30 GiB, ext4-Root.
+Basis: offizielles jammy-server-cloudimg-amd64 (SHA-256 geprüft gegen
+cloud-images.ubuntu.com/SHA256SUMS).
+
+3. EXAKTE UBUNTU-VERSION
+-----------------------------------------------------------------
+Ubuntu 22.04.5 LTS, Kernel 5.15.0-187-generic.
+
+4. ANWENDUNGSVERSION / JAR
+-----------------------------------------------------------------
+verwaltungsassistent-web 1.0.0-RC2 (gebaut aus dem Repository).
+Installiert unter /opt/verwaltungsassistent/releases/1.0.0, aktiv über Symlink
+/opt/verwaltungsassistent/current. Kein Quellcode, kein Maven, keine Tests im Image
+(verifiziert: "no source code" Check grün).
+
+5. RUNTIME-ABHÄNGIGKEITEN
+-----------------------------------------------------------------
+- OpenJDK 21.0.11 (Ubuntu-Paket)
+- Docker Engine 29.1.3 + docker-compose-v2 (Host-Dienst)
+- PostgreSQL 16/pgvector, Qdrant, Neo4j 5-community als Container
+  (Bind-Mounts auf /var/lib/verwaltungsassistent/{postgres,qdrant,neo4j}, Ports nur
+  127.0.0.1)
+- Ollama v0.32.13 (Host-Dienst, Port 127.0.0.1:11434)
+
+6. DATENVERZEICHNIS-STRUKTUR
+-----------------------------------------------------------------
+/opt/verwaltungsassistent/{releases,current,bin}  — Anwendung (ersetzbar)
+/etc/verwaltungsassistent/                       — Konfiguration + Secrets (0640)
+/var/lib/verwaltungsassistent/{corpus,uploads,postgres,qdrant,neo4j,backups} — Daten
+/var/log/verwaltungsassistent/                   — Logs
+Der Datenpfad ist über APP_UPLOAD_DIR (systemd-Unit) konfigurierbar.
+
+7. KORPUS-HANDHABUNG
+-----------------------------------------------------------------
+Das Image enthält 3 repräsentative PDFs (BRKG, AV §55 LHO, BauO Bln),
+die über die ECHTE Ingestion-Pipeline indexiert wurden. Das volle
+Demo-Korpus (18 PDFs) liegt als separates Paket vor; der Import nutzt
+ausschließlich POST /documents/upload der Anwendung (keine direkten
+DB-/Vektor-Schreibzugriffe). Während des Builds wurde das Image nach
+der Anforderung des Auftraggebers von 18 auf 3 PDFs zurückgebaut
+(abgeleitete Stores bereinigt, 3 Dokumente über die Pipeline neu
+indexiert).
+
+8. MODELL-HANDHABUNG
+-----------------------------------------------------------------
+Keine Modellgewichte im Image. qwen2.5:7b + nomic-embed-text wurden
+zum Verifizieren temporär in die VM importiert (aus dem lokalen
+Ollama-Store des Build-Hosts, über die Build-HTTP-Strecke) und sind im
+verteilten Image NICHT enthalten (Ollama-Modelle sind ein separates
+Artefakt; Installationsmechanismus: verwaltungsassistent-model-import.sh).
+
+9. SICHERHEITSKONFIGURATION
+-----------------------------------------------------------------
+Implementiert: eigener nicht-root-User verwaltungsassistent (systemd-Hardening:
+NoNewPrivileges, PrivateTmp, ProtectSystem=strict, ProtectHome,
+ReadWritePaths=/var/lib/verwaltungsassistent,/var/log/verwaltungsassistent); ufw aktiv (nur 22/8081
+eingehend); SSH nur Schlüssel, Root-Login aus, Passwort-Auth aus;
+Secrets beim Build zufällig generiert (0640 root:verwaltungsassistent); Build-SSH-
+Schlüssel vor Auslieferung entfernt (autorized_keys geleert).
+Empfohlen/Nicht implementiert: siehe README.
+
+10. BUILD-METHODE
+-----------------------------------------------------------------
+- QEMU 11.1 (Windows) mit WHPX-Beschleunigung (Fallback TCG).
+- Provisionierung: cloud-init NoCloud über SMBIOS ds=nocloud;s=URL
+  (Seed-ISO + HTTP-Server auf dem Build-Host). SMBIOS-Datasource nur
+  im Provisionierungs-Boot; das ausgelieferte Image bootet ohne Seed.
+- Appliance-Layout in staging/artifacts/provision.sh (idempotent,
+  mehrfach ausführbar).
+- Wichtige Build-Fixes (dokumentiert): voll-alloziertes RAW-Arbeits-
+  Image (sparse-tail read errors), unique instance-id pro Provisioning-
+  Lauf, deterministische Benutzeranlage (cloud-init-users-Modul),
+  Ollama-Binary mit Retry/Resume, Docker-Images als Host-Export
+  (docker load), Neo4j ohne env_file (NEO4J_PASSWORD würde als
+  neo4j.conf-Setting interpretiert → Crash-Loop).
+
+11. BOOT-VERIFIKATION (REAL BOOT TEST)
+-----------------------------------------------------------------
+Boot ohne Seed (ausgelieferter Zustand):
+- QEMU-Befehl: qemu-system-x86_64 -machine q35 -accel whpx -m 12288
+  -smp 8 -drive file=<work.raw>,if=virtio,format=raw -netdev
+  user,id=n1,hostfwd=... -device virtio-net-pci,netdev=n1 -nographic
+- Boot-Ergebnis: Ubuntu 22.04.5 startet bis zum Login, alle Dienste
+  aktiv. (Der erste Build-Boot unter TCG scheiterte zunächst am
+  sparse-tail read des qcow2 — behoben durch voll-alloziertes RAW;
+  siehe Punkt 10.)
+- Shutdown: ACPI poweroff, QEMU-Exit 0.
+
+12. RUNTIME-VERIFIKATION (verify-image.sh im Gast, 29/29 PASS)
+-----------------------------------------------------------------
+- OS/Java/systemd/JAR/Symlink/Datenpfade
+- systemd-Dienste: verwaltungsassistent (User verwaltungsassistent), docker, ollama aktiv+enabled
+- Container: postgres/qdrant/neo4j healthy; Qdrant-REST und Neo4j-Bolt
+  erreichbar; Ollama-Modelle installiert
+- App: Login-Seite 200, Demo-Admin-Authentifizierung
+- Korpus: 3 Dokumente READY (557 Chunks in PostgreSQL, 557 Punkte in
+  Qdrant mda_chunks, Neo4j-Graph aus der Anreicherung)
+- Retrieval: RULE_ENGINE-Trace im Journal (DecisionPackage built);
+  HYBRID_RETRIEVAL-Trace mit 3 Quellen im Journal (22,6 min Laufzeit)
+- Restart-Persistenz: verwaltungsassistent-Neustart, Dokumente bleiben (>= 3)
+- Firewall: ufw aktiv
+
+Einschränkung (dokumentiert): Die Fortschritts-Panels der UI konnten
+die Antworten unter der Emulation nicht beobachten, weil der
+JobProgressService laufende Jobs nach 15 min löscht — die Pipeline
+brauchte auf CPU-only-Hardware länger. Die Pipeline-Vollendung ist
+durch die Journal-Traces belegt. Der TTL-Fehler wird als separater
+Code-Fix (JobProgressService) behoben; auf nativer Hardware tritt das
+Problem nicht auf.
+
+13. UPGRADE-VERIFIKATION (Simulierter JAR-Tausch)
+-----------------------------------------------------------------
+- verwaltungsassistent-upgrade.sh: 1.0.0 → 1.0.1 (gleiches JAR als Test-Release):
+  Checksum ok, Symlink umgeschaltet, Neustart, /login 200.
+- Daten intakt: 19 Uploads, 3 Korpus-PDFs, Datenbanken unverändert.
+- Rollback auf 1.0.0 über Symlink + Neustart: /login 200.
+(Ein echtes zweites JAR existierte nicht — dokumentierter Dry-Run.)
+
+14. BACKUP/RESTORE
+-----------------------------------------------------------------
+verwaltungsassistent-backup.sh sichert PostgreSQL (pg_dump), Qdrant-Snapshot,
+Neo4j-Dump, uploads/, corpus/, /etc/verwaltungsassistent/ nach /var/lib/verwaltungsassistent/backups.
+Nicht aus PDFs rekonstruierbar: Benutzer, Fälle, Audit (PostgreSQL).
+Chunks/Vektoren/Graph sind aus dem Korpus über die Pipeline neu
+aufbaubar. Restore-Prozedur im README.
+
+15. BEKANNTE EINSCHRÄNKUNGEN
+-----------------------------------------------------------------
+- Keine Flyway/Liquibase-Migrationen (hibernate.ddl-auto=update) —
+  dokumentierter Produktions-Vorbehalt.
+- Fortschritts-TTL der UI (siehe Punkt 12) — separater Code-Fix.
+- Boot-Test unter WHPX-Emulation ohne GPU im Gast; auf nativer
+  Hardware läuft die Pipeline um ein Vielfaches schneller.
+- Ollama-Modelle und volles Korpus sind separate Artefakte.
+
+16. ORT JEDER LIEFERUNG
+-----------------------------------------------------------------
+docs/deployer/vm-image/
+  verwaltungsassistent-ubuntu-22.04.qcow2          (10.1 GiB — NICHT in Git)
+  verwaltungsassistent-demo-corpus-1.0.0.tar.zst   (973 KB)
+  SHA256SUMS, image-manifest.txt, README.md, build-report.txt
+  build-vm-image.sh, seed/*, staging/artifacts/*
+
+REAL BOOT TEST: DURCHGEFÜHRT (Details siehe Punkt 11/12).

@@ -1,0 +1,23 @@
+# ────────────────────────────────────────────────────────────
+# demo — manual/demo profile
+# PostgreSQL persistence (datasource inherited from the base
+# application.yml), real Qdrant/Neo4j/Ollama services, demo users.
+# Distinct from `dev` (H2 in-memory) and from the test configuration.
+# ────────────────────────────────────────────────────────────
+
+platform:
+  auth:
+    jwt-secret: demo-jwt-secret-that-is-at-least-32-bytes-long!!
+    issuer: verwaltungsassistent-demo
+
+# Öffentliche Demo: IP-Adress-Logging ist BEWUSST deaktiviert (Datenschutz).
+# Externe Nutzer testen das System, keine autorisierten Beschäftigten.
+# Im Normalbetrieb (application.yml) ist die Funktion aktiviert.
+app:
+  security:
+    client-address-logging:
+      enabled: false
+
+logging:
+  level:
+    verwaltungsassistent.web: INFO

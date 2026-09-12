@@ -1,0 +1,5420 @@
+[
+ {
+  "street": "Adalbertstraße",
+  "houseNumber": "24",
+  "postalCode": "10179",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.505623,
+  "lon": 13.422638
+ },
+ {
+  "street": "Alt-Moabit",
+  "houseNumber": "23A",
+  "postalCode": "10559",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.52469,
+  "lon": 13.350178
+ },
+ {
+  "street": "Anklamer Straße",
+  "houseNumber": "29",
+  "postalCode": "10115",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.536356,
+  "lon": 13.400117
+ },
+ {
+  "street": "Arkonaplatz",
+  "houseNumber": "6",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.537504,
+  "lon": 13.401143
+ },
+ {
+  "street": "Auguststraße",
+  "houseNumber": "71",
+  "postalCode": "10117",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.526773,
+  "lon": 13.394505
+ },
+ {
+  "street": "Bernhard-Weiß-Straße",
+  "houseNumber": "8",
+  "postalCode": "10178",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.523719,
+  "lon": 13.416215
+ },
+ {
+  "street": "Budapester Straße",
+  "houseNumber": "32",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.50599,
+  "lon": 13.34081
+ },
+ {
+  "street": "Chausseestraße",
+  "houseNumber": "32",
+  "postalCode": "10115",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.532762,
+  "lon": 13.381103
+ },
+ {
+  "street": "Dresdener Straße",
+  "houseNumber": "109",
+  "postalCode": "10179",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.505273,
+  "lon": 13.413809
+ },
+ {
+  "street": "Exerzierstraße",
+  "houseNumber": "9",
+  "postalCode": "13357",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.553594,
+  "lon": 13.375448
+ },
+ {
+  "street": "Fehrbelliner Straße",
+  "houseNumber": "38",
+  "postalCode": "10119",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.534955,
+  "lon": 13.400674
+ },
+ {
+  "street": "Flensburger Straße",
+  "houseNumber": "6",
+  "postalCode": "10557",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.520612,
+  "lon": 13.344685
+ },
+ {
+  "street": "Fürstenberger Straße",
+  "houseNumber": "12",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.537444,
+  "lon": 13.404377
+ },
+ {
+  "street": "Gerichtstraße",
+  "houseNumber": "60-61",
+  "postalCode": "13347",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.543894,
+  "lon": 13.370915
+ },
+ {
+  "street": "Granseer Straße",
+  "houseNumber": "3",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.536335,
+  "lon": 13.40161
+ },
+ {
+  "street": "Große Hamburger Straße",
+  "houseNumber": "5-11",
+  "postalCode": "10115",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.526008,
+  "lon": 13.396714
+ },
+ {
+  "street": "Heinrich-Heine-Platz",
+  "houseNumber": "10",
+  "postalCode": "10179",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.506393,
+  "lon": 13.416165
+ },
+ {
+  "street": "Holsteiner Ufer",
+  "houseNumber": "46",
+  "postalCode": "10557",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.520309,
+  "lon": 13.348964
+ },
+ {
+  "street": "Invalidenstraße",
+  "houseNumber": "3",
+  "postalCode": "10115",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.533124,
+  "lon": 13.397201
+ },
+ {
+  "street": "Karl-Heinrich-Ulrichs-Straße",
+  "houseNumber": "20",
+  "postalCode": "10785",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.503255,
+  "lon": 13.353821
+ },
+ {
+  "street": "Keithstraße",
+  "houseNumber": "34",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.505654,
+  "lon": 13.347877
+ },
+ {
+  "street": "Klopstockstraße",
+  "houseNumber": "31",
+  "postalCode": "10557",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.517971,
+  "lon": 13.340934
+ },
+ {
+  "street": "Köpenicker Straße",
+  "houseNumber": "70",
+  "postalCode": "10179",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.510848,
+  "lon": 13.419837
+ },
+ {
+  "street": "Leipziger Straße",
+  "houseNumber": "50",
+  "postalCode": "10117",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.510698,
+  "lon": 13.400859
+ },
+ {
+  "street": "Luxemburger Straße",
+  "houseNumber": "20",
+  "postalCode": "13353",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.543248,
+  "lon": 13.351545
+ },
+ {
+  "street": "Mauerstraße",
+  "houseNumber": "93",
+  "postalCode": "10117",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.508149,
+  "lon": 13.38972
+ },
+ {
+  "street": "Müllerstraße",
+  "houseNumber": "74",
+  "postalCode": "13349",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.558352,
+  "lon": 13.339213
+ },
+ {
+  "street": "Neue Roßstraße",
+  "houseNumber": "2",
+  "postalCode": "10179",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.510927,
+  "lon": 13.410274
+ },
+ {
+  "street": "Oranienburger Straße",
+  "houseNumber": "28-30",
+  "postalCode": "10117",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.524987,
+  "lon": 13.39432
+ },
+ {
+  "street": "Pankstraße",
+  "houseNumber": "9",
+  "postalCode": "13357",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.545431,
+  "lon": 13.371004
+ },
+ {
+  "street": "Rauchstraße",
+  "houseNumber": "25",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.508275,
+  "lon": 13.350158
+ },
+ {
+  "street": "Rheinsberger Straße",
+  "houseNumber": "27",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.538258,
+  "lon": 13.402174
+ },
+ {
+  "street": "Scharnhorststraße",
+  "houseNumber": "34-37",
+  "postalCode": "10115",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.529771,
+  "lon": 13.373322
+ },
+ {
+  "street": "Schönwalder Straße",
+  "houseNumber": "19",
+  "postalCode": "13347",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.541732,
+  "lon": 13.370855
+ },
+ {
+  "street": "Siegmunds Hof",
+  "houseNumber": "17A",
+  "postalCode": "10555",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.515529,
+  "lon": 13.335315
+ },
+ {
+  "street": "Spenerstraße",
+  "houseNumber": "11",
+  "postalCode": "10557",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.521858,
+  "lon": 13.352668
+ },
+ {
+  "street": "Stresemannstraße",
+  "houseNumber": "128",
+  "postalCode": "10117",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.507987,
+  "lon": 13.378526
+ },
+ {
+  "street": "Swinemünder Straße",
+  "houseNumber": "122",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.535973,
+  "lon": 13.40261
+ },
+ {
+  "street": "Swinemünder Straße",
+  "houseNumber": "7",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.536297,
+  "lon": 13.403005
+ },
+ {
+  "street": "Tiergartenstraße",
+  "houseNumber": "33 - 34",
+  "postalCode": "10785",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.509275,
+  "lon": 13.353333
+ },
+ {
+  "street": "Uferstraße",
+  "houseNumber": "5",
+  "postalCode": "13357",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.552904,
+  "lon": 13.37545
+ },
+ {
+  "street": "Veteranenstraße",
+  "houseNumber": "17",
+  "postalCode": "10119",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.533541,
+  "lon": 13.401994
+ },
+ {
+  "street": "Weydemeyerstraße",
+  "houseNumber": "20/21",
+  "postalCode": "10178",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.520169,
+  "lon": 13.427204
+ },
+ {
+  "street": "Wollankstraße",
+  "houseNumber": "46",
+  "postalCode": "13359",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.563031,
+  "lon": 13.388006
+ },
+ {
+  "street": "Wolliner Straße",
+  "houseNumber": "66",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.536327,
+  "lon": 13.403915
+ },
+ {
+  "street": "Zionskirchstraße",
+  "houseNumber": "21",
+  "postalCode": "10119",
+  "city": "Berlin",
+  "district": "Mitte",
+  "lat": 52.535103,
+  "lon": 13.402794
+ },
+ {
+  "street": "Adalbertstraße",
+  "houseNumber": "14",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.50152,
+  "lon": 13.419698
+ },
+ {
+  "street": "Adalbertstraße",
+  "houseNumber": "73",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.504132,
+  "lon": 13.421065
+ },
+ {
+  "street": "Adalbertstraße",
+  "houseNumber": "92",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.50102,
+  "lon": 13.418817
+ },
+ {
+  "street": "Askanischer Platz",
+  "houseNumber": "6",
+  "postalCode": "10963",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.503678,
+  "lon": 13.382522
+ },
+ {
+  "street": "Bahrfeldtstraße",
+  "houseNumber": "13",
+  "postalCode": "10245",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.494263,
+  "lon": 13.472701
+ },
+ {
+  "street": "Colbestraße",
+  "houseNumber": "26",
+  "postalCode": "10247",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.51231,
+  "lon": 13.463285
+ },
+ {
+  "street": "Dudenstraße",
+  "houseNumber": "40-64",
+  "postalCode": "10965",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.486768,
+  "lon": 13.37837
+ },
+ {
+  "street": "Eckertstraße",
+  "houseNumber": "15",
+  "postalCode": "10249",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.519208,
+  "lon": 13.450148
+ },
+ {
+  "street": "Forster Straße",
+  "houseNumber": "21",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.493556,
+  "lon": 13.431305
+ },
+ {
+  "street": "Friesenstraße",
+  "houseNumber": "16",
+  "postalCode": "10965",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.486272,
+  "lon": 13.395334
+ },
+ {
+  "street": "Hausburgstraße",
+  "houseNumber": "11",
+  "postalCode": "10249",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.525817,
+  "lon": 13.453102
+ },
+ {
+  "street": "Jüterboger Straße",
+  "houseNumber": "3",
+  "postalCode": "10965",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.486194,
+  "lon": 13.397794
+ },
+ {
+  "street": "Köpenicker Straße",
+  "houseNumber": "22",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.506901,
+  "lon": 13.43202
+ },
+ {
+  "street": "Legiendamm",
+  "houseNumber": "34",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.503659,
+  "lon": 13.415942
+ },
+ {
+  "street": "Leuschnerdamm",
+  "houseNumber": "41",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502996,
+  "lon": 13.417001
+ },
+ {
+  "street": "Liegnitzer Straße",
+  "houseNumber": "26",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.493064,
+  "lon": 13.434528
+ },
+ {
+  "street": "Luckenwalder Straße",
+  "houseNumber": "1",
+  "postalCode": "10963",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499578,
+  "lon": 13.377017
+ },
+ {
+  "street": "Mariannenplatz",
+  "houseNumber": "4",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502078,
+  "lon": 13.423524
+ },
+ {
+  "street": "Mariannenstraße",
+  "houseNumber": "6",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.500917,
+  "lon": 13.423275
+ },
+ {
+  "street": "Muskauer Straße",
+  "houseNumber": "20a",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.503139,
+  "lon": 13.42837
+ },
+ {
+  "street": "Muskauer Straße",
+  "houseNumber": "40",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502307,
+  "lon": 13.428714
+ },
+ {
+  "street": "Naunynstraße",
+  "houseNumber": "35",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502599,
+  "lon": 13.419425
+ },
+ {
+  "street": "Naunynstraße",
+  "houseNumber": "61",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.501903,
+  "lon": 13.420408
+ },
+ {
+  "street": "Naunynstraße",
+  "houseNumber": "74",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.501203,
+  "lon": 13.423199
+ },
+ {
+  "street": "Ohlauer Straße",
+  "houseNumber": "19",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.496027,
+  "lon": 13.431068
+ },
+ {
+  "street": "Oranienstraße",
+  "houseNumber": "162",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502505,
+  "lon": 13.413942
+ },
+ {
+  "street": "Oranienstraße",
+  "houseNumber": "179",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.500953,
+  "lon": 13.419882
+ },
+ {
+  "street": "Oranienstraße",
+  "houseNumber": "195",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499803,
+  "lon": 13.423016
+ },
+ {
+  "street": "Oranienstraße",
+  "houseNumber": "38",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502054,
+  "lon": 13.417524
+ },
+ {
+  "street": "Oranienstraße",
+  "houseNumber": "9",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.500035,
+  "lon": 13.424385
+ },
+ {
+  "street": "Prinzessinnenstraße",
+  "houseNumber": "19",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502469,
+  "lon": 13.41197
+ },
+ {
+  "street": "Ratiborstraße",
+  "houseNumber": "19",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.493775,
+  "lon": 13.440343
+ },
+ {
+  "street": "Reichenberger Straße",
+  "houseNumber": "73",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.494292,
+  "lon": 13.433793
+ },
+ {
+  "street": "Ritterstraße",
+  "houseNumber": "108",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.501449,
+  "lon": 13.409338
+ },
+ {
+  "street": "Schlesische Straße",
+  "houseNumber": "29-30",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499201,
+  "lon": 13.447619
+ },
+ {
+  "street": "Segitzdamm",
+  "houseNumber": "12",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.500876,
+  "lon": 13.413998
+ },
+ {
+  "street": "Skalitzer Straße",
+  "houseNumber": "138",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499202,
+  "lon": 13.417042
+ },
+ {
+  "street": "Skalitzer Straße",
+  "houseNumber": "55",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499026,
+  "lon": 13.435706
+ },
+ {
+  "street": "Straßmannstraße",
+  "houseNumber": "47",
+  "postalCode": "10249",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.523525,
+  "lon": 13.454307
+ },
+ {
+  "street": "Waldemarstraße",
+  "houseNumber": "23",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.504037,
+  "lon": 13.418282
+ },
+ {
+  "street": "Waldemarstraße",
+  "houseNumber": "38",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.503435,
+  "lon": 13.419391
+ },
+ {
+  "street": "Waldemarstraße",
+  "houseNumber": "70",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502463,
+  "lon": 13.422919
+ },
+ {
+  "street": "Wassertorstraße",
+  "houseNumber": "4",
+  "postalCode": "10969",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.499282,
+  "lon": 13.411263
+ },
+ {
+  "street": "Wiener Straße",
+  "houseNumber": "32",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.496475,
+  "lon": 13.43388
+ },
+ {
+  "street": "Wiener Straße",
+  "houseNumber": "56",
+  "postalCode": "10999",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.493921,
+  "lon": 13.441087
+ },
+ {
+  "street": "Wrangelstraße",
+  "houseNumber": "109",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.502295,
+  "lon": 13.433343
+ },
+ {
+  "street": "Zeughofstraße",
+  "houseNumber": "23",
+  "postalCode": "10997",
+  "city": "Berlin",
+  "district": "Friedrichshain-Kreuzberg",
+  "lat": 52.500169,
+  "lon": 13.43412
+ },
+ {
+  "street": "Achillesstraße",
+  "houseNumber": "31",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.619156,
+  "lon": 13.487316
+ },
+ {
+  "street": "Alt-Buch",
+  "houseNumber": "38",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.63511,
+  "lon": 13.499003
+ },
+ {
+  "street": "Am Sandhaus",
+  "houseNumber": "31",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.636916,
+  "lon": 13.480638
+ },
+ {
+  "street": "Amalienpark",
+  "houseNumber": "8",
+  "postalCode": "13187",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.572456,
+  "lon": 13.413273
+ },
+ {
+  "street": "Behmstraße",
+  "houseNumber": "74",
+  "postalCode": "10439",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.550442,
+  "lon": 13.40199
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "16",
+  "postalCode": "13189",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.565806,
+  "lon": 13.41201
+ },
+ {
+  "street": "Blankenburger Pflasterweg",
+  "houseNumber": "40",
+  "postalCode": "13129",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.587097,
+  "lon": 13.470635
+ },
+ {
+  "street": "Breite Straße",
+  "houseNumber": "3E",
+  "postalCode": "13187",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.572664,
+  "lon": 13.412391
+ },
+ {
+  "street": "Danziger Straße",
+  "houseNumber": "101",
+  "postalCode": "10405",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537507,
+  "lon": 13.430951
+ },
+ {
+  "street": "Eigene Scholle",
+  "houseNumber": "15",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.595815,
+  "lon": 13.381045
+ },
+ {
+  "street": "Eigene Scholle",
+  "houseNumber": "5",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.59444,
+  "lon": 13.383522
+ },
+ {
+  "street": "Ernst-Busch-Straße",
+  "houseNumber": "25",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.629065,
+  "lon": 13.48997
+ },
+ {
+  "street": "Friedrich-Engels-Straße",
+  "houseNumber": "173",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.595067,
+  "lon": 13.379686
+ },
+ {
+  "street": "Gleimstraße",
+  "houseNumber": "49",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.54743,
+  "lon": 13.405819
+ },
+ {
+  "street": "Greifswalder Straße",
+  "houseNumber": "90",
+  "postalCode": "10409",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.543469,
+  "lon": 13.442602
+ },
+ {
+  "street": "Hauptstraße",
+  "houseNumber": "149",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.599537,
+  "lon": 13.378047
+ },
+ {
+  "street": "Hauptstraße",
+  "houseNumber": "169",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.601997,
+  "lon": 13.380209
+ },
+ {
+  "street": "Hobrechtsfelder Chaussee",
+  "houseNumber": "96",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.640183,
+  "lon": 13.47641
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "86",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537558,
+  "lon": 13.409357
+ },
+ {
+  "street": "Kopenhagener Straße",
+  "houseNumber": "13",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.549238,
+  "lon": 13.409283
+ },
+ {
+  "street": "Kopenhagener Straße",
+  "houseNumber": "32",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.548757,
+  "lon": 13.402425
+ },
+ {
+  "street": "Kopenhagener Straße",
+  "houseNumber": "64",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.548782,
+  "lon": 13.408129
+ },
+ {
+  "street": "Liebermannstraße",
+  "houseNumber": "87",
+  "postalCode": "13088",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.560266,
+  "lon": 13.473933
+ },
+ {
+  "street": "Marienburger Straße",
+  "houseNumber": "19",
+  "postalCode": "10405",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.533433,
+  "lon": 13.426699
+ },
+ {
+  "street": "Marienburger Straße",
+  "houseNumber": "30",
+  "postalCode": "10405",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.533707,
+  "lon": 13.428166
+ },
+ {
+  "street": "Pappelallee",
+  "houseNumber": "41a",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.54688,
+  "lon": 13.419815
+ },
+ {
+  "street": "Paul-Robeson-Straße",
+  "houseNumber": "12",
+  "postalCode": "10439",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.55272,
+  "lon": 13.409462
+ },
+ {
+  "street": "Prenzlauer Allee",
+  "houseNumber": "179",
+  "postalCode": "10409",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.544564,
+  "lon": 13.426748
+ },
+ {
+  "street": "Pölnitzweg",
+  "houseNumber": "113",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.644221,
+  "lon": 13.490484
+ },
+ {
+  "street": "Rispenweg",
+  "houseNumber": "1",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.594109,
+  "lon": 13.382547
+ },
+ {
+  "street": "Rispenweg",
+  "houseNumber": "25b",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.59441,
+  "lon": 13.382415
+ },
+ {
+  "street": "Roelckestraße",
+  "houseNumber": "105",
+  "postalCode": "13088",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.565326,
+  "lon": 13.459005
+ },
+ {
+  "street": "Röländer Straße",
+  "houseNumber": "46",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.62395,
+  "lon": 13.484505
+ },
+ {
+  "street": "Schwedter Straße",
+  "houseNumber": "90",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.547933,
+  "lon": 13.40042
+ },
+ {
+  "street": "Schönhauser Allee",
+  "houseNumber": "108",
+  "postalCode": "10439",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.551688,
+  "lon": 13.413418
+ },
+ {
+  "street": "Schönholzer Straße",
+  "houseNumber": "4D",
+  "postalCode": "13187",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.570768,
+  "lon": 13.401038
+ },
+ {
+  "street": "Senefelderstraße",
+  "houseNumber": "5/6",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.540556,
+  "lon": 13.42271
+ },
+ {
+  "street": "Sonnenburger Straße",
+  "houseNumber": "69",
+  "postalCode": "10437",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.548296,
+  "lon": 13.40707
+ },
+ {
+  "street": "Storkower Straße",
+  "houseNumber": "132",
+  "postalCode": "10407",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.533,
+  "lon": 13.453234
+ },
+ {
+  "street": "Torstraße",
+  "houseNumber": "1",
+  "postalCode": "10119",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.527768,
+  "lon": 13.415656
+ },
+ {
+  "street": "Wiesenwinkel",
+  "houseNumber": "11",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.59303,
+  "lon": 13.380062
+ },
+ {
+  "street": "Wiesenwinkel",
+  "houseNumber": "25",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.59381,
+  "lon": 13.378955
+ },
+ {
+  "street": "Wiesenwinkel",
+  "houseNumber": "9",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.593249,
+  "lon": 13.379494
+ },
+ {
+  "street": "Wiltbergstraße",
+  "houseNumber": "48",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.639187,
+  "lon": 13.492288
+ },
+ {
+  "street": "Zepernicker Straße",
+  "houseNumber": "2",
+  "postalCode": "13125",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.638695,
+  "lon": 13.509333
+ },
+ {
+  "street": "Abbestraße",
+  "houseNumber": "2-12",
+  "postalCode": "10587",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.515892,
+  "lon": 13.32083
+ },
+ {
+  "street": "Babelsberger Straße",
+  "houseNumber": "14–16",
+  "postalCode": "10715",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.484252,
+  "lon": 13.334706
+ },
+ {
+  "street": "Bayerische Straße",
+  "houseNumber": "7",
+  "postalCode": "10707",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.497522,
+  "lon": 13.31361
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "145",
+  "postalCode": "10715",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.486265,
+  "lon": 13.325435
+ },
+ {
+  "street": "Berliner Straße",
+  "houseNumber": "54",
+  "postalCode": "10713",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.486777,
+  "lon": 13.316243
+ },
+ {
+  "street": "Bismarckstraße",
+  "houseNumber": "48",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.512203,
+  "lon": 13.303608
+ },
+ {
+  "street": "Bornstedter Straße",
+  "houseNumber": "4",
+  "postalCode": "10711",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.49762,
+  "lon": 13.285808
+ },
+ {
+  "street": "Brandenburgische Straße",
+  "houseNumber": "77",
+  "postalCode": "10713",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.487841,
+  "lon": 13.317797
+ },
+ {
+  "street": "Bundesallee",
+  "houseNumber": "27",
+  "postalCode": "10717",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.491694,
+  "lon": 13.330426
+ },
+ {
+  "street": "Einsteinufer",
+  "houseNumber": "17",
+  "postalCode": "10587",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.515078,
+  "lon": 13.326838
+ },
+ {
+  "street": "Fechnerstraße",
+  "houseNumber": "3",
+  "postalCode": "10717",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.486974,
+  "lon": 13.323533
+ },
+ {
+  "street": "Friedbergstraße",
+  "houseNumber": "11",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.504388,
+  "lon": 13.296852
+ },
+ {
+  "street": "Friedbergstraße",
+  "houseNumber": "45",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.503445,
+  "lon": 13.291837
+ },
+ {
+  "street": "Gasteiner Straße",
+  "houseNumber": "23",
+  "postalCode": "10717",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.487338,
+  "lon": 13.321658
+ },
+ {
+  "street": "Goethestraße",
+  "houseNumber": "26-30",
+  "postalCode": "10625",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.509051,
+  "lon": 13.310563
+ },
+ {
+  "street": "Hardenbergstraße",
+  "houseNumber": "40A",
+  "postalCode": "10623",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.511518,
+  "lon": 13.324317
+ },
+ {
+  "street": "Herschelstraße",
+  "houseNumber": "14",
+  "postalCode": "10589",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.528339,
+  "lon": 13.298949
+ },
+ {
+  "street": "Hubertusallee",
+  "houseNumber": "50",
+  "postalCode": "14193",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.485596,
+  "lon": 13.286937
+ },
+ {
+  "street": "Kaiser-Friedrich-Straße",
+  "houseNumber": "41",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.508931,
+  "lon": 13.301405
+ },
+ {
+  "street": "Kantstraße",
+  "houseNumber": "104",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.50647,
+  "lon": 13.303617
+ },
+ {
+  "street": "Kantstraße",
+  "houseNumber": "37",
+  "postalCode": "10625",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.506491,
+  "lon": 13.314962
+ },
+ {
+  "street": "Kantstraße",
+  "houseNumber": "69",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.506991,
+  "lon": 13.301363
+ },
+ {
+  "street": "Konstanzer Straße",
+  "houseNumber": "29",
+  "postalCode": "10709",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.489613,
+  "lon": 13.307828
+ },
+ {
+  "street": "Kronprinzendamm",
+  "houseNumber": "7",
+  "postalCode": "10711",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.497465,
+  "lon": 13.284868
+ },
+ {
+  "street": "Kurfürstendamm",
+  "houseNumber": "124a",
+  "postalCode": "10711",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.495333,
+  "lon": 13.285422
+ },
+ {
+  "street": "Landhausstraße",
+  "houseNumber": "12",
+  "postalCode": "10717",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.488909,
+  "lon": 13.327951
+ },
+ {
+  "street": "Leonhardtstraße",
+  "houseNumber": "2",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.505052,
+  "lon": 13.298851
+ },
+ {
+  "street": "Ludwig-Barnay-Platz",
+  "houseNumber": "2",
+  "postalCode": "14197",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.468462,
+  "lon": 13.314501
+ },
+ {
+  "street": "Masurenallee",
+  "houseNumber": "6a",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.507315,
+  "lon": 13.27809
+ },
+ {
+  "street": "Mierendorffstraße",
+  "houseNumber": "20-24",
+  "postalCode": "10589",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.523452,
+  "lon": 13.303627
+ },
+ {
+  "street": "Nassauische Straße",
+  "houseNumber": "33",
+  "postalCode": "10717",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.487989,
+  "lon": 13.326229
+ },
+ {
+  "street": "Nürnberger Straße",
+  "houseNumber": "5",
+  "postalCode": "10777",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.498527,
+  "lon": 13.336302
+ },
+ {
+  "street": "Pestalozzistraße",
+  "houseNumber": "34",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.50822,
+  "lon": 13.305046
+ },
+ {
+  "street": "Pestalozzistraße",
+  "houseNumber": "74",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.507745,
+  "lon": 13.30496
+ },
+ {
+  "street": "Reichweindamm",
+  "houseNumber": "8",
+  "postalCode": "13627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.535418,
+  "lon": 13.300574
+ },
+ {
+  "street": "Rönnestraße",
+  "houseNumber": "9",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.50397,
+  "lon": 13.29652
+ },
+ {
+  "street": "Schrammstraße",
+  "houseNumber": "3",
+  "postalCode": "10715",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.482248,
+  "lon": 13.32241
+ },
+ {
+  "street": "Sigmaringer Straße",
+  "houseNumber": "21",
+  "postalCode": "10713",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.490914,
+  "lon": 13.31887
+ },
+ {
+  "street": "Steifensandstraße",
+  "houseNumber": "8",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.508207,
+  "lon": 13.294907
+ },
+ {
+  "street": "Stuttgarter Platz",
+  "houseNumber": "24",
+  "postalCode": "10627",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.504795,
+  "lon": 13.300614
+ },
+ {
+  "street": "Suarezstraße",
+  "houseNumber": "61",
+  "postalCode": "14057",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.509746,
+  "lon": 13.297236
+ },
+ {
+  "street": "Ulmenallee",
+  "houseNumber": "45",
+  "postalCode": "14050",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.518369,
+  "lon": 13.26551
+ },
+ {
+  "street": "Westfälische Straße",
+  "houseNumber": "81",
+  "postalCode": "10709",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.493036,
+  "lon": 13.305355
+ },
+ {
+  "street": "Wilhelmsaue",
+  "houseNumber": "125",
+  "postalCode": "10715",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.485064,
+  "lon": 13.326367
+ },
+ {
+  "street": "Wilhelmsaue",
+  "houseNumber": "38",
+  "postalCode": "10713",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.485432,
+  "lon": 13.316975
+ },
+ {
+  "street": "Xantener Straße",
+  "houseNumber": "21",
+  "postalCode": "10707",
+  "city": "Berlin",
+  "district": "Charlottenburg-Wilmersdorf",
+  "lat": 52.499226,
+  "lon": 13.30901
+ },
+ {
+  "street": "Altstädter Ring",
+  "houseNumber": "1",
+  "postalCode": "13597",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.535349,
+  "lon": 13.199151
+ },
+ {
+  "street": "Am Juliusturm",
+  "houseNumber": "44",
+  "postalCode": "13599",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.538102,
+  "lon": 13.218834
+ },
+ {
+  "street": "Am Omnibushof",
+  "houseNumber": "13",
+  "postalCode": "13593",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.517707,
+  "lon": 13.184076
+ },
+ {
+  "street": "Am Teufelsbruch",
+  "houseNumber": "1",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.57348,
+  "lon": 13.213419
+ },
+ {
+  "street": "An der Spreeschanze",
+  "houseNumber": "6",
+  "postalCode": "13599",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.537892,
+  "lon": 13.212108
+ },
+ {
+  "street": "Baumertweg",
+  "houseNumber": "2",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.516603,
+  "lon": 13.194777
+ },
+ {
+  "street": "Breite Straße",
+  "houseNumber": "18",
+  "postalCode": "13597",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.536434,
+  "lon": 13.205041
+ },
+ {
+  "street": "Breite Straße",
+  "houseNumber": "59",
+  "postalCode": "13597",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.536397,
+  "lon": 13.204353
+ },
+ {
+  "street": "Buolstraße",
+  "houseNumber": "14",
+  "postalCode": "13629",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.545447,
+  "lon": 13.258453
+ },
+ {
+  "street": "Carl-Schurz-Straße",
+  "houseNumber": "41",
+  "postalCode": "13597",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.537825,
+  "lon": 13.203841
+ },
+ {
+  "street": "Charlottenstraße",
+  "houseNumber": "4",
+  "postalCode": "13597",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.536147,
+  "lon": 13.204911
+ },
+ {
+  "street": "Eiswerderstraße",
+  "houseNumber": "18H",
+  "postalCode": "13585",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.549077,
+  "lon": 13.220533
+ },
+ {
+  "street": "Flankenschanze",
+  "houseNumber": "45",
+  "postalCode": "13585",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.540362,
+  "lon": 13.198554
+ },
+ {
+  "street": "Gartenfelder Straße",
+  "houseNumber": "117",
+  "postalCode": "13599",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.541806,
+  "lon": 13.236858
+ },
+ {
+  "street": "Gatower Straße",
+  "houseNumber": "2",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.519804,
+  "lon": 13.186385
+ },
+ {
+  "street": "Graetschelsteig",
+  "houseNumber": "16",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.516785,
+  "lon": 13.188451
+ },
+ {
+  "street": "Heerstraße",
+  "houseNumber": "201",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.511866,
+  "lon": 13.201584
+ },
+ {
+  "street": "Hügelschanze",
+  "houseNumber": "10",
+  "postalCode": "13585",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.548544,
+  "lon": 13.196299
+ },
+ {
+  "street": "Kandeler Weg",
+  "houseNumber": "3",
+  "postalCode": "13583",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.541756,
+  "lon": 13.184668
+ },
+ {
+  "street": "Klosterstraße",
+  "houseNumber": "14",
+  "postalCode": "13581",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.530746,
+  "lon": 13.196078
+ },
+ {
+  "street": "Kuhnertstraße",
+  "houseNumber": "5",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.517082,
+  "lon": 13.196269
+ },
+ {
+  "street": "Maulbeerallee",
+  "houseNumber": "15",
+  "postalCode": "13593",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.523251,
+  "lon": 13.169804
+ },
+ {
+  "street": "Neuendorfer Straße",
+  "houseNumber": "1",
+  "postalCode": "13585",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.54085,
+  "lon": 13.206316
+ },
+ {
+  "street": "Neukladower Allee",
+  "houseNumber": "12",
+  "postalCode": "14089",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.457265,
+  "lon": 13.159453
+ },
+ {
+  "street": "Nonnendamm",
+  "houseNumber": "43",
+  "postalCode": "13627",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.531604,
+  "lon": 13.279286
+ },
+ {
+  "street": "Nonnendamm",
+  "houseNumber": "51",
+  "postalCode": "13627",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.530918,
+  "lon": 13.276533
+ },
+ {
+  "street": "Nonnendammallee",
+  "houseNumber": "15",
+  "postalCode": "13599",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.537512,
+  "lon": 13.23762
+ },
+ {
+  "street": "Obstallee",
+  "houseNumber": "28-30",
+  "postalCode": "13593",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.522047,
+  "lon": 13.164205
+ },
+ {
+  "street": "Pichelsdorfer Straße",
+  "houseNumber": "61",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.519183,
+  "lon": 13.197541
+ },
+ {
+  "street": "Rothenbücherweg",
+  "houseNumber": "21",
+  "postalCode": "14089",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.491736,
+  "lon": 13.18195
+ },
+ {
+  "street": "Salchendorfer Weg",
+  "houseNumber": "1",
+  "postalCode": "13583",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.546069,
+  "lon": 13.177943
+ },
+ {
+  "street": "Schmidt-Knobelsdorf-Straße",
+  "houseNumber": "27",
+  "postalCode": "13581",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.522213,
+  "lon": 13.187865
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/12",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.570172,
+  "lon": 13.197655
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/2",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.568242,
+  "lon": 13.193781
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/26",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.571319,
+  "lon": 13.200349
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/3",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.568448,
+  "lon": 13.195372
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/33",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.573076,
+  "lon": 13.195007
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/43",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.57057,
+  "lon": 13.195621
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/49",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.569728,
+  "lon": 13.195461
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "26/53",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.568412,
+  "lon": 13.192662
+ },
+ {
+  "street": "Schönwalder Allee",
+  "houseNumber": "51",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.567128,
+  "lon": 13.189314
+ },
+ {
+  "street": "Seegefelder Weg",
+  "houseNumber": "466",
+  "postalCode": "13591",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.550121,
+  "lon": 13.128441
+ },
+ {
+  "street": "Siemensdamm",
+  "houseNumber": "63",
+  "postalCode": "13627",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.532104,
+  "lon": 13.279257
+ },
+ {
+  "street": "Stadtrandstraße",
+  "houseNumber": "552",
+  "postalCode": "13589",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.55873,
+  "lon": 13.15967
+ },
+ {
+  "street": "Warägerweg",
+  "houseNumber": "19",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.504858,
+  "lon": 13.183057
+ },
+ {
+  "street": "Weverstraße",
+  "houseNumber": "53",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.519285,
+  "lon": 13.195953
+ },
+ {
+  "street": "Wilhelmstraße",
+  "houseNumber": "28C",
+  "postalCode": "13593",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.519183,
+  "lon": 13.18168
+ },
+ {
+  "street": "Wohlrabedamm",
+  "houseNumber": "22",
+  "postalCode": "13629",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.533003,
+  "lon": 13.272016
+ },
+ {
+  "street": "Wohlrabedamm",
+  "houseNumber": "31",
+  "postalCode": "13629",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.532776,
+  "lon": 13.267972
+ },
+ {
+  "street": "Zum Erlengrund",
+  "houseNumber": "1",
+  "postalCode": "13587",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.573508,
+  "lon": 13.214525
+ },
+ {
+  "street": "Zur Haveldüne",
+  "houseNumber": "19",
+  "postalCode": "13595",
+  "city": "Berlin",
+  "district": "Spandau",
+  "lat": 52.504186,
+  "lon": 13.181995
+ },
+ {
+  "street": "Aarauer Straße",
+  "houseNumber": "10",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.426078,
+  "lon": 13.289934
+ },
+ {
+  "street": "Aarauer Straße",
+  "houseNumber": "35",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.424571,
+  "lon": 13.291464
+ },
+ {
+  "street": "Ahornstraße",
+  "houseNumber": "31",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.460283,
+  "lon": 13.322946
+ },
+ {
+  "street": "An der Obstwiese",
+  "houseNumber": "5",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.42742,
+  "lon": 13.155462
+ },
+ {
+  "street": "Baseler Straße",
+  "houseNumber": "132",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.428726,
+  "lon": 13.294388
+ },
+ {
+  "street": "Baseler Straße",
+  "houseNumber": "179",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.424521,
+  "lon": 13.294636
+ },
+ {
+  "street": "Berner Straße",
+  "houseNumber": "42a",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.428763,
+  "lon": 13.293329
+ },
+ {
+  "street": "Boltzmannstraße",
+  "houseNumber": "22",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.445427,
+  "lon": 13.277064
+ },
+ {
+  "street": "Brümmerstraße",
+  "houseNumber": "74",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.449902,
+  "lon": 13.280026
+ },
+ {
+  "street": "Carstennstraße",
+  "houseNumber": "32a",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.427304,
+  "lon": 13.289814
+ },
+ {
+  "street": "Carstennstraße",
+  "houseNumber": "45",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.424806,
+  "lon": 13.292735
+ },
+ {
+  "street": "Clayallee",
+  "houseNumber": "294",
+  "postalCode": "14169",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.440286,
+  "lon": 13.264416
+ },
+ {
+  "street": "Damsdorfer Weg",
+  "houseNumber": "16",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.41662,
+  "lon": 13.141914
+ },
+ {
+  "street": "Englerallee",
+  "houseNumber": "2",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.465601,
+  "lon": 13.306429
+ },
+ {
+  "street": "Faradayweg",
+  "houseNumber": "12",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.449723,
+  "lon": 13.281648
+ },
+ {
+  "street": "Forststraße",
+  "houseNumber": "16",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.464299,
+  "lon": 13.314646
+ },
+ {
+  "street": "Garystraße",
+  "houseNumber": "5",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.446545,
+  "lon": 13.282608
+ },
+ {
+  "street": "Goerzallee",
+  "houseNumber": "307",
+  "postalCode": "14167",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.41203,
+  "lon": 13.27555
+ },
+ {
+  "street": "Gritznerstraße",
+  "houseNumber": "29",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.464076,
+  "lon": 13.316635
+ },
+ {
+  "street": "Haderslebener Straße",
+  "houseNumber": "10a",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.460412,
+  "lon": 13.305925
+ },
+ {
+  "street": "Hildburghauser Straße",
+  "houseNumber": "250",
+  "postalCode": "12207",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.420447,
+  "lon": 13.314337
+ },
+ {
+  "street": "Holsteinische Straße",
+  "houseNumber": "62",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.461957,
+  "lon": 13.32707
+ },
+ {
+  "street": "Johanna-Spyri-Weg",
+  "houseNumber": "3",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.428595,
+  "lon": 13.295771
+ },
+ {
+  "street": "Kaulbachstraße",
+  "houseNumber": "10A",
+  "postalCode": "12247",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.437153,
+  "lon": 13.331138
+ },
+ {
+  "street": "Kornmesserstraße",
+  "houseNumber": "2",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.430512,
+  "lon": 13.304508
+ },
+ {
+  "street": "Königin-Luise-Straße",
+  "houseNumber": "34",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.457725,
+  "lon": 13.295204
+ },
+ {
+  "street": "Lange Stücken",
+  "houseNumber": "10",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.415644,
+  "lon": 13.143956
+ },
+ {
+  "street": "Lepsiusstraße",
+  "houseNumber": "27",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.46366,
+  "lon": 13.320402
+ },
+ {
+  "street": "Luzerner Straße",
+  "houseNumber": "20",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.424385,
+  "lon": 13.293557
+ },
+ {
+  "street": "Markelstraße",
+  "houseNumber": "56",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.463919,
+  "lon": 13.324445
+ },
+ {
+  "street": "Nikolskoer Weg",
+  "houseNumber": "17",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.424688,
+  "lon": 13.117646
+ },
+ {
+  "street": "Ortlerweg",
+  "houseNumber": "40",
+  "postalCode": "12207",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.422759,
+  "lon": 13.301075
+ },
+ {
+  "street": "Otto-Erich-Straße",
+  "houseNumber": "8",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.416774,
+  "lon": 13.143464
+ },
+ {
+  "street": "Potsdamer Straße",
+  "houseNumber": "52",
+  "postalCode": "14163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.435061,
+  "lon": 13.259016
+ },
+ {
+  "street": "Ringstraße",
+  "houseNumber": "59A",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.435192,
+  "lon": 13.290529
+ },
+ {
+  "street": "Rothenburgstraße",
+  "houseNumber": "37",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.458297,
+  "lon": 13.318621
+ },
+ {
+  "street": "Ruthnerweg",
+  "houseNumber": "31",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.425768,
+  "lon": 13.299595
+ },
+ {
+  "street": "Sachtlebenstraße",
+  "houseNumber": "35A",
+  "postalCode": "14165",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.413058,
+  "lon": 13.252242
+ },
+ {
+  "street": "Schloßstraße",
+  "houseNumber": "1",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.464753,
+  "lon": 13.326368
+ },
+ {
+  "street": "Schulstraße",
+  "houseNumber": "4",
+  "postalCode": "14109",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.41477,
+  "lon": 13.146775
+ },
+ {
+  "street": "Sophie-Taeuber-Arp-Weg",
+  "houseNumber": "35",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.427472,
+  "lon": 13.296961
+ },
+ {
+  "street": "Takustraße",
+  "houseNumber": "9",
+  "postalCode": "14195",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.455978,
+  "lon": 13.297122
+ },
+ {
+  "street": "Thuner Straße",
+  "houseNumber": "16",
+  "postalCode": "12205",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.426095,
+  "lon": 13.296795
+ },
+ {
+  "street": "Wasgensteig",
+  "houseNumber": "5",
+  "postalCode": "14129",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.426191,
+  "lon": 13.215969
+ },
+ {
+  "street": "Wismarer Straße",
+  "houseNumber": "24",
+  "postalCode": "12207",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.420573,
+  "lon": 13.301688
+ },
+ {
+  "street": "Zimmermannstraße",
+  "houseNumber": "20",
+  "postalCode": "12163",
+  "city": "Berlin",
+  "district": "Steglitz-Zehlendorf",
+  "lat": 52.461076,
+  "lon": 13.318644
+ },
+ {
+  "street": "Ahornstraße",
+  "houseNumber": "5",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.50149,
+  "lon": 13.352364
+ },
+ {
+  "street": "Alt-Tempelhof",
+  "houseNumber": "11",
+  "postalCode": "12099",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.465533,
+  "lon": 13.38735
+ },
+ {
+  "street": "Ansbacher Straße",
+  "houseNumber": "15",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.503299,
+  "lon": 13.343033
+ },
+ {
+  "street": "Attilastraße",
+  "houseNumber": "3",
+  "postalCode": "12105",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.455231,
+  "lon": 13.374303
+ },
+ {
+  "street": "Belziger Straße",
+  "houseNumber": "52-58",
+  "postalCode": "10823",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.486323,
+  "lon": 13.348618
+ },
+ {
+  "street": "Buckower Chaussee",
+  "houseNumber": "36-42",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.412892,
+  "lon": 13.387926
+ },
+ {
+  "street": "Columbiadamm",
+  "houseNumber": "13-21",
+  "postalCode": "10965",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.48476,
+  "lon": 13.392508
+ },
+ {
+  "street": "Dickhardtstraße",
+  "houseNumber": "30",
+  "postalCode": "12161",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.466738,
+  "lon": 13.331756
+ },
+ {
+  "street": "Ebersstraße",
+  "houseNumber": "35",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.479299,
+  "lon": 13.348456
+ },
+ {
+  "street": "Ebersstraße",
+  "houseNumber": "55",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.478255,
+  "lon": 13.345575
+ },
+ {
+  "street": "Ebersstraße",
+  "houseNumber": "64",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.478947,
+  "lon": 13.348922
+ },
+ {
+  "street": "Ebersstraße",
+  "houseNumber": "72",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.479611,
+  "lon": 13.351613
+ },
+ {
+  "street": "Eythstraße",
+  "houseNumber": "45",
+  "postalCode": "12105",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.459491,
+  "lon": 13.363492
+ },
+ {
+  "street": "General-Pape-Straße",
+  "houseNumber": "14",
+  "postalCode": "12101",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.476606,
+  "lon": 13.36766
+ },
+ {
+  "street": "Goltzstraße",
+  "houseNumber": "48",
+  "postalCode": "10781",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.4907,
+  "lon": 13.352862
+ },
+ {
+  "street": "Großgörschenstraße",
+  "houseNumber": "28",
+  "postalCode": "10829",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.491372,
+  "lon": 13.367945
+ },
+ {
+  "street": "Hanielweg",
+  "houseNumber": "3-5",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.417429,
+  "lon": 13.365294
+ },
+ {
+  "street": "Hauptstraße",
+  "houseNumber": "42",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.483863,
+  "lon": 13.350863
+ },
+ {
+  "street": "Hohenzollernstraße",
+  "houseNumber": "20a",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.384098,
+  "lon": 13.392927
+ },
+ {
+  "street": "Imbrosweg",
+  "houseNumber": "70F",
+  "postalCode": "12109",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.441941,
+  "lon": 13.411184
+ },
+ {
+  "street": "Keithstraße",
+  "houseNumber": "17",
+  "postalCode": "10787",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.503471,
+  "lon": 13.345379
+ },
+ {
+  "street": "Kirchhainer Damm",
+  "houseNumber": "14A",
+  "postalCode": "12309",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.385724,
+  "lon": 13.410789
+ },
+ {
+  "street": "Klixstraße",
+  "houseNumber": "7",
+  "postalCode": "10823",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.489055,
+  "lon": 13.351487
+ },
+ {
+  "street": "Kärntener Straße",
+  "houseNumber": "17",
+  "postalCode": "10827",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.476844,
+  "lon": 13.348274
+ },
+ {
+  "street": "Lichtenrader Damm",
+  "houseNumber": "179",
+  "postalCode": "12305",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.396757,
+  "lon": 13.407066
+ },
+ {
+  "street": "Lichtenrader Damm",
+  "houseNumber": "220",
+  "postalCode": "12305",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.393063,
+  "lon": 13.406192
+ },
+ {
+  "street": "Malteserstraße",
+  "houseNumber": "179/181",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.414391,
+  "lon": 13.362435
+ },
+ {
+  "street": "Marienfelder Allee",
+  "houseNumber": "107",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.41681,
+  "lon": 13.366731
+ },
+ {
+  "street": "Marienfelder Allee",
+  "houseNumber": "130b",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.41486,
+  "lon": 13.364116
+ },
+ {
+  "street": "Motzener Straße",
+  "houseNumber": "22",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.404384,
+  "lon": 13.380639
+ },
+ {
+  "street": "Motzener Straße",
+  "houseNumber": "32",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.401589,
+  "lon": 13.38093
+ },
+ {
+  "street": "Nackenheimer Weg",
+  "houseNumber": "17",
+  "postalCode": "12099",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.462955,
+  "lon": 13.420339
+ },
+ {
+  "street": "Naumannstraße",
+  "houseNumber": "59",
+  "postalCode": "10829",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.480277,
+  "lon": 13.36396
+ },
+ {
+  "street": "Nürnberger Straße",
+  "houseNumber": "18",
+  "postalCode": "12309",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.385588,
+  "lon": 13.412454
+ },
+ {
+  "street": "Paetschstraße",
+  "houseNumber": "11",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.383558,
+  "lon": 13.391331
+ },
+ {
+  "street": "Paetschstraße",
+  "houseNumber": "18",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.382543,
+  "lon": 13.392151
+ },
+ {
+  "street": "Paetschstraße",
+  "houseNumber": "24",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.383637,
+  "lon": 13.39209
+ },
+ {
+  "street": "Rangsdorfer Straße",
+  "houseNumber": "57",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.383563,
+  "lon": 13.390631
+ },
+ {
+  "street": "Richard-Tauber-Damm",
+  "houseNumber": "10",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.41811,
+  "lon": 13.391244
+ },
+ {
+  "street": "Rohrbachstraße",
+  "houseNumber": "12c",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.383053,
+  "lon": 13.388432
+ },
+ {
+  "street": "Rohrbachstraße",
+  "houseNumber": "18b",
+  "postalCode": "12307",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.383271,
+  "lon": 13.389064
+ },
+ {
+  "street": "Röblingstraße",
+  "houseNumber": "36",
+  "postalCode": "12105",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.456611,
+  "lon": 13.359026
+ },
+ {
+  "street": "Sachsendamm",
+  "houseNumber": "47",
+  "postalCode": "10829",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.469022,
+  "lon": 13.367127
+ },
+ {
+  "street": "Sperenberger Straße",
+  "houseNumber": "11",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.402564,
+  "lon": 13.37606
+ },
+ {
+  "street": "Sperenberger Straße",
+  "houseNumber": "9",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.402067,
+  "lon": 13.375653
+ },
+ {
+  "street": "Säntisstraße",
+  "houseNumber": "49",
+  "postalCode": "12277",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.419167,
+  "lon": 13.390745
+ },
+ {
+  "street": "Tempelhofer Damm",
+  "houseNumber": "24",
+  "postalCode": "12101",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.480892,
+  "lon": 13.384898
+ },
+ {
+  "street": "Werner-Voß-Damm",
+  "houseNumber": "54B",
+  "postalCode": "12101",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.476108,
+  "lon": 13.369922
+ },
+ {
+  "street": "Wilhelm-Kabus-Straße",
+  "houseNumber": "40",
+  "postalCode": "10829",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.481817,
+  "lon": 13.365639
+ },
+ {
+  "street": "Yorckstraße",
+  "houseNumber": "56A",
+  "postalCode": "10965",
+  "city": "Berlin",
+  "district": "Tempelhof-Schöneberg",
+  "lat": 52.492339,
+  "lon": 13.37165
+ },
+ {
+  "street": "Alt-Britz",
+  "houseNumber": "81",
+  "postalCode": "12359",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.446189,
+  "lon": 13.437071
+ },
+ {
+  "street": "Breitunger Weg",
+  "houseNumber": "1",
+  "postalCode": "12349",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.421565,
+  "lon": 13.425243
+ },
+ {
+  "street": "Christoph-Ruden-Straße",
+  "houseNumber": "3",
+  "postalCode": "12349",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.419131,
+  "lon": 13.436236
+ },
+ {
+  "street": "Dammweg",
+  "houseNumber": "228",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.472491,
+  "lon": 13.466706
+ },
+ {
+  "street": "Delbrückstraße",
+  "houseNumber": "56",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.465293,
+  "lon": 13.439311
+ },
+ {
+  "street": "Dröpkeweg",
+  "houseNumber": "1",
+  "postalCode": "12353",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.41941,
+  "lon": 13.448054
+ },
+ {
+  "street": "Flurweg",
+  "houseNumber": "39a",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.431361,
+  "lon": 13.484901
+ },
+ {
+  "street": "Flurweg",
+  "houseNumber": "51",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.430634,
+  "lon": 13.483212
+ },
+ {
+  "street": "Fritz-Erler-Allee",
+  "houseNumber": "120",
+  "postalCode": "12351",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.425554,
+  "lon": 13.469717
+ },
+ {
+  "street": "Glockenblumenweg",
+  "houseNumber": "138",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.428376,
+  "lon": 13.489007
+ },
+ {
+  "street": "Goldlackweg",
+  "houseNumber": "10",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.429613,
+  "lon": 13.483422
+ },
+ {
+  "street": "Goldlackweg",
+  "houseNumber": "6",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.429877,
+  "lon": 13.482901
+ },
+ {
+  "street": "Grenzallee",
+  "houseNumber": "34",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.466353,
+  "lon": 13.456386
+ },
+ {
+  "street": "Grenzallee",
+  "houseNumber": "8",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.46876,
+  "lon": 13.460783
+ },
+ {
+  "street": "Haberstraße",
+  "houseNumber": "3",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.464227,
+  "lon": 13.46542
+ },
+ {
+  "street": "Hasenheide",
+  "houseNumber": "108",
+  "postalCode": "10967",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.486513,
+  "lon": 13.421508
+ },
+ {
+  "street": "Hermannstraße",
+  "houseNumber": "158",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.467308,
+  "lon": 13.43253
+ },
+ {
+  "street": "Hermannstraße",
+  "houseNumber": "191 - 195",
+  "postalCode": "12049",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.4744,
+  "lon": 13.431016
+ },
+ {
+  "street": "Hermannstraße",
+  "houseNumber": "74-75",
+  "postalCode": "12049",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.473654,
+  "lon": 13.427654
+ },
+ {
+  "street": "Kanalstraße",
+  "houseNumber": "8",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.430599,
+  "lon": 13.495435
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "197",
+  "postalCode": "12055",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.472731,
+  "lon": 13.441421
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "231-235",
+  "postalCode": "12055",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.468791,
+  "lon": 13.443666
+ },
+ {
+  "street": "Karl-Marx-Straße",
+  "houseNumber": "92-98",
+  "postalCode": "12043",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.479888,
+  "lon": 13.436006
+ },
+ {
+  "street": "Kranoldstraße",
+  "houseNumber": "17",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.465765,
+  "lon": 13.433958
+ },
+ {
+  "street": "Lahnstraße",
+  "houseNumber": "44",
+  "postalCode": "12055",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.469039,
+  "lon": 13.44919
+ },
+ {
+  "street": "Leinestraße",
+  "houseNumber": "49",
+  "postalCode": "12049",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.47282,
+  "lon": 13.425615
+ },
+ {
+  "street": "Leinestraße",
+  "houseNumber": "52",
+  "postalCode": "12049",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.472907,
+  "lon": 13.426397
+ },
+ {
+  "street": "Lichtenrader Straße",
+  "houseNumber": "6",
+  "postalCode": "12049",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.477849,
+  "lon": 13.419487
+ },
+ {
+  "street": "Lipschitzallee",
+  "houseNumber": "27-32",
+  "postalCode": "12351",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.427501,
+  "lon": 13.470528
+ },
+ {
+  "street": "Mittelbuschweg",
+  "houseNumber": "13",
+  "postalCode": "12055",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.468799,
+  "lon": 13.448371
+ },
+ {
+  "street": "Naumburger Straße",
+  "houseNumber": "33",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.466828,
+  "lon": 13.448451
+ },
+ {
+  "street": "Neuköllnische Allee",
+  "houseNumber": "34",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.468022,
+  "lon": 13.459908
+ },
+ {
+  "street": "Oderstraße",
+  "houseNumber": "18",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.470166,
+  "lon": 13.420804
+ },
+ {
+  "street": "Parchimer Allee",
+  "houseNumber": "84",
+  "postalCode": "12359",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.446009,
+  "lon": 13.447319
+ },
+ {
+  "street": "Parksiedlung Spruch",
+  "houseNumber": "55",
+  "postalCode": "12349",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.421633,
+  "lon": 13.407566
+ },
+ {
+  "street": "Parksiedlung Spruch",
+  "houseNumber": "9",
+  "postalCode": "12349",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.421044,
+  "lon": 13.411938
+ },
+ {
+  "street": "Rollbergstraße",
+  "houseNumber": "65-67",
+  "postalCode": "12053",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.478276,
+  "lon": 13.428147
+ },
+ {
+  "street": "Rungiusstraße",
+  "houseNumber": "18",
+  "postalCode": "12347",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.461733,
+  "lon": 13.440214
+ },
+ {
+  "street": "Schöneweider Straße",
+  "houseNumber": "16",
+  "postalCode": "12055",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.47206,
+  "lon": 13.445125
+ },
+ {
+  "street": "Silbersteinstraße",
+  "houseNumber": "102",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.466035,
+  "lon": 13.427335
+ },
+ {
+  "street": "Silbersteinstraße",
+  "houseNumber": "98",
+  "postalCode": "12051",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.466089,
+  "lon": 13.427798
+ },
+ {
+  "street": "Sonnenallee",
+  "houseNumber": "267-273",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.471423,
+  "lon": 13.463275
+ },
+ {
+  "street": "Späthstraße",
+  "houseNumber": "12",
+  "postalCode": "12359",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.452182,
+  "lon": 13.455004
+ },
+ {
+  "street": "Späthstraße",
+  "houseNumber": "170",
+  "postalCode": "12359",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.452842,
+  "lon": 13.452625
+ },
+ {
+  "street": "Thiemannstraße",
+  "houseNumber": "9-11",
+  "postalCode": "12059",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.478489,
+  "lon": 13.451322
+ },
+ {
+  "street": "Werbellinstraße",
+  "houseNumber": "72",
+  "postalCode": "12053",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.477963,
+  "lon": 13.427764
+ },
+ {
+  "street": "Wildhüterweg",
+  "houseNumber": "5",
+  "postalCode": "12353",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.421104,
+  "lon": 13.457753
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "41a",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.429341,
+  "lon": 13.482403
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "44",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.428702,
+  "lon": 13.482416
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "45a",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.429151,
+  "lon": 13.48319
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "49",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.428702,
+  "lon": 13.483329
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "54",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.428058,
+  "lon": 13.483728
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "57a",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.428274,
+  "lon": 13.484791
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "64a",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.42722,
+  "lon": 13.48542
+ },
+ {
+  "street": "Windenweg",
+  "houseNumber": "70",
+  "postalCode": "12357",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.426887,
+  "lon": 13.48605
+ },
+ {
+  "street": "Zwillingestraße",
+  "houseNumber": "21-19",
+  "postalCode": "12057",
+  "city": "Berlin",
+  "district": "Neukölln",
+  "lat": 52.4677,
+  "lon": 13.464807
+ },
+ {
+  "street": "Adlergestell",
+  "houseNumber": "105",
+  "postalCode": "12439",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.447135,
+  "lon": 13.525203
+ },
+ {
+  "street": "Adlergestell",
+  "houseNumber": "291",
+  "postalCode": "12489",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.431308,
+  "lon": 13.548141
+ },
+ {
+  "street": "Ahornallee",
+  "houseNumber": "31",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.447899,
+  "lon": 13.567562
+ },
+ {
+  "street": "Akeleiweg",
+  "houseNumber": "2",
+  "postalCode": "12487",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.436477,
+  "lon": 13.504061
+ },
+ {
+  "street": "Akeleiweg",
+  "houseNumber": "88",
+  "postalCode": "12487",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.429955,
+  "lon": 13.510969
+ },
+ {
+  "street": "Alt-Treptow",
+  "houseNumber": "15",
+  "postalCode": "12435",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.487522,
+  "lon": 13.477717
+ },
+ {
+  "street": "Am Springeberg",
+  "houseNumber": "1",
+  "postalCode": "15569",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.437555,
+  "lon": 13.759641
+ },
+ {
+  "street": "An der Wuhlheide",
+  "houseNumber": "209",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.46635,
+  "lon": 13.546968
+ },
+ {
+  "street": "Arndtstraße",
+  "houseNumber": "12",
+  "postalCode": "12489",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.437895,
+  "lon": 13.551136
+ },
+ {
+  "street": "Bruno-Taut-Straße",
+  "houseNumber": "4",
+  "postalCode": "12524",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.413455,
+  "lon": 13.570658
+ },
+ {
+  "street": "Buntzelstraße",
+  "houseNumber": "3",
+  "postalCode": "12526",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.410615,
+  "lon": 13.573037
+ },
+ {
+  "street": "Bölschestraße",
+  "houseNumber": "80",
+  "postalCode": "12587",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.455445,
+  "lon": 13.624586
+ },
+ {
+  "street": "Dahmestraße",
+  "houseNumber": "36",
+  "postalCode": "12526",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.401719,
+  "lon": 13.569683
+ },
+ {
+  "street": "Don-Ugoletti-Platz",
+  "houseNumber": "1",
+  "postalCode": "12527",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.418134,
+  "lon": 13.577883
+ },
+ {
+  "street": "Erwin-Bock-Straße",
+  "houseNumber": "9",
+  "postalCode": "12559",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.440111,
+  "lon": 13.595727
+ },
+ {
+  "street": "Friedrichshagener Straße",
+  "houseNumber": "32-36",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.451855,
+  "lon": 13.588911
+ },
+ {
+  "street": "Fürstenwalder Damm",
+  "houseNumber": "388",
+  "postalCode": "12587",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.452453,
+  "lon": 13.614652
+ },
+ {
+  "street": "Glienicker Weg",
+  "houseNumber": "95",
+  "postalCode": "12489",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.435037,
+  "lon": 13.560186
+ },
+ {
+  "street": "Grünauer Straße",
+  "houseNumber": "118",
+  "postalCode": "12557",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.436855,
+  "lon": 13.570471
+ },
+ {
+  "street": "Gustav-Kirchhoff-Straße",
+  "houseNumber": "4",
+  "postalCode": "12489",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.428621,
+  "lon": 13.53386
+ },
+ {
+  "street": "Hoernlestraße",
+  "houseNumber": "80",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.464691,
+  "lon": 13.576681
+ },
+ {
+  "street": "Johannes-Kraaz-Straße",
+  "houseNumber": "9",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.456248,
+  "lon": 13.526653
+ },
+ {
+  "street": "Kiefholzstraße",
+  "houseNumber": "189",
+  "postalCode": "12437",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.464022,
+  "lon": 13.48746
+ },
+ {
+  "street": "Kiefholzstraße",
+  "houseNumber": "386",
+  "postalCode": "12435",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.484406,
+  "lon": 13.461771
+ },
+ {
+  "street": "Köpenicker Landstraße",
+  "houseNumber": "294",
+  "postalCode": "12437",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.465002,
+  "lon": 13.496013
+ },
+ {
+  "street": "Köpenzeile",
+  "houseNumber": "123",
+  "postalCode": "12557",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.42847,
+  "lon": 13.595756
+ },
+ {
+  "street": "Mandrellaplatz",
+  "houseNumber": "6",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.455253,
+  "lon": 13.579326
+ },
+ {
+  "street": "Müggelheimer Damm",
+  "houseNumber": "145",
+  "postalCode": "12559",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.426037,
+  "lon": 13.641048
+ },
+ {
+  "street": "Nalepastraße",
+  "houseNumber": "208",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.465739,
+  "lon": 13.506236
+ },
+ {
+  "street": "Neuhelgoländer Weg",
+  "houseNumber": "1",
+  "postalCode": "12559",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.428827,
+  "lon": 13.682991
+ },
+ {
+  "street": "Odernheimer Straße",
+  "houseNumber": "42",
+  "postalCode": "12559",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.416282,
+  "lon": 13.670775
+ },
+ {
+  "street": "Ottomar-Geschke-Straße",
+  "houseNumber": "81",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.443395,
+  "lon": 13.561818
+ },
+ {
+  "street": "Paul-Tropp-Straße",
+  "houseNumber": "9",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.454357,
+  "lon": 13.529177
+ },
+ {
+  "street": "Radenzer Straße",
+  "houseNumber": "16",
+  "postalCode": "12437",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.462119,
+  "lon": 13.487958
+ },
+ {
+  "street": "Richterstraße",
+  "houseNumber": "6",
+  "postalCode": "12524",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.410139,
+  "lon": 13.571636
+ },
+ {
+  "street": "Rudolf-Rühl-Allee",
+  "houseNumber": "3",
+  "postalCode": "12555",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.471325,
+  "lon": 13.552371
+ },
+ {
+  "street": "Rummelsburger Landstraße",
+  "houseNumber": "92-96",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.473726,
+  "lon": 13.506341
+ },
+ {
+  "street": "Schmöckwitzer Damm",
+  "houseNumber": "1G",
+  "postalCode": "12527",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.36898,
+  "lon": 13.651133
+ },
+ {
+  "street": "Schnellerstraße",
+  "houseNumber": "88",
+  "postalCode": "12439",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.452573,
+  "lon": 13.529856
+ },
+ {
+  "street": "Schützenstraße",
+  "houseNumber": "33",
+  "postalCode": "12526",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.398547,
+  "lon": 13.5412
+ },
+ {
+  "street": "Sportfliegerstraße",
+  "houseNumber": "9",
+  "postalCode": "12487",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.445223,
+  "lon": 13.519571
+ },
+ {
+  "street": "Steinbachstraße",
+  "houseNumber": "2",
+  "postalCode": "12489",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.441651,
+  "lon": 13.539108
+ },
+ {
+  "street": "Straße am Flugplatz",
+  "houseNumber": "35A",
+  "postalCode": "12487",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.430999,
+  "lon": 13.512031
+ },
+ {
+  "street": "Straße zum FEZ",
+  "houseNumber": "6",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.460996,
+  "lon": 13.543531
+ },
+ {
+  "street": "Tabbertstraße",
+  "houseNumber": "14",
+  "postalCode": "12459",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.467954,
+  "lon": 13.503554
+ },
+ {
+  "street": "Waltersdorfer Straße",
+  "houseNumber": "1",
+  "postalCode": "12526",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.404374,
+  "lon": 13.573165
+ },
+ {
+  "street": "Werlseestraße",
+  "houseNumber": "37",
+  "postalCode": "12587",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.453551,
+  "lon": 13.636706
+ },
+ {
+  "street": "Willi-Sänger-Straße",
+  "houseNumber": "1",
+  "postalCode": "12437",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.476827,
+  "lon": 13.484936
+ },
+ {
+  "street": "Zur Uferbahn",
+  "houseNumber": "10",
+  "postalCode": "12527",
+  "city": "Berlin",
+  "district": "Treptow-Köpenick",
+  "lat": 52.410423,
+  "lon": 13.583474
+ },
+ {
+  "street": "Alberichstraße",
+  "houseNumber": "24",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.490573,
+  "lon": 13.556764
+ },
+ {
+  "street": "Allee der Kosmonauten",
+  "houseNumber": "134",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.533218,
+  "lon": 13.550975
+ },
+ {
+  "street": "Allee der Kosmonauten",
+  "houseNumber": "202",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.542276,
+  "lon": 13.564781
+ },
+ {
+  "street": "Allee der Kosmonauten",
+  "houseNumber": "39",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.526051,
+  "lon": 13.532983
+ },
+ {
+  "street": "Alt-Mahlsdorf",
+  "houseNumber": "117",
+  "postalCode": "12623",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.504461,
+  "lon": 13.611053
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "21",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.544213,
+  "lon": 13.557704
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "27",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.544069,
+  "lon": 13.559081
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "32",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543321,
+  "lon": 13.559435
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "45",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543774,
+  "lon": 13.560419
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "51",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543153,
+  "lon": 13.561013
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "56G",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.542154,
+  "lon": 13.561278
+ },
+ {
+  "street": "Alt-Marzahn",
+  "houseNumber": "61",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.542836,
+  "lon": 13.56244
+ },
+ {
+  "street": "Alwineweg",
+  "houseNumber": "26",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.533486,
+  "lon": 13.570497
+ },
+ {
+  "street": "Amanlisweg",
+  "houseNumber": "40",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.537568,
+  "lon": 13.552579
+ },
+ {
+  "street": "Amselhainer Weg",
+  "houseNumber": "5",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543599,
+  "lon": 13.573528
+ },
+ {
+  "street": "Amselhainer Weg",
+  "houseNumber": "8",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543732,
+  "lon": 13.574234
+ },
+ {
+  "street": "Blumberger Damm",
+  "houseNumber": "4",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.52549,
+  "lon": 13.566949
+ },
+ {
+  "street": "Bollersdorfer Weg",
+  "houseNumber": "5",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.54116,
+  "lon": 13.572726
+ },
+ {
+  "street": "Bollersdorfer Weg",
+  "houseNumber": "8",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.541266,
+  "lon": 13.573422
+ },
+ {
+  "street": "Borkheider Straße",
+  "houseNumber": "30",
+  "postalCode": "12689",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.562673,
+  "lon": 13.57428
+ },
+ {
+  "street": "Brodowiner Ring",
+  "houseNumber": "26",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.548655,
+  "lon": 13.579437
+ },
+ {
+  "street": "Brodowiner Ring",
+  "houseNumber": "8",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.550256,
+  "lon": 13.578372
+ },
+ {
+  "street": "Bärensteinstraße",
+  "houseNumber": "1",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543157,
+  "lon": 13.564921
+ },
+ {
+  "street": "Bärensteinstraße",
+  "houseNumber": "44",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.540387,
+  "lon": 13.568638
+ },
+ {
+  "street": "Cecilienstraße",
+  "houseNumber": "81",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.529919,
+  "lon": 13.559758
+ },
+ {
+  "street": "Chemnitzer Straße",
+  "houseNumber": "2 - 6",
+  "postalCode": "12621",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.504568,
+  "lon": 13.580961
+ },
+ {
+  "street": "Dankratweg",
+  "houseNumber": "20",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.490372,
+  "lon": 13.556835
+ },
+ {
+  "street": "Eisenacher Straße",
+  "houseNumber": "125",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.540131,
+  "lon": 13.570332
+ },
+ {
+  "street": "Fritz-Reuter-Straße",
+  "houseNumber": "8/9",
+  "postalCode": "12623",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.510899,
+  "lon": 13.614585
+ },
+ {
+  "street": "Geraer Ring",
+  "houseNumber": "32",
+  "postalCode": "12689",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.567424,
+  "lon": 13.560211
+ },
+ {
+  "street": "Glambecker Ring",
+  "houseNumber": "56",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.55432,
+  "lon": 13.578491
+ },
+ {
+  "street": "Havemannstraße",
+  "houseNumber": "12A",
+  "postalCode": "12689",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.568671,
+  "lon": 13.568448
+ },
+ {
+  "street": "Helene-Weigel-Platz",
+  "houseNumber": "13",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.526659,
+  "lon": 13.540495
+ },
+ {
+  "street": "Hultschiner Damm",
+  "houseNumber": "333",
+  "postalCode": "12623",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.502492,
+  "lon": 13.613929
+ },
+ {
+  "street": "Hönower Straße",
+  "houseNumber": "56",
+  "postalCode": "12623",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.509457,
+  "lon": 13.613876
+ },
+ {
+  "street": "Landsberger Allee",
+  "houseNumber": "378B",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.535815,
+  "lon": 13.52413
+ },
+ {
+  "street": "Luckenwalder Straße",
+  "houseNumber": "45",
+  "postalCode": "12629",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.542878,
+  "lon": 13.588219
+ },
+ {
+  "street": "Marzahner Chaussee",
+  "houseNumber": "189",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.523734,
+  "lon": 13.533063
+ },
+ {
+  "street": "Marzahner Promenade",
+  "houseNumber": "32",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.544284,
+  "lon": 13.549956
+ },
+ {
+  "street": "Marzahner Promenade",
+  "houseNumber": "49",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.545722,
+  "lon": 13.556104
+ },
+ {
+  "street": "Mehrower Allee",
+  "houseNumber": "34",
+  "postalCode": "12687",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.555737,
+  "lon": 13.563212
+ },
+ {
+  "street": "Märkische Allee",
+  "houseNumber": "161",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.532719,
+  "lon": 13.536069
+ },
+ {
+  "street": "Märkische Allee",
+  "houseNumber": "191",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.537606,
+  "lon": 13.53735
+ },
+ {
+  "street": "Märkische Spitze",
+  "houseNumber": "11",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.516243,
+  "lon": 13.541164
+ },
+ {
+  "street": "Neufahrwasserweg",
+  "houseNumber": "8",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.542862,
+  "lon": 13.552465
+ },
+ {
+  "street": "Oberweißbacher Straße",
+  "houseNumber": "7;9",
+  "postalCode": "12687",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.557188,
+  "lon": 13.570365
+ },
+ {
+  "street": "Pritzhagener Weg",
+  "houseNumber": "27",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543556,
+  "lon": 13.572123
+ },
+ {
+  "street": "Pritzhagener Weg",
+  "houseNumber": "3",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.541105,
+  "lon": 13.571309
+ },
+ {
+  "street": "Pritzhagener Weg",
+  "houseNumber": "32",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.543897,
+  "lon": 13.572887
+ },
+ {
+  "street": "Pritzhagener Weg",
+  "houseNumber": "6",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.541231,
+  "lon": 13.572012
+ },
+ {
+  "street": "Prötzeler Ring",
+  "houseNumber": "17",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.544389,
+  "lon": 13.576659
+ },
+ {
+  "street": "Prötzeler Ring",
+  "houseNumber": "3",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.546533,
+  "lon": 13.576407
+ },
+ {
+  "street": "Rhinstraße",
+  "houseNumber": "52",
+  "postalCode": "12681",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.518358,
+  "lon": 13.5201
+ },
+ {
+  "street": "Ringenwalder Straße",
+  "houseNumber": "59",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.550108,
+  "lon": 13.584311
+ },
+ {
+  "street": "Rudolf-Leonhard-Straße",
+  "houseNumber": "15",
+  "postalCode": "12679",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.551693,
+  "lon": 13.570491
+ },
+ {
+  "street": "Schragenfeldstraße",
+  "houseNumber": "18",
+  "postalCode": "12685",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.538639,
+  "lon": 13.562457
+ },
+ {
+  "street": "Waldowstraße",
+  "houseNumber": "39",
+  "postalCode": "12623",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.508762,
+  "lon": 13.610696
+ },
+ {
+  "street": "Wittenberger Straße",
+  "houseNumber": "21",
+  "postalCode": "12689",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.565294,
+  "lon": 13.566872
+ },
+ {
+  "street": "Wuhlestraße",
+  "houseNumber": "18",
+  "postalCode": "12683",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.526944,
+  "lon": 13.569577
+ },
+ {
+  "street": "Wörlitzer Straße",
+  "houseNumber": "41",
+  "postalCode": "12689",
+  "city": "Berlin",
+  "district": "Marzahn-Hellersdorf",
+  "lat": 52.567945,
+  "lon": 13.57116
+ },
+ {
+  "street": "Alfred-Kowalke-Straße",
+  "houseNumber": "1",
+  "postalCode": "10315",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.505302,
+  "lon": 13.514544
+ },
+ {
+  "street": "Alfredstraße",
+  "houseNumber": "6",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.512941,
+  "lon": 13.49011
+ },
+ {
+  "street": "Altenhofer Straße",
+  "houseNumber": "30",
+  "postalCode": "13055",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.534472,
+  "lon": 13.483724
+ },
+ {
+  "street": "Am Berl",
+  "houseNumber": "13-15",
+  "postalCode": "13051",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.574238,
+  "lon": 13.499566
+ },
+ {
+  "street": "Am Tierpark",
+  "houseNumber": "68",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.498333,
+  "lon": 13.521716
+ },
+ {
+  "street": "Bernhard-Bästlein-Straße",
+  "houseNumber": "22",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.529532,
+  "lon": 13.482286
+ },
+ {
+  "street": "Bernhard-Bästlein-Straße",
+  "houseNumber": "56",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.531772,
+  "lon": 13.480675
+ },
+ {
+  "street": "Bundesstraße 2",
+  "houseNumber": "20",
+  "postalCode": "13051",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.589775,
+  "lon": 13.493873
+ },
+ {
+  "street": "Dathepromenade",
+  "houseNumber": "3",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.496239,
+  "lon": 13.516438
+ },
+ {
+  "street": "Dorfstraße",
+  "houseNumber": "22",
+  "postalCode": "13059",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.575283,
+  "lon": 13.519599
+ },
+ {
+  "street": "Erich-Kurz-Straße",
+  "houseNumber": "13",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.497056,
+  "lon": 13.519282
+ },
+ {
+  "street": "Falkenberger Chaussee",
+  "houseNumber": "134 - 136",
+  "postalCode": "13057",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.567794,
+  "lon": 13.525568
+ },
+ {
+  "street": "Frankfurter Allee",
+  "houseNumber": "198",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.510744,
+  "lon": 13.489392
+ },
+ {
+  "street": "Franz-Mett-Straße",
+  "houseNumber": "18",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.504187,
+  "lon": 13.517345
+ },
+ {
+  "street": "Friedhofstraße",
+  "houseNumber": "4",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.546207,
+  "lon": 13.480783
+ },
+ {
+  "street": "Gehrenseestraße",
+  "houseNumber": "99",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.551349,
+  "lon": 13.510773
+ },
+ {
+  "street": "Hagenstraße",
+  "houseNumber": "26",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.517809,
+  "lon": 13.501181
+ },
+ {
+  "street": "Hansastraße",
+  "houseNumber": "5",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.547275,
+  "lon": 13.468903
+ },
+ {
+  "street": "Hauptstraße",
+  "houseNumber": "8",
+  "postalCode": "10317",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.496291,
+  "lon": 13.485797
+ },
+ {
+  "street": "Hohenschönhauser Straße",
+  "houseNumber": "7",
+  "postalCode": "13057",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.558538,
+  "lon": 13.527746
+ },
+ {
+  "street": "Josef-Orlopp-Straße",
+  "houseNumber": "22-24",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.522417,
+  "lon": 13.484206
+ },
+ {
+  "street": "Konrad-Wolf-Straße",
+  "houseNumber": "45",
+  "postalCode": "13055",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.537579,
+  "lon": 13.476886
+ },
+ {
+  "street": "Köpenicker Allee",
+  "houseNumber": "60-62",
+  "postalCode": "10318",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.486221,
+  "lon": 13.53482
+ },
+ {
+  "street": "Landsberger Allee",
+  "houseNumber": "177",
+  "postalCode": "10369",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.532322,
+  "lon": 13.470753
+ },
+ {
+  "street": "Landsberger Allee",
+  "houseNumber": "186",
+  "postalCode": "10369",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.532201,
+  "lon": 13.475217
+ },
+ {
+  "street": "Landsberger Allee",
+  "houseNumber": "230",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.533369,
+  "lon": 13.493113
+ },
+ {
+  "street": "Landsberger Allee",
+  "houseNumber": "270",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.532628,
+  "lon": 13.493777
+ },
+ {
+  "street": "Lückstraße",
+  "houseNumber": "73",
+  "postalCode": "10317",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.502649,
+  "lon": 13.486868
+ },
+ {
+  "street": "Mauritiuskirchstraße",
+  "houseNumber": "3",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.512337,
+  "lon": 13.478103
+ },
+ {
+  "street": "Nöldnerstraße",
+  "houseNumber": "43",
+  "postalCode": "10317",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.501411,
+  "lon": 13.481227
+ },
+ {
+  "street": "Orankestraße",
+  "houseNumber": "56",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.547042,
+  "lon": 13.480125
+ },
+ {
+  "street": "Orankestraße",
+  "houseNumber": "60",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.546538,
+  "lon": 13.482154
+ },
+ {
+  "street": "Otto-Schmirgal-Straße",
+  "houseNumber": "5",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.497248,
+  "lon": 13.520884
+ },
+ {
+  "street": "Prerower Platz",
+  "houseNumber": "1",
+  "postalCode": "13051",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.564378,
+  "lon": 13.50604
+ },
+ {
+  "street": "Rheinpfalzallee",
+  "houseNumber": "82",
+  "postalCode": "10318",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.488451,
+  "lon": 13.53774
+ },
+ {
+  "street": "Rhinstraße",
+  "houseNumber": "2",
+  "postalCode": "10315",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.510639,
+  "lon": 13.51989
+ },
+ {
+  "street": "Roedeliusplatz",
+  "houseNumber": "1",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.514344,
+  "lon": 13.489477
+ },
+ {
+  "street": "Rudolf-Seiffert-Straße",
+  "houseNumber": "37",
+  "postalCode": "10369",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.526426,
+  "lon": 13.471905
+ },
+ {
+  "street": "Ruschestraße",
+  "houseNumber": "45",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.521979,
+  "lon": 13.485129
+ },
+ {
+  "street": "Rüdickenstraße",
+  "houseNumber": "29",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.56031,
+  "lon": 13.509654
+ },
+ {
+  "street": "Saganer Straße",
+  "houseNumber": "3",
+  "postalCode": "10317",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.488788,
+  "lon": 13.504883
+ },
+ {
+  "street": "Seefelder Straße",
+  "houseNumber": "50",
+  "postalCode": "13053",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.549174,
+  "lon": 13.507154
+ },
+ {
+  "street": "Sewanstraße",
+  "houseNumber": "186",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.495463,
+  "lon": 13.51264
+ },
+ {
+  "street": "Sewanstraße",
+  "houseNumber": "260",
+  "postalCode": "10319",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.493542,
+  "lon": 13.518305
+ },
+ {
+  "street": "Siegfriedstraße",
+  "houseNumber": "204",
+  "postalCode": "10365",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.515032,
+  "lon": 13.497351
+ },
+ {
+  "street": "Treskowallee",
+  "houseNumber": "170",
+  "postalCode": "10318",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.477188,
+  "lon": 13.5184
+ },
+ {
+  "street": "Vincent-van-Gogh-Straße",
+  "houseNumber": "18A",
+  "postalCode": "13057",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.564834,
+  "lon": 13.523532
+ },
+ {
+  "street": "Wartiner Straße",
+  "houseNumber": "6",
+  "postalCode": "13057",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.569071,
+  "lon": 13.529729
+ },
+ {
+  "street": "Weißenseer Weg",
+  "houseNumber": "1",
+  "postalCode": "10367",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.527642,
+  "lon": 13.480183
+ },
+ {
+  "street": "Weißenseer Weg",
+  "houseNumber": "32-34",
+  "postalCode": "13055",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.53487,
+  "lon": 13.476383
+ },
+ {
+  "street": "Weißenseer Weg",
+  "houseNumber": "98",
+  "postalCode": "10369",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.5318,
+  "lon": 13.47597
+ },
+ {
+  "street": "Zur Alten Flussbadeanstalt",
+  "houseNumber": "5",
+  "postalCode": "10317",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.491115,
+  "lon": 13.489618
+ },
+ {
+  "street": "Üderseestraße",
+  "houseNumber": "26",
+  "postalCode": "10318",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.480937,
+  "lon": 13.517394
+ },
+ {
+  "street": "Üderseestraße",
+  "houseNumber": "32",
+  "postalCode": "10318",
+  "city": "Berlin",
+  "district": "Lichtenberg",
+  "lat": 52.480511,
+  "lon": 13.516766
+ },
+ {
+  "street": "Adelheidallee",
+  "houseNumber": "19",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.595087,
+  "lon": 13.276302
+ },
+ {
+  "street": "Alt-Tegel",
+  "houseNumber": "17",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.588767,
+  "lon": 13.280533
+ },
+ {
+  "street": "Antonienstraße",
+  "houseNumber": "57",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.570575,
+  "lon": 13.310969
+ },
+ {
+  "street": "Attendorner Weg",
+  "houseNumber": "4",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574171,
+  "lon": 13.281446
+ },
+ {
+  "street": "Berenhorststraße",
+  "houseNumber": "17",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.566352,
+  "lon": 13.323642
+ },
+ {
+  "street": "Berenhorststraße",
+  "houseNumber": "36a",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.567579,
+  "lon": 13.324944
+ },
+ {
+  "street": "Billerbecker Weg",
+  "houseNumber": "116",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574829,
+  "lon": 13.275047
+ },
+ {
+  "street": "Billerbecker Weg",
+  "houseNumber": "38",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574912,
+  "lon": 13.286536
+ },
+ {
+  "street": "Bocholter Weg",
+  "houseNumber": "19",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574302,
+  "lon": 13.270076
+ },
+ {
+  "street": "Breckerfelder Pfad",
+  "houseNumber": "11",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.571913,
+  "lon": 13.275001
+ },
+ {
+  "street": "Brunowstraße",
+  "houseNumber": "57",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.587647,
+  "lon": 13.287099
+ },
+ {
+  "street": "Dülmener Pfad",
+  "houseNumber": "7",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574559,
+  "lon": 13.271763
+ },
+ {
+  "street": "Eisenhartsteig",
+  "houseNumber": "14",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.582997,
+  "lon": 13.322725
+ },
+ {
+  "street": "Feuerweg",
+  "houseNumber": "7",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.584935,
+  "lon": 13.324914
+ },
+ {
+  "street": "Flottenstraße",
+  "houseNumber": "24",
+  "postalCode": "13407",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.578077,
+  "lon": 13.354075
+ },
+ {
+  "street": "Großkopfstraße",
+  "houseNumber": "4",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.565686,
+  "lon": 13.329907
+ },
+ {
+  "street": "Hattinger Weg",
+  "houseNumber": "6",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.573265,
+  "lon": 13.276967
+ },
+ {
+  "street": "Herscheider Weg",
+  "houseNumber": "24",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.5723,
+  "lon": 13.27886
+ },
+ {
+  "street": "Holländerstraße",
+  "houseNumber": "31",
+  "postalCode": "13407",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.562484,
+  "lon": 13.35492
+ },
+ {
+  "street": "Humannstraße",
+  "houseNumber": "44",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.577349,
+  "lon": 13.317509
+ },
+ {
+  "street": "Invalidensiedlung",
+  "houseNumber": "2",
+  "postalCode": "13465",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.660117,
+  "lon": 13.284088
+ },
+ {
+  "street": "Invalidensiedlung",
+  "houseNumber": "49",
+  "postalCode": "13465",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.655827,
+  "lon": 13.285188
+ },
+ {
+  "street": "Kamener Weg",
+  "houseNumber": "37",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.57189,
+  "lon": 13.278175
+ },
+ {
+  "street": "Kreuztaler Weg",
+  "houseNumber": "9",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574003,
+  "lon": 13.287424
+ },
+ {
+  "street": "Letmather Weg",
+  "houseNumber": "8",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.57217,
+  "lon": 13.275637
+ },
+ {
+  "street": "Mescheder Weg",
+  "houseNumber": "27",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.573571,
+  "lon": 13.290139
+ },
+ {
+  "street": "Mescheder Weg",
+  "houseNumber": "7",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574787,
+  "lon": 13.291657
+ },
+ {
+  "street": "Montanstraße",
+  "houseNumber": "18",
+  "postalCode": "13407",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.58157,
+  "lon": 13.353659
+ },
+ {
+  "street": "Nordhellesteig",
+  "houseNumber": "31",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.571776,
+  "lon": 13.280388
+ },
+ {
+  "street": "Nordlichtstraße",
+  "houseNumber": "48,50",
+  "postalCode": "13405",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.564819,
+  "lon": 13.320126
+ },
+ {
+  "street": "Ollenhauerstraße",
+  "houseNumber": "20",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.567422,
+  "lon": 13.3296
+ },
+ {
+  "street": "Pannwitzstraße",
+  "houseNumber": "27",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.57917,
+  "lon": 13.319534
+ },
+ {
+  "street": "Pannwitzstraße",
+  "houseNumber": "65",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.582306,
+  "lon": 13.322477
+ },
+ {
+  "street": "Plettenberger Pfad",
+  "houseNumber": "23",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.57252,
+  "lon": 13.281365
+ },
+ {
+  "street": "Polsumer Pfad",
+  "houseNumber": "3",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.573578,
+  "lon": 13.270225
+ },
+ {
+  "street": "Residenzstraße",
+  "houseNumber": "58",
+  "postalCode": "13409",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.562166,
+  "lon": 13.366232
+ },
+ {
+  "street": "Rue du Capitaine Jean Maridor",
+  "houseNumber": "15",
+  "postalCode": "13405",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.56687,
+  "lon": 13.304882
+ },
+ {
+  "street": "Scharnweberstraße",
+  "houseNumber": "82",
+  "postalCode": "13405",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.567726,
+  "lon": 13.311301
+ },
+ {
+  "street": "Sendener Weg",
+  "houseNumber": "21",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.573181,
+  "lon": 13.271985
+ },
+ {
+  "street": "Seppenrader Weg",
+  "houseNumber": "8",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.573163,
+  "lon": 13.270316
+ },
+ {
+  "street": "Sterkrader Straße",
+  "houseNumber": "28",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.574416,
+  "lon": 13.285864
+ },
+ {
+  "street": "Waidmannsluster Damm",
+  "houseNumber": "1",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.594417,
+  "lon": 13.282086
+ },
+ {
+  "street": "Werdohler Weg",
+  "houseNumber": "16",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.570987,
+  "lon": 13.281171
+ },
+ {
+  "street": "Westiger Pfad",
+  "houseNumber": "3",
+  "postalCode": "13507",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.572434,
+  "lon": 13.277017
+ },
+ {
+  "street": "Windhalmweg",
+  "houseNumber": "6",
+  "postalCode": "13403",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.579626,
+  "lon": 13.319038
+ },
+ {
+  "street": "Wittestraße",
+  "houseNumber": "8",
+  "postalCode": "13509",
+  "city": "Berlin",
+  "district": "Reinickendorf",
+  "lat": 52.577067,
+  "lon": 13.312542
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "59",
+  "postalCode": "13158",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.5914,
+  "lon": 13.375988
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "85",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.53739,
+  "lon": 13.409247
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "82",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537008,
+  "lon": 13.408532
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "84",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537285,
+  "lon": 13.409219
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "89",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537871,
+  "lon": 13.409746
+ },
+ {
+  "street": "Kastanienallee",
+  "houseNumber": "90",
+  "postalCode": "10435",
+  "city": "Berlin",
+  "district": "Pankow",
+  "lat": 52.537985,
+  "lon": 13.409861
+ }
+]

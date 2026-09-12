@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'documents', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Dokumente</h1>
+                    <a th:href="@{/documents/upload}" class="btn btn--primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>Dokument hochladen
+                    </a>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="cases-toolbar" style="margin-bottom: 1rem;">
+                <form th:action="@{/documents}" method="get"
+                      hx-get="/documents" hx-target="#document-table-container" hx-trigger="submit"
+                      style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <div class="search-box" style="flex: 1; min-width: 250px;">
+                        <input type="text" name="q" class="search-box__input"
+                               th:value="${searchQuery}" placeholder="Dokumente durchsuchen...">
+                    </div>
+                    <select name="status" class="form-field__input" style="max-width: 200px;"
+                            hx-get="/documents" hx-target="#document-table-container" hx-trigger="change">
+                        <option value="">Alle Status</option>
+                        <option value="READY" th:selected="${statusFilter == 'READY'}">Bereit</option>
+                        <option value="INGESTION_PENDING" th:selected="${statusFilter == 'INGESTION_PENDING'}">Ausstehend</option>
+                        <option value="INGESTING" th:selected="${statusFilter == 'INGESTING'}">Wird indexiert</option>
+                        <option value="FAILED" th:selected="${statusFilter == 'FAILED'}">Fehlgeschlagen</option>
+                        <option value="DRAFT" th:selected="${statusFilter == 'DRAFT'}">Entwurf</option>
+                    </select>
+                </form>
+            </div>
+
+            <!-- Index purge (Phase 2D.12: SUPERADMIN only — destruktive Wartung) -->
+            <div sec:authorize="hasRole('SUPERADMIN')" style="margin-bottom: 1rem; text-align: right;">
+                <button class="btn" type="button"
+                        style="font-size: 0.8125rem; background: var(--color-error-100); color: var(--color-error-700); border: 1px solid var(--color-error-700);"
+                        data-modal="purge-indices-modal"
+                        @click="Alpine.$data(document.getElementById('purge-indices-modal')).open = true">
+                    Indizes vollständig leeren
+                </button>
+                <div class="modal-overlay" id="purge-indices-modal"
+                     x-data="{ open: false }" x-show="open" x-trap.noscroll="open"
+                     @keydown.escape.window="open = false" @click.self="open = false"
+                     role="dialog" aria-modal="true" x-cloak>
+                    <div class="modal-dialog modal-dialog--confirm">
+                        <div class="modal__header">
+                            <h2 class="modal__title">Indizes vollständig leeren</h2>
+                            <button class="modal__close" @click="open = false" aria-label="Schließen">&times;</button>
+                        </div>
+                        <div class="modal__body">
+                            <p class="modal__message">
+                                Diese administrative Operation entfernt alle indexierten Wissensbestände:
+                                Textabschnitte (PostgreSQL), Vektoren (Qdrant) und den Wissensgraph (Neo4j).
+                            </p>
+                            <p class="modal__message" style="margin-top: 0.5rem;">
+                                Die hochgeladenen PDF-Dateien bleiben vollständig erhalten und können
+                                anschließend erneut indexiert werden. Suche und Assistent stehen bis zur
+                                erneuten Indexierung nur eingeschränkt zur Verfügung.
+                            </p>
+                        </div>
+                        <div class="modal__actions">
+                            <button class="btn modal__btn-cancel" @click="open = false">Abbrechen</button>
+                            <form th:action="@{/admin/indices/purge}" method="post" style="display: inline;">
+                                <button type="submit" class="btn modal__btn-confirm"
+                                        style="background: var(--color-error-600, #b91c1c);">
+                                    Endgültig leeren
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Table -->
+            <th:block th:replace="~{documents/fragments :: documentTableContainer}"></th:block>
+        </div>
+    </th:block>
+</body>
+</html>

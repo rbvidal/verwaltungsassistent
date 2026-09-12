@@ -1,0 +1,15 @@
+From: Birgit Lorenz <birgit.lorenz@example.de>
+To: demo11@verwaltungsassistent.local
+Subject: Baulärm am Wochenende – Baustelle läuft
+Date: 2026-09-01T04:00:00+02:00
+Message-ID: demo-catalog-21
+
+--- body ab hier ---
+Betreff: Baulärm
+
+Sehr geehrte Damen und Herren,
+
+auf der Baustelle in der Hauptstraße wird auch sonntags gearbeitet. Ist das mit der Baugenehmigung vereinbar?
+
+Mit freundlichen Grüßen
+Birgit Lorenz

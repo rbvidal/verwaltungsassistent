@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="answer">
+    <!-- Answered result -->
+    <div th:if="${answered}" x-data="{ sourcesOpen: false }"
+         th:attr="data-question=${question}">
+        <div th:if="${terminalMessage != null}" class="progress-terminal"
+             style="margin-bottom: 0.75rem; padding: 0.5rem 0.75rem;">
+            <span style="color: #9aa5b1;">&gt;</span>
+            <span th:text="${terminalMessage}"></span>
+        </div>
+
+        <div class="decision-package__recommendation"
+             th:text="${answerText}"
+             style="white-space: pre-line; font-size: 0.9375rem; line-height: 1.6;">Antwort</div>
+
+        <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <button type="button" th:if="${grounded and citations != null and !citations.isEmpty()}"
+                    class="badge badge--success badge--clickable"
+                    @click="sourcesOpen = true">
+                <span class="material-symbols-outlined" aria-hidden="true">check</span> Durch Quellen belegt · Quellen anzeigen
+            </button>
+            <span th:unless="${grounded and citations != null and !citations.isEmpty()}"
+                  class="badge badge--warning"><span class="material-symbols-outlined" aria-hidden="true">warning</span> Eingeschränkte Quellenlage</span>
+            <span class="badge badge--neutral" th:text="${strategy}">STRATEGIE</span>
+            <span th:if="${confidencePct != null}" class="badge badge--neutral"
+                  th:text="'Konfidenz ' + ${confidencePct} + '%'">0%</span>
+        </div>
+
+        <!-- PDF-Export der fertigen Antwort: exportiert die beantwortete Frage
+             mit Quellenlage und Belegen — kein zweiter KI-Lauf. -->
+        <div th:if="${answered and progressJobId != null}" style="margin-top: 0.75rem;">
+            <a th:href="@{/assistant/answer/export-pdf(job=${progressJobId})}"
+               class="btn" target="_blank" rel="noopener noreferrer">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem; vertical-align: middle;">picture_as_pdf</span>
+                Antwort als PDF erstellen
+            </a>
+        </div>
+
+        <section th:if="${(authorities != null and !authorities.isEmpty()) or (citations != null and !citations.isEmpty())}"
+                 style="margin-top: 1.25rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.5rem;">
+                <button type="button" th:if="${citations != null and !citations.isEmpty()}"
+                        @click="sourcesOpen = true"
+                        style="background: none; border: none; padding: 0; color: inherit; cursor: pointer; font: inherit;">
+                    Rechtliche Grundlagen
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem; vertical-align: middle;">open_in_new</span>
+                </button>
+                <span th:unless="${citations != null and !citations.isEmpty()}">Rechtliche Grundlagen</span>
+            </h3>
+            <p th:if="${citations != null and !citations.isEmpty()}" style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                Klicken Sie auf „Rechtliche Grundlagen“, um die belegten Quellen dieser Antwort anzusehen
+                (Dokument, Fundstelle, hervorgehobene Textstelle).
+            </p>
+            <ul th:if="${authorities != null and !authorities.isEmpty()}"
+                style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                <li th:each="a : ${authorities}" class="decision-package__authority-item"
+                    style="font-size: 0.8125rem;">
+                    <!-- Strukturierte-Wissen-Quelle mit hinterlegtem Dokument:
+                         Titel wird klickbar (neuer Tab, Dokument im Viewer).
+                         Ohne Dokument bleibt der Titel reiner Text. -->
+                    <a th:if="${authorityDocIds != null and authorityDocIds.containsKey(a.entryTitle())}"
+                       th:attr="href=|/documents/${authorityDocIds[a.entryTitle()]}|"
+                       target="_blank" rel="noopener noreferrer"
+                       style="color: var(--color-primary, #1a56db);"
+                       th:text="${a.entryTitle() != null ? a.entryTitle() : a.referenceId()}">Quelle</a>
+                    <strong th:unless="${authorityDocIds == null or !authorityDocIds.containsKey(a.entryTitle())}"
+                            th:text="${a.entryTitle() != null ? a.entryTitle() : a.referenceId()}">Quelle</strong>
+                    <span class="badge badge--success" style="font-size: 0.6875rem;"
+                          th:text="${a.tier() != null ? a.tier().name() : 'Primär'}">PRIMÄR</span>
+                    <p th:if="${a.excerpt() != null and a.excerpt() != ''}"
+                       th:text="${a.excerpt()}" style="color: var(--color-text-muted);"></p>
+                </li>
+            </ul>
+        </section>
+
+        <section th:if="${citations != null and !citations.isEmpty()}" style="margin-top: 1.25rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.5rem;">Belege</h3>
+            <!-- Dokument-orientiert: EIN Eintrag pro Dokument; der Titel öffnet
+                 den Dokument-Viewer mit den relevanten Stellen hervorgehoben. -->
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem;">
+                <li th:each="c, iter : ${citations}"
+                    style="font-size: 0.8125rem; border-left: 3px solid var(--color-primary); padding-left: 0.75rem;">
+                    <span x-data="{ viewerOpen: false }">
+                        <button type="button" @click="viewerOpen = true"
+                                th:attr="hx-get=@{/documents/{id}/view(id=${c.documentId()}, q=${question}, chunks=${#strings.listJoin(c.chunkIds(), ',')})},
+                                         hx-target=|#srcv-${iter.index}-body|, hx-swap=innerHTML"
+                                hx-trigger="click once"
+                                style="font-weight: 600; background: none; border: none; padding: 0; color: inherit; cursor: pointer; font: inherit; text-align: left;">
+                            <span th:text="${c.title()}">Quelle</span>
+                        </button>
+                        <span th:if="${c.pageNumber() != null and c.pageNumber() > 0}"
+                              th:text="', S. ' + ${c.pageNumber()}" style="font-size: 0.75rem; color: var(--color-text-muted);"></span>
+                        <span th:if="${c.chunkCount() > 1}" class="badge badge--neutral"
+                              th:text="${c.chunkCount()} + ' Abschnitte'" style="font-size: 0.625rem;"></span>
+                        <th:block th:replace="~{fragments/components :: documentViewerModal(
+                            id=|srcv-${iter.index}|,
+                            docUrl=@{/documents/{id}/view(id=${c.documentId()}, q=${question}, chunks=${#strings.listJoin(c.chunkIds(), ',')})})}">
+                        </th:block>
+                    </span>
+                    <p th:if="${c.excerpt() != null}" th:text="${c.excerpt()}"
+                       style="color: var(--color-text-muted); margin-top: 0.25rem;"></p>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Gemeinsamer Quellen-Dialog mit Hervorhebung der Frage-Begriffe -->
+        <th:block th:replace="~{fragments/components :: sourcesDialog(${citations}, ${question})}"></th:block>
+    </div>
+
+    <!-- Error state -->
+    <div th:if="${!answered and askError != null}" class="message message--error" role="alert"
+         th:text="${askError}" style="margin-bottom: 1rem;"></div>
+
+    <!-- Initial state -->
+    <div th:if="${!answered and askError == null}" class="empty-state" role="status" aria-live="polite">
+        <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">chat</div>
+        <h3 class="empty-state__title">Stellen Sie eine Frage</h3>
+        <p class="empty-state__desc">Der Assistent beantwortet Fragen zu Reisekosten, Vergabeverfahren,
+            Besoldung und weiteren Themen der Kommunalverwaltung — belegt mit den Dokumenten der
+            Wissensbasis oder mit dem ausdrücklichen Hinweis, dass keine ausreichenden Quellen vorliegen.</p>
+    </div>
+</th:block>
+
+<th:block th:fragment="progressPanel">
+    <div th:if="${progressExpired != null}" class="message message--info" role="status"
+         th:text="${progressExpired}"></div>
+
+    <div th:if="${progressError != null}" class="message message--error" role="alert"
+         th:text="${progressError}"></div>
+
+    <!-- KI-Kapazität wieder frei? Grüner Hinweis statt Automatik-Retry:
+         nur bei Kapazitäts-Ablehnung aktiv, kein Wiedereinreichen. -->
+    <th:block th:if="${aiCapacityRejected}"
+              th:replace="~{fragments/components :: aiCapacityRecoveryWatch}"></th:block>
+
+    <!-- EIN gemeinsames Fortschritts-Muster (identisch zu Entscheidungs- und
+         E-Mail-Analyse): Pipeline-Knoten + Status-Panel + Polling kommen aus
+         fragments/progress — keine zweite, konkurrierende Assistanten-eigene
+         Darstellung. Der Abschluss ersetzt den .progress-block durch die
+         Antwort (Poll-Endpunkt), danach endet das Polling von selbst. -->
+    <th:block th:unless="${progressError != null or progressExpired != null}"
+              th:replace="~{fragments/progress :: progressPanel(
+                  title='Anfrage wird analysiert …',
+                  messages=${progressMessages},
+                  pollUrl=${'/assistant/progress/' + progressJobId},
+                  hint='Die Bearbeitung kann einen Moment dauern. Das System sucht Informationen, prüft ihre Eignung und gleicht die Antwort mit den verfügbaren Informationen ab.',
+                  emptyMessage='Die Anfrage wird entgegengenommen …',
+                  error=${null},
+                  nodes=${progressNodes})}">
+    </th:block>
+</th:block>
+
+</html>

@@ -1,0 +1,13 @@
+From: Erika Müller <erika.mueller@example.de>
+To: info@verwaltungs-demo.de
+Subject: Wohngeldantrag – welche Unterlagen fehlen?
+Date: 2026-08-03T09:00:00+02:00
+Message-ID: demo-seed:fallmüllerwohngeld@verwaltungsassistent.local
+
+--- body ab hier ---
+Sehr geehrte Damen und Herren,
+
+Wohngeldantrag von Erika Müller – Unterlagen unvollständig, Prüfung offen.
+
+Mit freundlichen Grüßen
+Erika Müller

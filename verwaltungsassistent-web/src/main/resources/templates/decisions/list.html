@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Entscheidungen</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Prüfen Sie die Entscheidungen Ihrer Fälle. Jede Entscheidung wird über das
+                    Regelsystem oder die Wissensbasis ermittelt und unabhängig verifiziert —
+                    der Prüfstatus (durch Quellen belegt / eingeschränkte Quellenlage) wird im
+                    Entscheidungsbereich des jeweiligen Falls angezeigt.
+                </p>
+            </div>
+
+            <div th:if="${rows == null or rows.isEmpty()}" class="empty-state" role="status" aria-live="polite">
+                <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">assignment</div>
+                <h3 class="empty-state__title">Keine Entscheidungen vorhanden</h3>
+                <p class="empty-state__desc">Legen Sie einen Fall an und starten Sie die Analyse im
+                    Entscheidungsbereich des Falls.</p>
+            </div>
+
+            <div th:unless="${rows == null or rows.isEmpty()}" style="display: flex; flex-direction: column; gap: 1rem;">
+                <a th:each="r : ${rows}" th:href="@{/cases/{id}/decision(id=${r.id()})}" class="decision-list__item">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <span style="font-weight: 600; font-size: 0.9375rem; color: var(--color-text);"
+                                  th:text="${r.name()}">Fall</span>
+                            <span th:text="' (' + ${r.code()} + ')'"
+                                  style="font-size: 0.75rem; color: var(--color-text-muted);"></span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span class="badge badge--neutral" th:text="${r.phaseLabel()}" style="font-size: 0.6875rem;">Phase</span>
+                            <span class="btn btn--primary" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Entscheidung öffnen</span>
+                        </div>
+                    </div>
+                    <p th:text="${r.description()}"
+                       style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.35rem;"></p>
+                    <div style="display: flex; gap: 1rem; font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+                        <span th:text="${r.documentCount()} + ' Dokumente'">0 Dokumente</span>
+                        <span th:text="'Aktualisiert ' + ${r.updatedAt()}">—</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,15 @@
+From: Heike Brandt <heike.brandt@example.de>
+To: demo08@verwaltungsassistent.local
+Subject: Wasserrohrbruch – feuchter Keller
+Date: 2026-09-02T04:00:00+02:00
+Message-ID: demo-catalog-15
+
+--- body ab hier ---
+Betreff: Wasserrohrbruch
+
+Sehr geehrte Damen und Herren,
+
+in der Breiten Straße tritt Wasser aus dem Gehweg, unser Keller ist feucht. Bitte prüfen Sie die Wasserleitung.
+
+Mit freundlichen Grüßen
+Heike Brandt

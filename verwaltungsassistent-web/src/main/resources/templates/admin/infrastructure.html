@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Administration</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <span th:text="${adminTitle}"></span> — Status aus echten Verbindungsprüfungen,
+                    keine pauschal grünen Anzeigen. Keine Zugangsdaten werden angezeigt.
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+
+            <!-- Systemressourcen: live metrics + VRAM history graph -->
+            <section class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.35rem;">Systemressourcen</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                    Live-Werte der Maschine, auf der diese Anwendung laeuft. GPU/VRAM nur, wenn nvidia-smi verfuegbar ist.
+                </p>
+
+                <div id="resource-metrics" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div class="admin-card-grid">
+                        <div class="infra-metric">
+                            <div class="infra-metric__label">CPU-Auslastung</div>
+                            <div id="metric-cpu" style="font-size: 1.25rem; font-weight: 700;">—</div>
+                        </div>
+                        <div class="infra-metric">
+                            <div class="infra-metric__label">Arbeitsspeicher (RAM)</div>
+                            <div id="metric-ram" style="font-size: 1.25rem; font-weight: 700;">—</div>
+                        </div>
+                        <div class="infra-metric">
+                            <div class="infra-metric__label">GPU-Auslastung</div>
+                            <div id="metric-gpu" style="font-size: 1.25rem; font-weight: 700;">—</div>
+                            <!-- Separater Echtzeit-Verlauf (letzte ~40 s) direkt in der Karte -->
+                            <svg id="gpu-live-graph" viewBox="0 0 200 36" style="width: 100%; height: 36px; display: block; margin-top: 0.4rem;"
+                                 role="img" aria-label="GPU-Auslastung Echtzeitverlauf"></svg>
+                        </div>
+                        <div class="infra-metric">
+                            <div class="infra-metric__label">VRAM</div>
+                            <div id="metric-vram" style="font-size: 1.25rem; font-weight: 700;">—</div>
+                        </div>
+                    </div>
+
+                    <div class="infra-metric">
+                        <div class="infra-metric__label" style="margin-bottom: 0.35rem;">
+                            GPU-Auslastungs-Verlauf (letzte ~30 Minuten)
+                        </div>
+                        <svg id="gpu-graph" viewBox="0 0 560 90" style="width: 100%; height: 90px; display: block;"
+                             role="img" aria-label="GPU-Auslastungs-Verlaufsdiagramm"></svg>
+                        <div id="gpu-graph-empty" style="font-size: 0.75rem; color: var(--color-text-muted);">
+                            Noch keine GPU-Daten erfasst — der Verlauf fuellt sich mit den Abfragen.
+                        </div>
+                    </div>
+
+                    <div class="infra-metric">
+                        <div class="infra-metric__label" style="margin-bottom: 0.35rem;">
+                            VRAM-Verlauf (letzte ~30 Minuten)
+                        </div>
+                        <svg id="vram-graph" viewBox="0 0 560 90" style="width: 100%; height: 90px; display: block;"
+                             role="img" aria-label="VRAM-Verlaufsdiagramm"></svg>
+                        <div id="vram-graph-empty" style="font-size: 0.75rem; color: var(--color-text-muted);">
+                            Noch keine VRAM-Daten erfasst — der Verlauf fuellt sich mit den Abfragen.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.75rem;">Diensteverfügbarkeit</h2>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div th:each="s : ${services}" class="admin-row">
+                        <div>
+                            <div style="font-weight: 600;" th:text="${s.name()}">—</div>
+                            <div style="font-size: 0.75rem; color: var(--color-text-muted);">
+                                <!-- Durchklick-Links nur wo rollenmäßig erlaubt
+                                     (Phase 2D.13): Qdrant-Dashboard nur für
+                                     SUPERADMIN; sonst erscheint der Endpunkt als
+                                     reine Status-Information ohne Link. -->
+                                <a th:if="${s.linkable() and s.endpoint().startsWith('http')}"
+                                   th:href="${s.endpoint()}" target="_blank" rel="noopener noreferrer"
+                                   style="color: inherit; text-decoration: underline;"
+                                   th:text="${s.endpoint()}">—</a>
+                                <span th:unless="${s.linkable() and s.endpoint().startsWith('http')}" th:text="${s.endpoint()}">—</span>
+                            </div>
+                        </div>
+                        <span th:if="${s.ready()}" class="badge badge--success"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check_circle</span> Bereit</span>
+                        <span th:unless="${s.ready()}" class="badge badge--warning"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">error</span> Nicht erreichbar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-package__section">
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Die Prüfungen laufen serverseitig gegen die lokalen Dienste (PostgreSQL über die
+                    Datenquelle, Qdrant/Neo4j/Ollama über HTTP). Es werden keine Passwörter, Token oder
+                    andere Zugangsdaten angezeigt oder übertragen.
+                </p>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                function fmtMb(mb) { return Math.round(mb) + ' MB'; }
+                function pct(v) { return (v != null) ? v.toLocaleString('de-DE') + ' %' : null; }
+
+                function drawHistory(svgId, emptyId, history, valueFn, color, labelFn) {
+                    var svg = document.getElementById(svgId);
+                    var empty = document.getElementById(emptyId);
+                    if (!svg) return;
+                    // A single measurement is already drawn (a dot) — the chart
+                    // must not wait for 30 minutes of accumulated history.
+                    if (!history || history.length < 1) {
+                        svg.innerHTML = '';
+                        if (empty) empty.style.display = '';
+                        return;
+                    }
+                    if (empty) empty.style.display = 'none';
+                    var w = 560, h = 90, pad = 6;
+                    var max = Math.max.apply(null, history.map(valueFn)) * 1.1 || 1;
+                    var minT = history[0].timestampMs, maxT = history[history.length - 1].timestampMs;
+                    var spanT = Math.max(1, maxT - minT);
+                    var pts = history.map(function (p) {
+                        var x = pad + (p.timestampMs - minT) / spanT * (w - 2 * pad);
+                        var y = h - pad - (valueFn(p) / max) * (h - 2 * pad);
+                        return x.toFixed(1) + ',' + y.toFixed(1);
+                    });
+                    var last = history[history.length - 1];
+                    var labelX = pad + (last.timestampMs - minT) / spanT * (w - 2 * pad);
+                    var labelY = h - pad - (valueFn(last) / max) * (h - 2 * pad);
+                    var polyline = pts.length >= 2
+                        ? '<polyline fill="none" stroke="' + color + '" stroke-width="1.5" points="' + pts.join(' ') + '"/>'
+                        : '';
+                    svg.innerHTML =
+                        polyline +
+                        '<circle cx="' + labelX.toFixed(1) + '" cy="' + labelY.toFixed(1) + '" r="2.5" fill="' + color + '"/>' +
+                        '<text x="' + labelX.toFixed(1) + '" y="' + Math.max(10, labelY - 5).toFixed(1) +
+                        '" font-size="8" fill="#718096">' + labelFn(last) + '</text>';
+                }
+
+                // ── Live-GPU-Verlauf (separat vom 30-Minuten-Chart) ──
+                // Kleine clientseitige Rolling-Puffer der letzten ~40 Messwerte
+                // (1 s Abtastung über den bestehenden Metrics-Endpunkt).
+                var liveGpu = [];
+                var MAX_LIVE = 40;
+
+                function drawLiveGpu(values) {
+                    var svg = document.getElementById('gpu-live-graph');
+                    if (!svg) return;
+                    if (!values || values.length < 1) {
+                        svg.innerHTML = '';
+                        return;
+                    }
+                    var w = 200, h = 36, pad = 2;
+                    var max = 100; // GPU-Auslastung ist eine Prozentangabe 0-100
+                    var n = values.length;
+                    var pts = values.map(function (v, i) {
+                        var x = pad + (i / Math.max(1, MAX_LIVE - 1)) * (w - 2 * pad);
+                        var y = h - pad - (Math.min(100, Math.max(0, v)) / max) * (h - 2 * pad);
+                        return x.toFixed(1) + ',' + y.toFixed(1);
+                    });
+                    var lastY = h - pad - (Math.min(100, Math.max(0, values[n - 1])) / max) * (h - 2 * pad);
+                    var polyline = pts.length >= 2
+                        ? '<polyline fill="none" stroke="#dd6b20" stroke-width="1.5" points="' + pts.join(' ') + '"/>'
+                        : '';
+                    svg.innerHTML = polyline +
+                        '<circle cx="' + pts[pts.length - 1].split(',')[0] + '" cy="' + lastY.toFixed(1) +
+                        '" r="1.8" fill="#dd6b20"/>';
+                }
+
+                async function liveRefresh() {
+                    try {
+                        var r = await fetch('/admin/infrastructure/metrics');
+                        if (!r.ok) return;
+                        var m = await r.json();
+                        if (m.gpuUtilization != null) {
+                            liveGpu.push(m.gpuUtilization);
+                            if (liveGpu.length > MAX_LIVE) liveGpu.shift();
+                            var gpu = document.getElementById('metric-gpu');
+                            if (gpu) gpu.textContent = pct(m.gpuUtilization);
+                            drawLiveGpu(liveGpu);
+                        }
+                    } catch (e) { /* keep previous values */ }
+                }
+                liveRefresh();
+                setInterval(liveRefresh, 1000);
+
+                async function refresh() {
+                    try {
+                        var r = await fetch('/admin/infrastructure/metrics');
+                        if (!r.ok) return;
+                        var m = await r.json();
+                        var cpu = document.getElementById('metric-cpu');
+                        var ram = document.getElementById('metric-ram');
+                        var gpu = document.getElementById('metric-gpu');
+                        var vram = document.getElementById('metric-vram');
+                        if (cpu) cpu.textContent = m.cpuPercent != null ? pct(m.cpuPercent) : 'Nicht verfügbar';
+                        if (ram) ram.textContent = m.ramTotalMb != null
+                            ? Math.round(m.ramUsedMb) + ' / ' + Math.round(m.ramTotalMb) + ' MB'
+                            : 'Nicht verfügbar';
+                        if (gpu) gpu.textContent = m.gpuUtilization != null ? pct(m.gpuUtilization) : 'Nicht verfügbar';
+                        if (vram) vram.textContent = m.vramUsedMb != null
+                            ? fmtMb(m.vramUsedMb) + ' / ' + fmtMb(m.vramTotalMb)
+                            : 'Nicht verfügbar';
+                        drawHistory('gpu-graph', 'gpu-graph-empty', m.gpuHistory,
+                            function (p) { return p.utilizationPercent; }, '#3182ce',
+                            function (p) { return Math.round(p.utilizationPercent) + ' %'; });
+                        drawHistory('vram-graph', 'vram-graph-empty', m.vramHistory,
+                            function (p) { return p.vramUsedMb; }, '#dd6b20',
+                            function (p) { return Math.round(p.vramUsedMb) + ' MB'; });
+                    } catch (e) { /* keep previous values */ }
+                }
+                refresh();
+                setInterval(refresh, 30000);
+            })();
+        </script>
+    </th:block>
+</body>
+</html>

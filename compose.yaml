@@ -1,0 +1,212 @@
+# ─────────────────────────────────────────────────────────────
+# Verwaltungsassistent — self-contained installation stack
+#
+#   docker compose up -d --build     start everything (first run builds the app image)
+#   docker compose logs -f app       follow the application log
+#   docker compose down              stop (data stays in the named volumes)
+#
+# Services: PostgreSQL (pgvector), Qdrant, Neo4j, Ollama (with automatic
+# model download) and the application itself. The app starts with the
+# deterministic demo seed; the fully prepared demo data set (corpus,
+# e-mails, vector index, graph) is loaded with the restore script:
+#
+#   Linux:    deploy/restore-demo-data.sh
+#   Windows:  deploy\restore-demo-data.bat
+#
+# Configuration: copy .env.example to .env and adjust (the install
+# scripts create it automatically).
+#
+# NOTE: docker-compose.yml / docker-compose-prod.yml are the legacy local
+# DEVELOPMENT stack (app built and run on the host with Maven, host
+# Ollama). They are not used for installations.
+# ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── PostgreSQL 16 with pgvector ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: va-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-verwaltungsassistent}
+      POSTGRES_USER: ${POSTGRES_USER:-verwaltungsassistent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-verwaltungsassistent}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Loopback only — for psql/backup tooling on the host, never public.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-verwaltungsassistent} -d ${POSTGRES_DB:-verwaltungsassistent}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # ── Qdrant — pinned to 1.15.5: the bundled demo snapshot was produced by
+  #    a 1.15.5 instance and 1.18+ can no longer read that storage format ──
+  qdrant:
+    image: qdrant/qdrant:v1.15.5
+    container_name: va-qdrant
+    restart: unless-stopped
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    ports:
+      # Loopback only — the restore script uses the snapshot API.
+      - "127.0.0.1:${QDRANT_PORT:-6333}:6333"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/6333; printf \"GET /readyz HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; grep -q 200 <&3'"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 15s
+
+  # ── Neo4j 5.26 community (matches the bundled graph dump) ──
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: va-neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-password}
+    volumes:
+      - neo4j_data:/data
+    ports:
+      # Loopback only — Neo4j Browser on http://localhost:7474 for debugging.
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
+    healthcheck:
+      test: ["CMD-SHELL", "neo4j status >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+
+  # ── Ollama — runs only with the "local-ai" compose profile, which the
+  #    .env enables by default. To use an Ollama on the host instead:
+  #    set COMPOSE_PROFILES= (empty) and OLLAMA_BASE_URL=http://host.docker.internal:11434 ──
+  ollama:
+    image: ollama/ollama:0.34.0
+    container_name: va-ollama
+    profiles: ["local-ai"]
+    restart: unless-stopped
+    environment:
+      OLLAMA_KEEP_ALIVE: ${OLLAMA_KEEP_ALIVE:-30m}
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  # ── One-shot: download the configured models into the Ollama volume ──
+  ollama-models:
+    image: ollama/ollama:0.34.0
+    container_name: va-ollama-models
+    profiles: ["local-ai"]
+    restart: "no"
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command: >-
+      ollama pull ${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text} &&
+      ollama pull ${OLLAMA_CHAT_MODEL:-qwen2.5:14b} &&
+      ollama pull ${OLLAMA_VERIFIER_MODEL:-qwen2.5:14b}
+
+  # ── Application ──
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${APP_IMAGE:-verwaltungsassistent:latest}
+    container_name: va-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8081}:8081"
+    environment:
+      # Spring
+      SPRING_PROFILES_ACTIVE: demo
+      SERVER_PORT: "8081"
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError"
+      # PostgreSQL
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-verwaltungsassistent}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-verwaltungsassistent}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-verwaltungsassistent}
+      # Auth
+      JWT_SECRET: ${JWT_SECRET:-demo-jwt-secret-that-is-at-least-32-bytes-long!!}
+      # Qdrant
+      QDRANT_ENABLED: "true"
+      QDRANT_HOST: qdrant
+      QDRANT_REST_PORT: "6333"
+      QDRANT_BASE_URL: http://qdrant:6333
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-mda_chunks}
+      # Neo4j
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USERNAME: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-password}
+      NEO4J_IMAGE: neo4j:5.26-community
+      # Ollama / AI
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434}
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen2.5:14b}
+      OLLAMA_VERIFIER_MODEL: ${OLLAMA_VERIFIER_MODEL:-qwen2.5:14b}
+      OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
+      # Storage (named volumes below)
+      VA_UPLOAD_DIR: /app/uploads
+      DATA_BACKUP_DIR: /app/backups
+      # Admin "Datensicherung/Datenwiederherstellung" — container names of
+      # this stack, reached through the mounted Docker socket.
+      POSTGRES_CONTAINER: va-postgres
+      NEO4J_CONTAINER: va-neo4j
+      QDRANT_CONTAINER: va-qdrant
+      # Demo behaviour: true = deterministic in-process demo seed at every
+      # start; the restore script switches this to false so the restored
+      # state is preserved.
+      DEMO_STARTUP_RESET: ${DEMO_STARTUP_RESET:-true}
+      DEMO_DATASET_ROOT: /data/demo
+      LIVE_DEMO_ENABLED: ${LIVE_DEMO_ENABLED:-false}
+      INACTIVITY_TIMEOUT_MINUTES: ${INACTIVITY_TIMEOUT_MINUTES:-6}
+    group_add:
+      # Linux: GID of the docker group so the non-root app user may use the
+      # mounted socket (install-linux.sh writes it into .env).
+      - "${DOCKER_GID:-0}"
+    volumes:
+      - uploads:/app/uploads
+      - backups:/app/backups
+      # Admin backup/restore UI drives the host Docker daemon.
+      # Tradeoff: this gives the container host-level Docker access —
+      # acceptable for the demo/pilot appliance, remove for hard isolation.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Optional: filesystem demo dataset for the from-scratch import
+      # (DEMO_PREPARE_ENABLED=true). Read-only, unused by default.
+      - ./deploy/demo-dataset:/data/demo:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  postgres_data:
+    name: va_postgres_data
+  qdrant_storage:
+    name: va_qdrant_storage
+  neo4j_data:
+    name: va_neo4j_data
+  uploads:
+    name: va_uploads
+  backups:
+    name: va_backups
+  ollama_models:
+    name: va_ollama_models

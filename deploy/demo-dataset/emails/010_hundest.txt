@@ -1,0 +1,15 @@
+From: Petra Braun <petra.braun@example.de>
+To: info@verwaltungs-demo.de
+Subject: Hundesteuer – Anmeldung eines Hundes
+Date: 2026-09-02T22:00:00+02:00
+Message-ID: demo-catalog-10
+
+--- body ab hier ---
+Betreff: Hundesteuer
+
+Guten Tag,
+
+wir haben einen Hund aus dem Tierheim aufgenommen. Wie melde ich die Hundehaltung an und wo bekomme ich die Steuermarke?
+
+Mit freundlichen Grüßen
+Petra Braun, Teltow

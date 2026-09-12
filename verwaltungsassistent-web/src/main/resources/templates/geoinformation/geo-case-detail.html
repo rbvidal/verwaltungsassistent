@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title" th:text="${caseName}">Geovorgang</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Geovorgang <strong th:text="${caseCode}">GV-…</strong> — Außendienstaufnahme, Standort und
+                    deterministisch bestimmte Zuständigkeit.
+                </p>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.75rem; border-bottom: 2px solid var(--color-border, #ddd); padding-bottom: 0.5rem;">
+                    <a th:href="@{/geoinformation/geo-cases}" class="btn btn--sm" style="font-size: 0.75rem; margin-right: 0.5rem;">
+                        ← Zurück zur Übersicht
+                    </a>
+                    <a th:href="@{/geoinformation/map}" class="btn"
+                       style="font-size: 0.8125rem;">Stadtkarte</a>
+                    <a th:href="@{/geoinformation/photos}" class="btn"
+                       style="font-size: 0.8125rem;">Geotagged Fotos</a>
+                    <a th:href="@{/geoinformation/geo-cases}" class="btn btn--primary"
+                       style="font-size: 0.8125rem;">Geovorgänge</a>
+                    <a th:href="@{/cases/{id}/settings(id=${caseId})}" class="btn"
+                       style="font-size: 0.8125rem; margin-left: auto;">Vorgang bearbeiten</a>
+                </div>
+            </div>
+
+            <!-- Zuständigkeit — prominent, deterministisch bestimmt -->
+            <div style="border: 1px solid var(--color-primary, #1a56db); border-left: 5px solid var(--color-primary, #1a56db); border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <h2 style="font-size: 0.8125rem; font-weight: 600; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-text-muted);">
+                            Zuständige Behörde
+                        </h2>
+                        <p style="font-size: 1.05rem; font-weight: 600; margin: 0;" th:text="${geoAuthority}">—</p>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.25rem 0 0;"
+                           th:text="'Zuständigkeitsgebiet: ' + ${geoDistrict}">—</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+
+                <!-- Standort + Metadaten -->
+                <div class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Standort &amp; Metadaten</h2>
+                    <p style="font-size: 0.875rem; margin: 0 0 0.5rem;" th:text="${caseDescription}">Beschreibung</p>
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.75rem;"
+                       th:text="'Status: ' + ${caseStatus} + ' · Zuständig: ' + (${caseOwnerName != null ? caseOwnerName : caseOwner})"></p>
+
+                    <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Adresse</h3>
+                        <p style="font-size: 0.875rem; margin: 0;" th:text="${geoAddress}">Adresse</p>
+                    </div>
+
+                    <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Koordinaten</h3>
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; font-size: 0.8125rem;">
+                            <span id="geo-lat-cell" th:text="'Latitude: ' + ${geoLatitude}">—</span>
+                            <button type="button" class="btn btn--sm" onclick="copyText('geo-lat-cell')">📋</button>
+                            <span id="geo-lon-cell" th:text="'Longitude: ' + ${geoLongitude}">—</span>
+                            <button type="button" class="btn btn--sm" onclick="copyText('geo-lon-cell')">📋</button>
+                        </div>
+                    </div>
+
+                    <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Vorgangsdaten</h3>
+                        <p style="font-size: 0.8125rem; margin: 0 0 0.2rem;" th:text="'Vorgangsnummer: ' + ${caseCode}">—</p>
+                        <!-- Statusänderungen sind operative Arbeit der zuständigen
+                             Sachbearbeitung; die Leitung sieht nur lesend. Ein
+                             Archivieren (Entfernen aus dem GEO-Bestand) gibt es
+                             bewusst NICHT — Geovorgänge sind unveränderliche
+                             Demo-Bestände (serverseitig gesperrt). -->
+                        <form th:if="${!supervisory}"
+                              th:action="@{/geoinformation/geo-cases/{id}/status(id=${caseId})}" method="post"
+                              style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin: 0.3rem 0 0.2rem;">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                            <span style="font-size: 0.8125rem;">Status:</span>
+                            <select name="status" class="form-field__input" style="width: auto; min-width: 150px; font-size: 0.8125rem; padding: 0.2rem 0.4rem;">
+                                <option value="DRAFT" th:selected="${caseStatus == 'Entwurf'}">Entwurf</option>
+                                <option value="ACTIVE" th:selected="${caseStatus == 'In Bearbeitung'}">In Bearbeitung</option>
+                                <option value="CLOSED" th:selected="${caseStatus == 'Abgeschlossen'}">Abgeschlossen</option>
+                            </select>
+                            <button type="submit" class="btn btn--sm">Ändern</button>
+                            <span style="font-size: 0.6875rem; color: var(--color-text-muted);">Änderungen werden in der Historie protokolliert.</span>
+                        </form>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.2rem;"
+                           th:text="'Angelegt am ' + ${geoCreatedAt}">—</p>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.2rem;"
+                           th:text="'Erfasst von: ' + (${caseOwnerName != null ? caseOwnerName : caseOwner})">—</p>
+                        <p th:if="${photo != null}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0;"
+                           th:text="${photoGpsSource == 'MANUAL' ? 'GPS-Quelle: manuell auf der Karte ausgewählt' : 'GPS-Quelle: EXIF aus der Außendienstaufnahme'}">—</p>
+                        <p th:if="${photo == null}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0;"
+                           th:text="'GPS-Quelle: Standort aus der Feldaufnahme'">—</p>
+                    </div>
+
+                    <div th:if="${geoCategory != null or geoPriority != null or geoRemark != null}"
+                         style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Fallangaben</h3>
+                        <p th:if="${geoCategory != null}" style="font-size: 0.8125rem; margin: 0 0 0.2rem;"
+                           th:text="'Kategorie: ' + ${geoCategory}">—</p>
+                        <p th:if="${geoPriority != null}" style="font-size: 0.8125rem; margin: 0 0 0.2rem;"
+                           th:text="'Priorität: ' + (${geoPriority == 'HOCH'} ? 'Hoch' : (${geoPriority == 'NIEDRIG'} ? 'Niedrig' : 'Mittel'))">—</p>
+                        <p th:if="${geoRemark != null}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0;"
+                           th:text="'Bemerkung: ' + ${geoRemark}">—</p>
+                    </div>
+
+                    <!-- Bearbeitungshistorie (Mitarbeitende, Statusänderungen, Zuweisungen) -->
+                    <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Mitarbeitende / Bearbeitungshistorie</h3>
+                        <div th:if="${timeline == null or timeline.isEmpty()}" style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                            Noch keine Ereignisse protokolliert.
+                        </div>
+                        <table th:unless="${timeline == null or timeline.isEmpty()}" class="activity-table" style="font-size: 0.8125rem;">
+                            <!-- Herkunfts-Spalte (Erfassung): Automatisch (KI) /
+                                 Manuell erfasst — keine "KI-Verarbeitung"-Überschrift
+                                 über manuell erfassten Ereignissen. -->
+                            <thead><tr><th>Datum</th><th>Ereignis</th><th>Ereignisart</th><th>Erfassung</th></tr></thead>
+                            <tbody>
+                                <tr th:each="e : ${timeline}">
+                                    <td style="white-space: nowrap;" th:text="${e.date()}">—</td>
+                                    <td>
+                                        <span th:text="${e.title()}">—</span>
+                                        <span th:if="${e.detail() != null and !e.detail().isEmpty()}"
+                                              style="color: var(--color-text-muted); font-size: 0.75rem;" th:text="${e.detail()}">—</span>
+                                    </td>
+                                    <td th:text="${T(verwaltungsassistent.web.controller.CaseDetailController).timelineTypeLabel(e.type())}">—</td>
+                                    <td>
+                                        <span class="badge" th:classappend="${e.aiGenerated()} ? 'badge--info' : 'badge--neutral'"
+                                              th:text="${e.aiGenerated()} ? 'Automatisch (KI)' : 'Manuell erfasst'"
+                                              style="font-size: 0.6875rem;">—</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:if="${photo != null}" style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem;">
+                        <h3 style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.5rem;">Aufnahme</h3>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.2rem;"
+                           th:text="'Aufnahmezeitpunkt: ' + ${photoCapturedAt}">—</p>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0;"
+                           th:text="'Datei: ' + ${photo.getOriginalName()}">—</p>
+                    </div>
+                </div>
+
+                <!-- Foto + Karte -->
+                <div class="decision-package__section">
+                    <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Aufnahme &amp; Karte</h2>
+                    <div th:if="${photo != null}">
+                        <span x-data="{ open: false }">
+                            <img th:src="@{/geoinformation/photos/{id}/image(id=${photo.getId()})}" alt="Georeferenzierte Aufnahme"
+                                 style="max-width: 100%; max-height: 260px; border-radius: var(--radius); border: 1px solid var(--color-border-subtle); margin-bottom: 0.5rem; cursor: zoom-in;"
+                                 @click="open = true"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <div style="display: none; width: 100%; height: 140px; align-items: center; justify-content: center; border-radius: var(--radius); border: 1px solid var(--color-border-subtle); color: var(--color-text-muted); font-size: 0.8125rem;">
+                                Bild nicht anzeigbar
+                            </div>
+                            <div class="modal-overlay" x-cloak x-show="open" x-trap.noscroll="open"
+                                 @keydown.escape.window="open = false" @click.self="open = false" role="dialog" aria-modal="true">
+                                <div class="modal-dialog" style="max-width: 860px;">
+                                    <div class="modal__header">
+                                        <h2 class="modal__title" th:text="${photo.getOriginalName()}">Foto</h2>
+                                        <button class="modal__close" @click="open = false">&times;</button>
+                                    </div>
+                                    <div class="modal__body">
+                                        <img th:src="@{/geoinformation/photos/{id}/image(id=${photo.getId()})}" alt="Georeferenzierte Aufnahme"
+                                             style="max-width: 100%; max-height: 60vh; border-radius: var(--radius);">
+                                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.5rem 0 0;"
+                                           th:text="'Aufnahmezeitpunkt: ' + ${photoCapturedAt}">—</p>
+                                        <p th:if="${geoDistrict != null}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.25rem 0 0;"
+                                           th:text="'Zuständigkeitsgebiet: ' + ${geoDistrict} + ' · ' + ${geoAuthority}">—</p>
+                                        <div class="modal__actions" style="margin-top: 1rem;">
+                                            <a th:href="@{/geoinformation/photos/{id}/image(id=${photo.getId()}, download=1)}"
+                                               class="btn btn--primary">Aufnahme herunterladen</a>
+                                            <button type="button" class="btn" @click="open = false">Schließen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.75rem;">
+                            Die Aufnahme ist als Beleg an diesen Vorgang angehängt.
+                            <span th:if="${demoMode}">Bei Demo-Daten handelt es sich um archivierte Übungsaufnahmen; die GPS-Positionen sind zugeordnete Demo-Koordinaten.</span>
+                        </p>
+                    </div>
+                    <div th:if="${photo == null}" class="message message--info" role="status" style="margin-bottom: 0.75rem;">
+                        Keine Aufnahme an diesen Vorgang angehängt.
+                    </div>
+                    <div id="geo-case-map" style="height: 420px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius);"></div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted); flex-wrap: wrap;">
+                        <span>Kartenansicht:</span>
+                        <button type="button" id="case-map-view-bezirke" class="btn btn--sm" onclick="switchCaseMapView('bezirke')">Verwaltungsbereiche</button>
+                        <button type="button" id="case-map-view-strassen" class="btn btn--sm btn--primary" onclick="switchCaseMapView('strassen')">Straßenkarte</button>
+                        <span style="margin-left: 0.75rem;">Umkreis anzeigen:</span>
+                        <button type="button" class="btn btn--sm" onclick="setRadius(0)">aus</button>
+                        <button type="button" class="btn btn--sm" onclick="setRadius(250)">250 m</button>
+                        <button type="button" class="btn btn--sm" onclick="setRadius(500)">500 m</button>
+                    </div>
+                    <!-- OSM/ODbL-Attribution + ehrlicher Umfang der lokalen Straßendaten -->
+                    <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin: 0.5rem 0 0; line-height: 1.5;">
+                        Kartendaten: © OpenStreetMap-Mitwirkende (ODbL). Das Straßennetz der
+                        Straßenkarte umfasst die Demo-Stadt Werder (Havel) — lokal gebündelt,
+                        keine vollständige Straßenabdeckung Brandenburgs.
+                    </p>
+                    <div id="geo-nearby" style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.6rem;">—</div>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/geo-map.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            var __geoAddresses = /*[[${demoAddresses}]]*/ [];
+            function switchCaseMapView(type) {
+                var map = window.__caseMap;
+                if (!map) return;
+                geoMap.setViewType(map, type, { dots: type === 'bezirke' });
+                var b = document.getElementById('case-map-view-bezirke');
+                var s = document.getElementById('case-map-view-strassen');
+                if (b) b.className = 'btn btn--sm' + (type === 'bezirke' ? ' btn--primary' : '');
+                if (s) s.className = 'btn btn--sm' + (type === 'strassen' ? ' btn--primary' : '');
+            }
+
+            function copyText(elId) {
+                var el = document.getElementById(elId);
+                var text = el ? el.textContent.replace(/^[^:]*:\s*/, '') : '';
+                if (navigator.clipboard) navigator.clipboard.writeText(text);
+                else {
+                    var ta = document.createElement('textarea');
+                    ta.value = text; document.body.appendChild(ta); ta.select();
+                    document.execCommand('copy'); ta.remove();
+                }
+            }
+            (function () {
+                var mapEl = document.getElementById('geo-case-map');
+                if (!mapEl) return;
+                var lat = parseFloat('[[${geoLatitude}]]') || 52.39;
+                var lon = parseFloat('[[${geoLongitude}]]') || 13.06;
+                var map = L.map(mapEl, { zoomControl: true, attributionControl: false });
+                map.setView([lat, lon], 15);
+                geoMap.setViewType(map, 'strassen', { dots: false });
+                if (lat && lon) {
+                    L.marker([lat, lon]).addTo(map)
+                        .bindPopup('Standort: Zuständigkeitsgebiet ' + '[[${geoDistrict}]]').openPopup();
+                    // kleiner sichtbarer Umkreis als Standard (Arbeitswerkzeug)
+                    window.__radiusCircle = L.circle([lat, lon], {
+                        radius: 150, color: '#1a56db', weight: 1, fillColor: '#1a56db', fillOpacity: 0.08
+                    }).addTo(map);
+                }
+                loadNearby(map, lat, lon);
+                window.__caseMap = map;
+            })();
+            var __radiusCircle = null;
+            function setRadius(meters) {
+                var map = window.__caseMap;
+                if (!map) return;
+                var lat = parseFloat('[[${geoLatitude}]]') || 52.39;
+                var lon = parseFloat('[[${geoLongitude}]]') || 13.06;
+                if (__radiusCircle) map.removeLayer(__radiusCircle);
+                __radiusCircle = null;
+                if (meters > 0) {
+                    __radiusCircle = L.circle([lat, lon], {
+                        radius: meters, color: '#1a56db', weight: 1, fillColor: '#1a56db', fillOpacity: 0.08
+                    }).addTo(map);
+                }
+            }
+            function loadNearby(map, lat, lon) {
+                var box = document.getElementById('geo-nearby');
+                fetch('/geoinformation/api/nearby?lat=' + lat + '&lon=' + lon + '&radius=1500')
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (!data.results || data.results.length === 0) {
+                            box.textContent = 'Keine erfassten Adressen im Umkreis von 1,5 km.';
+                            return;
+                        }
+                        var html = '<strong style="font-size: 0.75rem;">In der Nähe (lokale Adressdaten):</strong>';
+                        data.results.slice(0, 5).forEach(function (n) {
+                            html += '<div style="margin: 0.2rem 0;">' + n.address
+                                + ' <span style="color: var(--color-text-muted);">(' + n.distanceMeters + ' m)</span></div>';
+                        });
+                        box.innerHTML = html;
+                    })
+                    .catch(function () { box.textContent = ''; });
+            }
+        </script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,15 @@
+From: Erika Schulze <erika.schulze@example.de>
+To: info@verwaltungs-demo.de
+Subject: Wohngeld – Nachfrage zu meinem Antrag
+Date: 2026-09-03T14:00:00+02:00
+Message-ID: msg-mailbox-wohngeld-01
+
+--- body ab hier ---
+Betreff: Wohngeld Nachfrage
+
+Guten Tag,
+
+ich habe vor einigen Wochen einen Wohngeldantrag gestellt und frage nach dem aktuellen Stand. Welche Unterlagen werden noch benötigt?
+
+Mit freundlichen Grüßen
+Erika Schulze

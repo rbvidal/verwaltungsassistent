@@ -1,0 +1,15 @@
+From: Stefan Wolf <stefan.wolf@example.de>
+To: demo07@verwaltungsassistent.local
+Subject: Parkverbotsschild beschädigt – Teltow
+Date: 2026-09-02T12:00:00+02:00
+Message-ID: demo-catalog-13
+
+--- body ab hier ---
+Betreff: Verkehrsschild
+
+Sehr geehrte Damen und Herren,
+
+das Parkverbotsschild in der Rathausstraße ist angefahren und hängt schief. Bitte um Ausbesserung.
+
+Mit freundlichen Grüßen
+Stefan Wolf, Teltow

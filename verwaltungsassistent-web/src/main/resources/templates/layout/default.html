@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html th:fragment="layout(content, pageTitle, activeSection, breadcrumbs)"
+      lang="de"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}">
+    <meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : ''}">
+
+    <title th:text="${pageTitle} ?: 'Verwaltungsassistent'">Verwaltungsassistent</title>
+
+    <link rel="stylesheet" th:href="@{/fonts/fonts.css}">
+    <link rel="stylesheet" th:href="@{/css/application.css}">
+    <!-- 2D.16: Die wichtigsten Webfonts (Text + Sidebar-Icons) werden bereits
+         im head geladen — bei jeder Navigation (voller Seitenaufbau) steht die
+         Sidebar dadurch sofort mit den echten Glyphen da, statt erst nach dem
+         Font-Download umzubrechen (Flicker/Artefakte). -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin th:href="@{/fonts/font-07.woff2}">
+    <link rel="preload" as="font" type="font/woff2" crossorigin th:href="@{/fonts/font-66.woff2}">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
+
+    <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+    <script th:src="@{/webjars/alpinejs/dist/cdn.min.js}" defer="defer"></script>
+    <!-- Leaflet (lokal via WebJars) für das Geoinformation-Modul; Basiskacheln
+         kommen von OpenStreetMap mit lokalem Offline-Rückfall (geo-map.js).
+         Bewusst ohne defer: die Geo-Templates rufen L.* in Inline-Skripten während des
+         Body-Parsings auf — mit defer wäre L dort noch undefined (leere Karten). -->
+    <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/app.js}" defer="defer"></script>
+</head>
+<body th:attr="data-inactivity-timeout=${inactivityTimeoutSeconds}"
+      th:classappend="${supervisory} ? 'role-leitung' : ''">
+    <div id="toast-container" th:replace="~{fragments/toast :: container}"></div>
+
+    <!-- Inactivity warning: shown before the server-side session expiry -->
+    <div id="inactivity-warning" role="alertdialog" aria-live="assertive"
+         style="display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+                background: var(--color-warning-100, #fffff0); color: var(--color-warning-700, #975a16);
+                border-bottom: 1px solid var(--color-warning-600, #d97706);
+                padding: 0.75rem 1rem; font-size: 0.875rem; line-height: 1.5;">
+        <span id="inactivity-warning-text">Sie waren seit einiger Zeit nicht aktiv.</span>
+        <button type="button" id="inactivity-keep-alive" class="btn btn--primary"
+                style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Angemeldet bleiben</button>
+    </div>
+
+    <div class="app-shell">
+        <th:block th:replace="${activeSection != 'none'} ? ~{fragments/header :: sidebar} : ~{}"></th:block>
+
+        <div class="app-main">
+            <th:block th:replace="${activeSection != 'none'} ? ~{fragments/header :: topbar(${pageTitle})} : ~{}"></th:block>
+            <div th:replace="~{live-demo/status :: banner}"></div>
+
+            <div class="app-layout"
+                 th:classappend="${activeSection == 'none'} ? 'app-layout--no-sidebar'">
+                <main id="main-content">
+                    <th:block th:if="${activeSection != 'none'}">
+                        <nav th:replace="~{fragments/breadcrumbs :: breadcrumbs(${breadcrumbs})}"></nav>
+                    </th:block>
+
+                    <div th:replace="~{fragments/messages :: messages}"></div>
+
+                    <div id="page-content" th:insert="${content}"></div>
+                </main>
+            </div>
+
+            <footer th:replace="~{fragments/footer :: footer}"></footer>
+        </div>
+    </div>
+
+    <!-- Command palette: global search + navigation (Ctrl/Cmd+K).
+         Bewusst OHNE Alpine umgesetzt: Die Alpine-CDN-Initialisierung ist in
+         dieser Umgebung nicht zuverlässig (teils keine Komponenten-Init, teils
+         erstickt an CSP-unsafe-eval), was die Palette sichtbar "hängen"
+         ließ. Die Steuerung (Öffnen/Schließen/Fokus/Filter) liegt in app.js
+         (Verwaltungsassistent.palette) — deterministisch, kein x-data/x-show/x-cloak mehr.
+         Schließen: Esc, Klick auf den Hintergrund oder ×. -->
+    <div th:if="${activeSection != 'none'}" id="command-palette" class="modal-overlay"
+         role="dialog" aria-modal="true" aria-label="Globale Suche"
+         style="display: none;">
+        <div class="modal-dialog modal-dialog--palette">
+            <div class="modal__header">
+                <span class="material-symbols-outlined" style="color: var(--color-text-muted);">search</span>
+                <form th:action="@{/knowledge}" method="get" style="flex: 1; display: flex; min-width: 0;">
+                    <input type="text" name="q" id="palette-input" autocomplete="off"
+                           class="palette-input"
+                           placeholder="Akten, Gesetze & Vorgänge suchen …">
+                </form>
+                <span class="palette-kbd">Esc</span>
+                <button type="button" id="palette-close" class="modal__close"
+                        aria-label="Suchfeld schließen">&times;</button>
+            </div>
+            <div class="modal__body palette-body">
+                <div class="palette-group">Hauptbereiche</div>
+                <a th:href="@{/dashboard}" class="palette-item">
+                    <span class="material-symbols-outlined">space_dashboard</span><span>Dashboard</span>
+                </a>
+                <a th:href="@{/cases}" class="palette-item">
+                    <span class="material-symbols-outlined">folder_open</span><span>Fälle</span>
+                </a>
+                <a th:href="@{/emails}" class="palette-item">
+                    <span class="material-symbols-outlined">mail</span><span>E-Mails</span>
+                </a>
+                <a th:if="${!demoMode}" th:href="@{/documents}" class="palette-item">
+                    <span class="material-symbols-outlined">description</span><span>Dokumente</span>
+                </a>
+                <a th:if="${!demoMode}" th:href="@{/knowledge}" class="palette-item">
+                    <span class="material-symbols-outlined">menu_book</span><span>Wissensbasis</span>
+                </a>
+                <a th:if="${!demoMode}" th:href="@{/assistant}" class="palette-item">
+                    <span class="material-symbols-outlined">psychology</span><span>Assistent</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasAnyRole('USER','ANALYST','AUDITOR','ADMIN')" th:href="@{/decisions}" class="palette-item">
+                    <span class="material-symbols-outlined">gavel</span><span>Entscheidungen</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasAnyRole('AUDITOR','ADMIN')" th:href="@{/audit}" class="palette-item">
+                    <span class="material-symbols-outlined">shield_lock</span><span>Audit</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')" th:href="@{/geoinformation}" class="palette-item">
+                    <span class="material-symbols-outlined">map</span><span>Geoinformation</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasAnyRole('AUDITOR','ADMIN')" th:href="@{/corpus}" class="palette-item">
+                    <span class="material-symbols-outlined">explore</span><span>Beispiele</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasRole('ADMIN')" th:href="@{/admin}" class="palette-item">
+                    <span class="material-symbols-outlined">settings</span><span>Administration</span>
+                </a>
+                <div class="palette-group">Schnellaktionen</div>
+                <a sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')"
+                   th:href="@{/cases/new}" class="palette-item">
+                    <span class="material-symbols-outlined">add_circle</span><span>Neuer Fall</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   th:href="@{/documents/upload}" class="palette-item">
+                    <span class="material-symbols-outlined">upload_file</span><span>Dokument hochladen</span>
+                </a>
+                <a th:if="${!demoMode}"
+                   sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')" th:href="@{/assistant}" class="palette-item">
+                    <span class="material-symbols-outlined">smart_toy</span><span>Assistent öffnen</span>
+                </a>
+                <p id="palette-hint" class="palette-hint" style="display: none;">
+                    Enter startet die Suche in der Wissensbasis.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verwaltungsassistent — Technical White Paper: Retrieval and Reasoning Architecture</title>
+<style>
+/* ============ PAGED MEDIA SETUP ============ */
+@page {
+  size: A4;
+  margin: 21mm 17mm 19mm 17mm;
+  @top-left {
+    content: "Verwaltungsassistent · Enterprise Knowledge Reasoning Platform";
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #5a6b7c;
+    letter-spacing: 0.4pt;
+  }
+  @top-right {
+    content: string(secttitle);
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #123a5f;
+    letter-spacing: 0.4pt;
+  }
+  @bottom-left {
+    content: "Version 2.0 · September 2026 · Public";
+    font-family: "Segoe UI", sans-serif; font-size: 7pt; color: #7d8b99;
+  }
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #123a5f;
+  }
+}
+@page cover {
+  margin: 0;
+  @top-left { content: none; }
+  @top-right { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+@page plain {
+  @top-right { content: none; }
+  @top-left { content: "Verwaltungsassistent · Enterprise Knowledge Reasoning Platform"; }
+}
+
+/* ============ BASE TYPOGRAPHY ============ */
+html { font-size: 10.2pt; }
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 10.2pt; line-height: 1.52; color: #1d2733;
+  margin: 0; padding: 0;
+}
+p { margin: 0 0 5.5pt 0; text-align: justify; }
+h1, h2, h3, h4 { font-family: "Segoe UI", "Segoe UI Semibold", sans-serif; color: #123a5f; page-break-after: avoid; }
+h1 {
+  font-size: 17pt; font-weight: 700; margin: 0 0 4pt 0;
+  padding-bottom: 4pt; border-bottom: 2.2pt solid #123a5f;
+  string-set: secttitle content();
+  page-break-before: always;
+}
+h1.first { page-break-before: avoid; }
+h2 { font-size: 12.5pt; font-weight: 600; margin: 13pt 0 4pt 0; color: #16456b; }
+h3 { font-size: 10.8pt; font-weight: 600; margin: 10pt 0 3pt 0; color: #1d2733; }
+section > p:first-of-type { margin-top: 0; }
+strong { color: #10293f; }
+em { color: inherit; }
+
+ul, ol { margin: 2pt 0 6pt 0; padding-left: 16pt; }
+li { margin-bottom: 2.2pt; text-align: justify; }
+li > ul { margin-top: 2pt; }
+
+code, .code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 8.6pt; color: #0e4b6b;
+  background: #f2f5f8; border: 0.4pt solid #dde4ea;
+  border-radius: 2pt; padding: 0.5pt 2.5pt;
+}
+.mono { font-family: Consolas, "Courier New", monospace; font-size: 8.8pt; }
+
+/* ============ PRINCIPLE / CALLOUT BOXES ============ */
+.principle {
+  background: #f0f7f4; border-left: 3.5pt solid #0e7c66;
+  padding: 6.5pt 9pt; margin: 7pt 0; page-break-inside: avoid;
+}
+.principle .p-title {
+  font-family: "Segoe UI", sans-serif; font-weight: 700; font-size: 9pt;
+  color: #0a5c4c; text-transform: uppercase; letter-spacing: 0.6pt; margin-bottom: 2.5pt;
+}
+.principle p { margin-bottom: 2.5pt; }
+.note {
+  background: #f4f6f9; border-left: 3.5pt solid #123a5f;
+  padding: 6.5pt 9pt; margin: 7pt 0; page-break-inside: avoid; font-size: 9.4pt;
+}
+.note .p-title {
+  font-family: "Segoe UI", sans-serif; font-weight: 700; font-size: 9pt;
+  color: #123a5f; text-transform: uppercase; letter-spacing: 0.6pt; margin-bottom: 2.5pt;
+}
+.german-quote {
+  background: #f7f4ec; border-left: 3.5pt solid #a8842c;
+  padding: 6pt 9pt; margin: 7pt 0; font-style: italic; page-break-inside: avoid;
+}
+
+/* ============ FIGURES ============ */
+.figure { margin: 9pt 0 11pt 0; page-break-inside: avoid; text-align: center; }
+.figure svg { max-width: 100%; height: auto; }
+.figcaption, .tblcaption {
+  font-family: "Segoe UI", sans-serif; font-size: 8.4pt; color: #4a5a6a;
+  margin-top: 3.5pt; text-align: center; line-height: 1.35;
+}
+.tblcaption { margin-top: 0; margin-bottom: 3pt; }
+
+/* ============ TABLES ============ */
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 9pt 0; page-break-inside: avoid; }
+th {
+  font-family: "Segoe UI", sans-serif; font-size: 8.6pt; font-weight: 600;
+  background: #123a5f; color: #ffffff; padding: 3.5pt 5pt; text-align: left;
+  border: 0.4pt solid #123a5f;
+}
+td {
+  font-size: 9pt; padding: 3.5pt 5pt; border: 0.4pt solid #ccd6df;
+  vertical-align: top; line-height: 1.4;
+}
+tr:nth-child(even) td { background: #f4f7fa; }
+td.num, th.num { text-align: right; }
+td.mono { font-family: Consolas, monospace; font-size: 8.4pt; }
+.tblwrap { page-break-inside: avoid; }
+
+/* ============ TOC ============ */
+.toc { page: plain; }
+.toc h1 { page-break-before: avoid; }
+.toc ol { list-style: none; padding: 0; margin: 8pt 0 0 0; }
+.toc li { margin: 0; padding: 0; }
+.toc a {
+  display: flex; align-items: baseline; text-decoration: none; color: #1d2733;
+  padding: 2.6pt 0; border-bottom: 0.4pt dotted #b9c6d2; font-family: "Segoe UI", sans-serif;
+  font-size: 9.4pt;
+}
+.toc a .t-num { color: #123a5f; font-weight: 700; width: 22pt; flex: none; }
+.toc a .t-label { flex: 1; }
+.toc a::after { content: target-counter(attr(href), page); color: #123a5f; font-weight: 600; }
+.toc li.lvl2 a { padding-left: 22pt; font-size: 8.8pt; color: #3c4c5c; }
+.toc li.lvl2 a::after { color: #3c4c5c; font-weight: 400; }
+
+/* ============ COVER ============ */
+.cover { page: cover; width: 210mm; height: 296mm; background: #0d2c4b; color: #ffffff; position: relative; }
+.cover .inner { padding: 34mm 24mm 0 24mm; }
+.cover .brand {
+  font-family: "Segoe UI", sans-serif; font-size: 10.5pt; letter-spacing: 2.5pt;
+  color: #9fc3dd; text-transform: uppercase; margin-bottom: 26mm;
+}
+.cover h1 {
+  font-size: 27pt; line-height: 1.22; color: #ffffff; border: none; margin: 0 0 10mm 0; padding: 0;
+  page-break-before: avoid;
+}
+.cover .subtitle {
+  font-family: "Segoe UI", sans-serif; font-size: 13.5pt; color: #cfe0ee;
+  line-height: 1.45; margin-bottom: 20mm; font-weight: 300;
+}
+.cover .meta {
+  font-family: "Segoe UI", sans-serif; font-size: 10pt; color: #9fc3dd; line-height: 1.9;
+  border-top: 0.6pt solid #3d6285; padding-top: 6mm; width: 130mm;
+}
+.cover .meta b { color: #ffffff; font-weight: 600; }
+.cover .rule-line { width: 34mm; height: 2.4mm; background: #2e9e86; margin-bottom: 10mm; }
+.cover .footer-strip {
+  position: absolute; bottom: 0; left: 0; width: 210mm; height: 9mm;
+  background: #082038; color: #7d9bb8;
+  font-family: "Segoe UI", sans-serif; font-size: 8pt; letter-spacing: 1.2pt;
+  display: flex; align-items: center; padding-left: 24mm; box-sizing: border-box;
+}
+.imprint h1 { page-break-before: avoid; }
+.imp-table td:first-child { width: 38mm; font-weight: 600; color: #123a5f; }
+
+/* ============ MISC ============ */
+.small { font-size: 8.8pt; color: #4a5a6a; }
+.tight li { margin-bottom: 1pt; }
+.term { font-weight: 700; color: #123a5f; }
+.glossary dt {
+  font-family: "Segoe UI", sans-serif; font-weight: 700; color: #123a5f;
+  font-size: 9.8pt; margin-top: 5.5pt;
+}
+.glossary dd { margin: 1pt 0 0 14pt; font-size: 9.4pt; }
+.refs { font-size: 9.2pt; }
+.refs li { margin-bottom: 3pt; text-align: left; }
+.kv { font-weight: 700; color: #0e7c66; }
+.eq {
+  font-family: Consolas, "Courier New", monospace; font-size: 9pt;
+  background: #f2f5f8; border: 0.4pt solid #dde4ea; padding: 5pt 8pt;
+  margin: 6pt 0; page-break-inside: avoid; text-align: center; color: #10293f;
+}
+.flowline { text-align: center; font-family: "Segoe UI", sans-serif; font-size: 9pt; color: #4a5a6a; margin: 3pt 0; }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER ==================== -->
+<section class="cover">
+  <div class="inner">
+    <div class="brand">Verwaltungsassistent · Open-Source Decision Support</div>
+    <div class="rule-line"></div>
+    <h1>Retrieval and Reasoning<br>Architecture</h1>
+    <div class="subtitle">
+      Technical White Paper<br>
+      How Verwaltungsassistent retrieves candidate evidence through hybrid search,
+      verifies it independently, and refuses to answer when the
+      evidence is insufficient.
+    </div>
+    <div class="meta">
+      <b>Document type:</b>&nbsp; Technical White Paper<br>
+      <b>Version:</b>&nbsp; 2.0<br>
+      <b>Date:</b>&nbsp; 12 September 2026<br>
+      <b>Status:</b>&nbsp; Public<br>
+      <b>Deployment reference:</b>&nbsp; Verwaltungsassistent — municipal pilot (Berlin demo corpus)<br>
+      <b>Audience:</b>&nbsp; municipal/public administration IT architects, enterprise decision makers,
+      partners, investors, technical evaluators
+    </div>
+  </div>
+  <div class="footer-strip">VERWALTUNGSASSISTENT · WHITE PAPER · V2.0</div>
+</section>
+
+<!-- ==================== IMPRINT ==================== -->
+<section class="imprint">
+  <h1 class="first">Document Control</h1>
+  <table class="imp-table">
+    <tr><td>Title</td><td>Verwaltungsassistent — Technical White Paper: Retrieval and Reasoning Architecture</td></tr>
+    <tr><td>Version / Date</td><td>2.0 / 2026-09-12</td></tr>
+    <tr><td>Classification</td><td>Public</td></tr>
+    <tr><td>System described</td><td>Enterprise Knowledge Reasoning Platform (Verwaltungsassistent), retrieval, evidence-verification and answer-generation architecture, as implemented in the current code base (Java 21, Spring Boot 3.3)</td></tr>
+    <tr><td>Reference deployment</td><td>Verwaltungsassistent — municipal assistant for German public administration (demo corpus: Berlin Service-Portal documents, BRKG, AV § 55 LHO, TV-L 2025)</td></tr>
+    <tr><td>Basis</td><td>Direct inspection of the current implementation (September 2026). All described capabilities are implemented and running; future work is explicitly labelled as such.</td></tr>
+    <tr><td>Conventions</td><td><span class="mono">monospace</span> = implementation identifier; <em>italic</em> = German system wording with translation</td></tr>
+  </table>
+
+  <div class="note">
+    <div class="p-title">About this document</div>
+    <p>This white paper describes the retrieval and reasoning architecture of the Enterprise Knowledge
+    Reasoning Platform (Verwaltungsassistent) as it is implemented today. It is written for readers without access to the
+    source code, but every architectural statement is grounded in the current implementation. Where a
+    capability is configurable, the default configuration of the reference deployment is described and
+    alternatives are noted. Where a capability is planned but not implemented, it is explicitly labelled
+    <em>future work</em>.</p>
+  </div>
+
+  <div class="note">
+    <div class="p-title">The central architectural claim</div>
+    <p>Verwaltungsassistent is not a simple vector-RAG system. Its pipeline distinguishes two very different things that
+    naive retrieval systems conflate: <strong>candidate evidence</strong> — material that was <em>retrieved</em>
+    because it looked relevant — and <strong>verified evidence</strong> — material that an independent
+    verification stage has confirmed actually <em>supports</em> the statements of the generated answer.
+    Every retrieved document is treated as a candidate only. And when verification fails, Verwaltungsassistent
+    fails closed: it says that it does not know, instead of presenting a plausible-sounding answer.</p>
+  </div>
+</section>
+
+<!-- ==================== TOC ==================== -->
+<section class="toc">
+  <h1>Table of Contents</h1>
+  <ol>
+    <li><a href="#sec-1"><span class="t-num">1</span><span class="t-label">Executive Summary</span></a></li>
+    <li><a href="#sec-2"><span class="t-num">2</span><span class="t-label">Problem: Why Traditional RAG Is Not Enough</span></a></li>
+    <li><a href="#sec-3"><span class="t-num">3</span><span class="t-label">Verwaltungsassistent Architecture Overview</span></a></li>
+    <li><a href="#sec-4"><span class="t-num">4</span><span class="t-label">Document Ingestion</span></a></li>
+    <li><a href="#sec-5"><span class="t-num">5</span><span class="t-label">Hybrid Retrieval: Vector, Lexical and Graph Search</span></a></li>
+    <li><a href="#sec-6"><span class="t-num">6</span><span class="t-label">Intent and Domain Analysis</span></a></li>
+    <li><a href="#sec-7"><span class="t-num">7</span><span class="t-label">Candidate Ranking: Fusion, Reranking and Evidence Selection</span></a></li>
+    <li><a href="#sec-8"><span class="t-num">8</span><span class="t-label">The Critical Evidence Problem</span></a></li>
+    <li><a href="#sec-9"><span class="t-num">9</span><span class="t-label">Evidence Verification</span></a></li>
+    <li><a href="#sec-10"><span class="t-num">10</span><span class="t-label">Fail-Closed Answer Boundary</span></a></li>
+    <li><a href="#sec-11"><span class="t-num">11</span><span class="t-label">Rule-First Processing and Structured Knowledge</span></a></li>
+    <li><a href="#sec-12"><span class="t-num">12</span><span class="t-label">End-to-End Examples</span></a></li>
+    <li><a href="#sec-13"><span class="t-num">13</span><span class="t-label">Performance Considerations</span></a></li>
+    <li><a href="#sec-14"><span class="t-num">14</span><span class="t-label">Auditability and Explainability</span></a></li>
+    <li><a href="#sec-15"><span class="t-num">15</span><span class="t-label">Security, On-Premise and Air-Gapped Deployment</span></a></li>
+    <li><a href="#sec-16"><span class="t-num">16</span><span class="t-label">Comparison with Conventional RAG</span></a></li>
+    <li><a href="#sec-17"><span class="t-num">17</span><span class="t-label">Limitations</span></a></li>
+    <li><a href="#sec-18"><span class="t-num">18</span><span class="t-label">Future Directions</span></a></li>
+    <li><a href="#sec-19"><span class="t-num">19</span><span class="t-label">Conclusion</span></a></li>
+    <li class="lvl2"><a href="#glossary"><span class="t-num"></span><span class="t-label">Glossary</span></a></li>
+    <li class="lvl2"><a href="#references"><span class="t-num"></span><span class="t-label">References and Source Notes</span></a></li>
+  </ol>
+</section>
+
+<!-- ==================== 1 EXECUTIVE SUMMARY ==================== -->
+<section >
+  <h1 id="sec-1" class="first">1&nbsp;&nbsp;Executive Summary</h1>
+  <p>The Enterprise Knowledge Reasoning Platform (Verwaltungsassistent) is a domain-oriented question-answering and
+  decision-support platform for public administration. It answers natural-language questions over an
+  organization's authoritative document corpus — laws, regulations, service descriptions, procedural
+  guidelines — and, where a question has a deterministic answer in structured knowledge (tariff tables,
+  travel-allowance rules, procurement thresholds), it computes that answer directly by rule instead of
+  guessing with a language model.</p>
+
+  <p>The reference deployment described in this document is the <strong>Verwaltungsassistent</strong>,
+  a German municipal assistant currently running a real pilot corpus of official Berlin administration
+  documents. The platform itself is domain-agnostic: all municipal knowledge — domains, terminology,
+  structured rule tables — is supplied as data by the application layer. In the municipal deployment,
+  requests also arrive as citizen and caseworker email: an intake pipeline classifies each incoming
+  message, links it to a case (<em>Vorgang</em>) and feeds it through the same retrieval, verification
+  and fail-closed path described in this document.</p>
+
+  <p>Verwaltungsassistent's question-answering path consists of six architectural stages:</p>
+  <ol class="tight">
+    <li><span class="term">Intent and domain analysis</span> — a semantic parser extracts a structured
+    intent (domain, intent type, numeric parameters, language) from the question.</li>
+    <li><span class="term">Rule-first routing</span> — if structured knowledge can answer the question
+    deterministically, it does so (no retrieval, no guessing). Otherwise the question proceeds to retrieval.</li>
+    <li><span class="term">Hybrid retrieval</span> — three complementary mechanisms run in parallel:
+    semantic (vector) search, lexical (keyword) search and graph search. Their results are fused into a
+    candidate pool.</li>
+    <li><span class="term">Candidate ranking</span> — the pool is reranked, adjusted by domain relevance,
+    and compressed into a compact evidence package (at most four documents, three excerpts each).</li>
+    <li><span class="term">Independent evidence verification</span> — a separate verifier model judges, for
+    each claim of the drafted answer, whether the retrieved excerpts actually support it. Retrieval
+    candidates are explicitly <em>not</em> treated as evidence by default.</li>
+    <li><span class="term">Fail-closed presentation</span> — the answer is presented only if it is grounded
+    in verified evidence. Otherwise Verwaltungsassistent answers: <em>„Für diese Frage liegen in der Wissensbasis keine
+    ausreichenden Informationen vor.“</em> ("The knowledge base does not contain sufficient information for
+    this question.")</li>
+  </ol>
+
+  <div class="principle">
+    <div class="p-title">The key distinction</div>
+    <p><strong>RETRIEVED &ne; VERIFIED.</strong> Retrieval produces <em>candidate evidence</em> — material
+    that looks relevant. Only the verification stage turns candidates into <em>supporting evidence</em> for a
+    specific answer. Semantic similarity to the question is a retrieval signal, not proof of support.</p>
+  </div>
+
+  <div class="principle">
+    <div class="p-title">The key safety principle</div>
+    <p><strong>If the evidence is insufficient, Verwaltungsassistent says so.</strong> When verification finds no supported
+    claim, the generated answer is not shown. Retrieval failure is never converted into fabricated
+    certainty. This fail-closed boundary is enforced in code, not by prompt instruction alone.</p>
+  </div>
+
+  <p>These two principles — the candidate/evidence distinction and the fail-closed boundary — are the
+  architectural core of Verwaltungsassistent and the main subject of this white paper.</p>
+</section>
+
+<!-- ==================== 2 PROBLEM ==================== -->
+<section >
+  <h1 id="sec-2">2&nbsp;&nbsp;Problem: Why Traditional RAG Is Not Enough</h1>
+
+  <p>Retrieval-augmented generation (RAG) — retrieving text passages and handing them to a large language
+  model (LLM) as context — is the standard pattern for grounding model output in an organization's
+  documents. In its conventional form it has four structural weaknesses that matter acutely in public
+  administration, where an answer carries legal and procedural consequences:</p>
+
+  <h3>2.1&nbsp;&nbsp;Semantic similarity measures topical relatedness, not evidentiary support</h3>
+  <p>Vector search ranks passages by the cosine distance between the question embedding and passage
+  embeddings. A passage can be <em>extremely similar</em> to a question and still not contain the information
+  needed to answer it. A question about an exception to a rule ("registration without a landlord's
+  confirmation") retrieves passages about registration in general — highly similar, entirely unhelpful for
+  the specific exception. Conventional RAG systems feed such passages to the LLM anyway; the LLM then
+  plausibly bridges the gap, and the missing information is filled in by the model's world knowledge. The
+  result reads confidently and cites real documents that do not actually support the answer.</p>
+
+  <h3>2.2&nbsp;&nbsp;No independent check between generation and presentation</h3>
+  <p>In conventional RAG, the same retrieved passages that seed generation are also presented as the
+  "sources". There is no step that asks: does this passage actually entail what the answer claims? A
+  citation is treated as proof of support. But <em>a citation alone does not establish support</em> — it
+  establishes only that the passage was in the context window.</p>
+
+  <h3>2.3&nbsp;&nbsp;No fail-closed behavior</h3>
+  <p>When retrieval returns poor or irrelevant material, a conventional RAG system still generates an
+  answer — the model is instructed to answer, so it answers. A system intended for administrative use must
+  instead be able to say "insufficient information" as a designed, first-class outcome.</p>
+
+  <h3>2.4&nbsp;&nbsp;One retrieval mechanism, one ranking</h3>
+  <p>Pure vector RAG is blind to exact terminology and to the structural relationships between documents
+  (which regulation implements which procedure, which authority is responsible, which procedures are
+  related). Administrative language is dense with exact terms — <em>Wohnungsgeberbestätigung</em>,
+  <em>Tagegeld</em>, <em>Vergabevermerk</em> — where lexical exactness and legal structure matter as much
+  as meaning similarity.</p>
+
+  <div class="principle">
+    <div class="p-title">Design consequence</div>
+    <p>Verwaltungsassistent addresses each weakness structurally: (1)&nbsp;three complementary retrieval mechanisms instead
+    of one; (2)&nbsp;an explicit candidate/evidence distinction; (3)&nbsp;an independent verifier model that
+    judges logical support, not similarity; (4)&nbsp;a fail-closed presentation boundary enforced in code;
+    and (5)&nbsp;a rule-first path that never lets a language model compute what structured knowledge can
+    compute exactly.</p>
+  </div>
+</section>
+
+<!-- ==================== 3 ARCHITECTURE OVERVIEW ==================== -->
+<section >
+  <h1 id="sec-3">3&nbsp;&nbsp;Verwaltungsassistent Architecture Overview</h1>
+
+  <p>Verwaltungsassistent is implemented as a modular Java 21 / Spring Boot 3.3 platform. The core reasoning pipeline is
+  domain-agnostic; the municipal application layer supplies domains, terminology, structured rule tables
+  and the user interface. The reference deployment runs entirely on local infrastructure: PostgreSQL for
+  documents, chunks, audit data and user management; Qdrant for vector search; Neo4j for the knowledge
+  graph; and Ollama as the local model server for generation, verification and embeddings.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#123a5f"/>
+        </marker>
+      </defs>
+      <rect x="20" y="150" width="180" height="130" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="110" y="176" text-anchor="middle" font-size="13.5" font-weight="700" fill="#123a5f">User / Browser</text>
+      <text x="110" y="198" text-anchor="middle" font-size="11" fill="#34506b">German-language assistant UI</text>
+      <text x="110" y="216" text-anchor="middle" font-size="11" fill="#34506b">Login, roles, session</text>
+      <text x="110" y="234" text-anchor="middle" font-size="11" fill="#34506b">Audit &amp; corpus surfaces</text>
+
+      <rect x="280" y="20" width="300" height="160" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="430" y="48" text-anchor="middle" font-size="13.5" font-weight="700" fill="#7a5f1c">Verwaltungsassistent Reasoning Core</text>
+      <text x="430" y="72" text-anchor="middle" font-size="11" fill="#5c5644">Intent gate → DecisionRouter</text>
+      <text x="430" y="92" text-anchor="middle" font-size="11" fill="#5c5644">RULE_ENGINE  |  HYBRID / GRAPH path</text>
+      <text x="430" y="112" text-anchor="middle" font-size="11" fill="#5c5644">RetrievalPlanner · DomainGate · EvidencePackage</text>
+      <text x="430" y="132" text-anchor="middle" font-size="11" fill="#5c5644">PromptBuilder · Generation LLM</text>
+      <text x="430" y="152" text-anchor="middle" font-size="11" fill="#5c5644">ClaimVerifier · Grounding · Fail-closed gate</text>
+
+      <rect x="280" y="210" width="300" height="170" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="430" y="238" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0a5c4c">Retrieval &amp; Storage Services</text>
+      <text x="430" y="262" text-anchor="middle" font-size="11" fill="#1d4d42">PostgreSQL — documents, chunks, keyword</text>
+      <text x="430" y="282" text-anchor="middle" font-size="11" fill="#1d4d42">Qdrant — vector index (mda_chunks, 768-d)</text>
+      <text x="430" y="302" text-anchor="middle" font-size="11" fill="#1d4d42">Neo4j — knowledge graph (enrichment)</text>
+      <text x="430" y="322" text-anchor="middle" font-size="11" fill="#1d4d42">Ollama — local model serving</text>
+      <text x="430" y="342" text-anchor="middle" font-size="11" fill="#1d4d42">Structured knowledge — versioned rule tables &amp; store</text>
+
+      <rect x="660" y="210" width="200" height="170" rx="6" fill="#f4f6f9" stroke="#5a6b7c" stroke-width="1.2"/>
+      <text x="760" y="238" text-anchor="middle" font-size="13.5" font-weight="700" fill="#33414f">Ingestion Pipeline</text>
+      <text x="760" y="262" text-anchor="middle" font-size="11" fill="#4a5a6a">Upload → PDF/DOCX extraction</text>
+      <text x="760" y="282" text-anchor="middle" font-size="11" fill="#4a5a6a">Chunking (500 chars / 50 overlap)</text>
+      <text x="760" y="302" text-anchor="middle" font-size="11" fill="#4a5a6a">Embedding (nomic-embed-text)</text>
+      <text x="760" y="322" text-anchor="middle" font-size="11" fill="#4a5a6a">LLM graph enrichment</text>
+      <text x="760" y="342" text-anchor="middle" font-size="11" fill="#4a5a6a">Legal metadata extraction</text>
+
+      <line x1="200" y1="215" x2="280" y2="100" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar)"/>
+      <line x1="580" y1="100" x2="660" y2="250" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar)"/>
+      <line x1="580" y1="120" x2="660" y2="295" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar)"/>
+      <line x1="660" y1="380" x2="580" y2="340" stroke="#5a6b7c" stroke-width="1.4" marker-end="url(#ar)"/>
+      <text x="232" y="150" font-size="10" fill="#34506b">question</text>
+      <text x="612" y="182" font-size="10" fill="#34506b">search / verify</text>
+      <text x="612" y="222" font-size="10" fill="#34506b">generate</text>
+      <text x="612" y="360" font-size="10" fill="#4a5a6a">store (PG + Qdrant + Neo4j)</text>
+    </svg>
+    <div class="figcaption">Figure 1 — Verwaltungsassistent system context: the reasoning core orchestrates retrieval,
+    verification and generation; storage services and the ingestion pipeline sit alongside it. All services
+    run locally (on-premise capable).</div>
+  </div>
+
+  <p>One execution path answers every question (<span class="mono">AiService</span>, single entry point).
+  A query-intent gate first detects meta-queries about the index itself. Then the
+  <span class="mono">DecisionRouter</span> routes the question to exactly one strategy:</p>
+  <ul>
+    <li><span class="mono">RULE_ENGINE</span> — the question matches structured knowledge (salary, travel
+    allowance, procurement threshold). A deterministic table lookup produces the decision; the LLM only
+    explains it. Retrieval is structurally skipped.</li>
+    <li><span class="mono">GRAPH_REASONING</span> / <span class="mono">HYBRID_RETRIEVAL</span> — no
+    deterministic match. Full hybrid retrieval runs (graph-enhanced when Neo4j is available), followed by
+    evidence assembly, generation, verification and the fail-closed gate.</li>
+  </ul>
+
+  <p>Verwaltungsassistent is fed from two channels in the reference deployment: the assistant UI (direct questions)
+  and an <strong>email intake pipeline</strong>. Incoming mail is deduplicated, classified
+  deterministically (request type, whether administrative work is required), matched against existing
+  cases — or opened as a new case (<em>Vorgang</em>) — and its attachments are ingested through the
+  same document pipeline. From there, every request runs the identical question-answering path
+  described in this document. Case handling follows explicit phases (SETUP → INGESTION → ANALYSIS →
+  REVIEW → COMPLETE); completion requires explicit human sign-off.</p>
+
+  <div class="principle">
+    <div class="p-title">Rule-first architecture</div>
+    <p><strong>If the question has a deterministic structured answer, use structured knowledge. Otherwise,
+    use hybrid retrieval and evidence-grounded reasoning.</strong> A language model is never asked to
+    compute a tariff amount or a procurement procedure when a rule table can compute it exactly.</p>
+  </div>
+
+  <p>The remainder of this document follows the life of a question and a document through the system:
+  ingestion (Section 4), retrieval (Section 5), intent and domain (Section 6), ranking and evidence
+  selection (Section 7), the evidence problem (Section 8), verification (Section 9), the fail-closed
+  boundary (Section 10), rule-first processing (Section 11), and worked examples (Section 12).</p>
+</section>
+
+<!-- ==================== 4 INGESTION ==================== -->
+<section >
+  <h1 id="sec-4">4&nbsp;&nbsp;Document Ingestion</h1>
+
+  <p>Before Verwaltungsassistent can answer questions, authoritative documents must be ingested. Ingestion is an
+  asynchronous pipeline: an upload creates a document record and an ingestion job; a scheduled worker
+  processes pending jobs (oldest first, every 10 seconds). Each document passes through extraction,
+  chunking, embedding and three parallel persistence paths.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#123a5f"/>
+        </marker>
+      </defs>
+      <rect x="20" y="160" width="150" height="70" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="95" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Official document</text>
+      <text x="95" y="207" text-anchor="middle" font-size="10.5" fill="#34506b">PDF / DOCX / TXT / HTML</text>
+
+      <rect x="230" y="160" width="150" height="70" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="305" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Upload</text>
+      <text x="305" y="207" text-anchor="middle" font-size="10.5" fill="#34506b">local storage · SHA-256</text>
+
+      <rect x="440" y="160" width="150" height="70" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="515" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Text extraction</text>
+      <text x="515" y="207" text-anchor="middle" font-size="10.5" fill="#34506b">PDFBox / Tika</text>
+
+      <rect x="650" y="160" width="150" height="70" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="725" y="188" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Chunking</text>
+      <text x="725" y="207" text-anchor="middle" font-size="10.5" fill="#34506b">sentence-aware · 500 / 50</text>
+
+      <rect x="60" y="290" width="210" height="80" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="165" y="318" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">PostgreSQL</text>
+      <text x="165" y="338" text-anchor="middle" font-size="10.5" fill="#1d4d42">document metadata · chunks</text>
+      <text x="165" y="354" text-anchor="middle" font-size="10.5" fill="#1d4d42">legal refs (§, Art., clause)</text>
+
+      <rect x="330" y="290" width="210" height="80" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="435" y="318" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Qdrant</text>
+      <text x="435" y="338" text-anchor="middle" font-size="10.5" fill="#1d4d42">embedding: nomic-embed-text</text>
+      <text x="435" y="354" text-anchor="middle" font-size="10.5" fill="#1d4d42">768-d · cosine · mda_chunks</text>
+
+      <rect x="600" y="290" width="210" height="80" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="705" y="318" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Neo4j</text>
+      <text x="705" y="338" text-anchor="middle" font-size="10.5" fill="#1d4d42">LLM enrichment: entities,</text>
+      <text x="705" y="354" text-anchor="middle" font-size="10.5" fill="#1d4d42">concepts, regulations, orgs</text>
+
+      <line x1="170" y1="195" x2="230" y2="195" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <line x1="380" y1="195" x2="440" y2="195" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <line x1="590" y1="195" x2="650" y2="195" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <path d="M725,230 C725,255 165,260 165,290" fill="none" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <path d="M725,230 L725,290" fill="none" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <path d="M750,230 C760,260 705,265 705,290" fill="none" stroke="#123a5f" stroke-width="1.4" marker-end="url(#ar2)"/>
+      <text x="430" y="257" text-anchor="middle" font-size="10" fill="#34506b">embed batch</text>
+      <text x="742" y="257" text-anchor="middle" font-size="10" fill="#34506b">enrich</text>
+    </svg>
+    <div class="figcaption">Figure 2 — Ingestion data flow: one document fans out into three storage
+    systems, each serving one retrieval mechanism (lexical, vector, graph).</div>
+  </div>
+
+  <h3>4.1&nbsp;&nbsp;Text extraction and chunking</h3>
+  <p>PDFs are extracted with Apache PDFBox (position-preserving); HTML via jsoup; plain text directly;
+  all other formats (DOCX and the like) via Apache Tika. Extracted text is split into chunks by a
+  <strong>sentence-aware strategy</strong>: target size <strong>500 characters with 50 characters
+  overlap</strong>, preferring sentence and paragraph boundaries — including numbered paragraphs and
+  § headings — and falling back to a fixed-size cut only when no boundary is available. Chunk-level
+  metadata includes document title, type, category, tags, and — for administrative documents —
+  extracted legal references (§, Art., clause numbers).</p>
+
+  <h3>4.2&nbsp;&nbsp;Three parallel persistence paths</h3>
+  <ul>
+    <li><strong>PostgreSQL</strong> — document metadata (title, type, status, versions, checksums),
+    ingestion job state, and every chunk with its full text and positions. PostgreSQL also serves as the
+    keyword-search index (Section 5.2). Vectors are <em>not</em> stored here; each chunk stores only an
+    embedding reference such as <span class="mono">nomic-embed-text:768d</span>.</li>
+    <li><strong>Qdrant</strong> — each chunk is embedded with <span class="mono">nomic-embed-text</span>
+    (768 dimensions) and written as a point into collection <span class="mono">mda_chunks</span>
+    (cosine distance). The payload carries the chunk text, document identifiers, title, type, category and
+    tags, so search hits are self-describing.</li>
+    <li><strong>Neo4j</strong> — an LLM-based enrichment step extracts entities, concepts, regulations and
+    organizations from the document text and writes a graph: a <span class="mono">DOCUMENT</span> node,
+    <span class="mono">ENTITY</span>, <span class="mono">CONCEPT</span>, <span class="mono">REGULATION</span>
+    and <span class="mono">ORGANIZATION</span> nodes, and <span class="mono">MENTIONS</span> /
+    <span class="mono">RELATED_TO</span> edges (among others). The graph gives retrieval a structural view
+    of the corpus: which documents mention which legal bases, which authorities, which related procedures.</li>
+  </ul>
+
+  <h3>4.3&nbsp;&nbsp;Temporal validity metadata</h3>
+  <p>Documents carry uploader-maintained validity metadata: publication date, valid-from, valid-until and
+  superseded-at. These dates are stored on the document, copied to every chunk and into the vector payload,
+  and travel with each citation. At question time the caller may supply a reference date
+  (<span class="mono">asOf</span> — the German <em>Stichtag</em>); retrieval then drops candidates that are
+  not yet valid, already expired or superseded as of that date, while documents with unknown dates are
+  kept and flagged as such. The reference date is also shown to the generator and, through the citation,
+  to the reviewer — so an answer is always anchored to the version of a regulation that applied on the
+  reference date.</p>
+
+  <p>Ingestion is idempotent per document version, and the pipeline degrades gracefully: if the embedding
+  service is unavailable, a keyword-only fallback path still indexes chunks into PostgreSQL.</p>
+
+  <div class="note">
+    <div class="p-title">The demo corpus (snapshot 2026-08-15)</div>
+    <p>The reference deployment runs 19 documents: <em>Bundesreisekostengesetz (BRKG)</em>,
+    <em>Ausführungsvorschriften zu § 55 LHO Berlin</em> (procurement thresholds), <em>Bauordnung für
+    Berlin</em>, and 15 official Berlin Service-Portal procedures (registration/de-registration, identity
+    documents, passport, driver's licence, certifications, eID activation). The ingested corpus currently
+    comprises ~1,560 PostgreSQL chunks, ~2,120 Qdrant points and ~350 graph nodes. The versioned knowledge
+    base additionally contains GWB Part 4 (procurement law), the TV-L 2025 collective agreement and the
+    Berlin Bauvorlagenverordnung as managed markdown documents.</p>
+  </div>
+</section>
+
+<!-- ==================== 5 HYBRID RETRIEVAL ==================== -->
+<section >
+  <h1 id="sec-5">5&nbsp;&nbsp;Hybrid Retrieval: Vector, Lexical and Graph Search</h1>
+
+  <p>When the router decides that no deterministic rule answers the question, Verwaltungsassistent executes a
+  <strong>single-pass hybrid retrieval</strong>: three independent search mechanisms run over the same
+  question in parallel, and their results are fused into one candidate pool. Retrieval is deliberately
+  single-pass — no recursive searches, no query rewriting — which keeps the process fast, explainable and
+  easy to audit. Each channel deliberately over-fetches (the vector channel to six times the requested
+  result window, the lexical channel up to a fetch cap of 2,000 chunks) so that fusion, temporal
+  filtering and evidence selection decide on a rich candidate pool rather than on a truncated top
+  list.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#123a5f"/>
+        </marker>
+      </defs>
+      <rect x="20" y="180" width="170" height="60" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="105" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#7a5f1c">User question</text>
+      <text x="105" y="224" text-anchor="middle" font-size="10.5" fill="#5c5644">(with authoritative domain)</text>
+
+      <rect x="280" y="30" width="180" height="90" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="370" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a5c4c">Vector search</text>
+      <text x="370" y="78" text-anchor="middle" font-size="10.5" fill="#1d4d42">Qdrant · cosine search</text>
+      <text x="370" y="96" text-anchor="middle" font-size="10.5" fill="#1d4d42">nomic-embed-text · 768-d</text>
+
+      <rect x="280" y="150" width="180" height="90" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="370" y="178" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a5c4c">Keyword search</text>
+      <text x="370" y="198" text-anchor="middle" font-size="10.5" fill="#1d4d42">PostgreSQL · term-variant matching</text>
+      <text x="370" y="216" text-anchor="middle" font-size="10.5" fill="#1d4d42">weighted lexical coverage</text>
+
+      <rect x="280" y="270" width="180" height="90" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="370" y="298" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a5c4c">Graph search</text>
+      <text x="370" y="318" text-anchor="middle" font-size="10.5" fill="#1d4d42">Neo4j · doc keyword hits</text>
+      <text x="370" y="336" text-anchor="middle" font-size="10.5" fill="#1d4d42">+ 2-hop traversal (≤10)</text>
+
+      <rect x="540" y="150" width="180" height="90" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="630" y="178" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Candidate pool</text>
+      <text x="630" y="198" text-anchor="middle" font-size="10.5" fill="#34506b">fused per chunk (weights)</text>
+      <text x="630" y="216" text-anchor="middle" font-size="10.5" fill="#34506b">1 chunk per document</text>
+
+      <rect x="540" y="290" width="180" height="60" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="630" y="315" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Reranking</text>
+      <text x="630" y="334" text-anchor="middle" font-size="10.5" fill="#34506b">score sort + domain gate</text>
+
+      <rect x="790" y="290" width="70" height="60" rx="6" fill="#f4f6f9" stroke="#5a6b7c" stroke-width="1.2"/>
+      <text x="825" y="315" text-anchor="middle" font-size="11" font-weight="700" fill="#33414f">Evidence</text>
+      <text x="825" y="333" text-anchor="middle" font-size="11" font-weight="700" fill="#33414f">package</text>
+
+      <line x1="190" y1="210" x2="280" y2="85" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="190" y1="210" x2="280" y2="195" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="190" y1="210" x2="280" y2="315" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="460" y1="85" x2="540" y2="170" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="460" y1="195" x2="540" y2="195" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="460" y1="315" x2="540" y2="225" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="630" y1="240" x2="630" y2="290" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <line x1="720" y1="320" x2="790" y2="320" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar3)"/>
+      <text x="478" y="250" font-size="9.5" fill="#4a5a6a" text-anchor="middle">→ candidates (not evidence)</text>
+      <text x="478" y="380" font-size="9.5" fill="#4a5a6a" text-anchor="middle">diversity ≤3 chunks/doc → ≤4 docs, ≤3 paragraphs</text>
+    </svg>
+    <div class="figcaption">Figure 3 — Hybrid retrieval: three mechanisms, one candidate pool, reranking,
+    then a compact evidence package. Until verification (Section 9), everything in this diagram is a
+    <em>candidate</em>, not evidence.</div>
+  </div>
+
+  <h3>5.1&nbsp;&nbsp;Vector (semantic) retrieval — Qdrant</h3>
+  <p>An embedding is a numerical vector that places a text in a high-dimensional meaning space: texts with
+  similar meaning land close to each other, regardless of wording. In Verwaltungsassistent, both the question and every
+  ingested chunk are embedded with the local model <span class="mono">nomic-embed-text</span> (768
+  dimensions), served through Ollama.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#0e7c66"/>
+        </marker>
+      </defs>
+      <rect x="30" y="30" width="140" height="46" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="100" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Question</text>
+      <rect x="30" y="122" width="140" height="46" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="100" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a5c4c">Embedding</text>
+      <rect x="30" y="214" width="140" height="46" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="100" y="242" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a5c4c">Qdrant search</text>
+      <rect x="340" y="214" width="150" height="46" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="415" y="238" text-anchor="middle" font-size="12" font-weight="700" fill="#123a5f">Similar chunks</text>
+      <text x="415" y="253" text-anchor="middle" font-size="9.5" fill="#34506b">(candidate pool)</text>
+      <line x1="100" y1="76" x2="100" y2="122" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar4)"/>
+      <line x1="100" y1="168" x2="100" y2="214" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar4)"/>
+      <line x1="170" y1="237" x2="340" y2="237" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar4)"/>
+      <text x="255" y="228" text-anchor="middle" font-size="10" fill="#1d4d42">cosine similarity</text>
+      <text x="100" y="282" text-anchor="middle" font-size="10" fill="#4a5a6a">nomic-embed-text · 768 dimensions</text>
+    </svg>
+    <div class="figcaption">Figure 4 — Vector retrieval: question → embedding → cosine search in Qdrant
+    collection <span class="mono">mda_chunks</span> → the most similar chunks as candidates.</div>
+  </div>
+
+  <p><strong>What vector retrieval is good at:</strong> paraphrase-tolerant matching. A question asking
+  "which documents do I need to apply for an ID card" will find the official procedure "Personalausweis
+  beantragen" even when the wording differs substantially from the document text. It ranks by meaning, not
+  by vocabulary.</p>
+
+  <p><strong>What vector retrieval can miss:</strong> exact terminology and structural facts. Two passages
+  can be meaning-adjacent yet differ on the one term that decides the answer (a threshold of 1,000 €
+  versus 10,000 €; a requirement versus an exception). Vector similarity also has no notion of which
+  regulation implements which procedure or which authority is responsible — it only sees text.</p>
+
+  <div class="note">
+    <div class="p-title">Qdrant is one component of the architecture, not "the RAG"</div>
+    <p>Qdrant provides the vector index and cosine search. It is one of three retrieval mechanisms, and it
+    neither verifies anything nor generates anything. Vector search alone — "Qdrant RAG" — is exactly the
+    pattern this platform is designed to move beyond.</p>
+  </div>
+
+  <h3>5.2&nbsp;&nbsp;Lexical (keyword) retrieval — PostgreSQL</h3>
+  <p>The keyword path matches chunk text in PostgreSQL with case-insensitive pattern matching
+  (<span class="mono">ILIKE</span>) over the content words of the question and their German term
+  variants: umlaut and ß folding (ä→a, ö→o, ü→u, ß→ss) plus morphological prefix variants (e.g.
+  <em>Ummeldung</em> → <em>Meldung</em>). Generic administrative vocabulary is excluded via a stop-word
+  list. Every matching chunk (up to a fetch cap of 2,000) is then scored in the application by
+  <strong>weighted lexical coverage</strong>: the share of the question's word mass — repeated words
+  count more, because they mark the topic — that is actually present in the chunk. Chunks dominated by
+  table-of-contents dot leaders are suppressed, so OCR artifacts cannot masquerade as evidence. This is
+  a deliberately simple, transparent mechanism: the current implementation does not use PostgreSQL
+  full-text search (<span class="mono">tsvector</span>), BM25 or sparse-vector indexing.</p>
+
+  <p>Why keep a lexical path at all when vectors exist? Because administrative text is dense with exact
+  terms whose presence or absence is itself the answer. Consider the term <em>Wohnungsgeberbestätigung</em>
+  (landlord's confirmation of residence). A question about this document class retrieves — lexically — the
+  chunks that actually contain the term, wherever they sit in the semantic ranking. Exact terminology is
+  also what regulators, auditors and staff search for; a mechanism that provably matches the literal term
+  is an audit-friendly complement to meaning-based search.</p>
+
+  <h3>5.3&nbsp;&nbsp;Graph retrieval — Neo4j</h3>
+  <p>The graph path queries Neo4j in two steps: a keyword match over document nodes (title, label,
+  category, tags; up to 10 documents), then a 2-hop traversal from the matched documents to related nodes
+  — regulations they cite, organizations they involve, concepts they share, and other documents connected
+  to them. Graph results join the candidate pool with a fixed base score (0.6 for document nodes, 0.5 for
+  other node types).</p>
+
+  <p>Graph retrieval finds what neither mechanism above can: <em>documents you did not search for, but
+  which are structurally connected to what you did</em>. A question about passport applications can surface
+  the related identity-card procedure and the legal bases both procedures cite — material that no
+  similarity measure would rank, but which an administrator needs for a complete answer.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#0e7c66"/>
+        </marker>
+      </defs>
+      <rect x="210" y="130" width="220" height="60" rx="30" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.4"/>
+      <text x="320" y="155" text-anchor="middle" font-size="13" font-weight="700" fill="#123a5f">Procedure document</text>
+      <text x="320" y="174" text-anchor="middle" font-size="10.5" fill="#34506b">(DOCUMENT node)</text>
+      <rect x="30" y="30" width="150" height="52" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="105" y="52" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">Legal basis</text>
+      <text x="105" y="69" text-anchor="middle" font-size="9.5" fill="#5c5644">REGULATION · REFERENCES</text>
+      <rect x="460" y="30" width="150" height="52" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="535" y="52" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">Authority</text>
+      <text x="535" y="69" text-anchor="middle" font-size="9.5" fill="#5c5644">ORGANIZATION · MENTIONS</text>
+      <rect x="30" y="230" width="150" height="52" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="105" y="252" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">Related procedure</text>
+      <text x="105" y="269" text-anchor="middle" font-size="9.5" fill="#5c5644">DOCUMENT · RELATED_TO</text>
+      <rect x="460" y="230" width="150" height="52" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="535" y="252" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">Entities / concepts</text>
+      <text x="535" y="269" text-anchor="middle" font-size="9.5" fill="#5c5644">ENTITY · CONCEPT · MENTIONS</text>
+      <line x1="180" y1="56" x2="225" y2="132" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar5)"/>
+      <line x1="460" y1="82" x2="415" y2="132" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar5)"/>
+      <line x1="225" y1="160" x2="180" y2="245" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar5)"/>
+      <line x1="415" y1="160" x2="460" y2="245" stroke="#0e7c66" stroke-width="1.3" marker-end="url(#ar5)"/>
+      <text x="320" y="310" text-anchor="middle" font-size="9.5" fill="#4a5a6a">Conceptual illustration — actual node labels are the generic set above
+      (enrichment maps legal bases → REGULATION, authorities → ORGANIZATION)</text>
+    </svg>
+    <div class="figcaption">Figure 5 — Conceptual graph schema. The enrichment stage extracts entities,
+    concepts, regulations and organizations per document; retrieval traverses up to 2 hops from matched
+    documents.</div>
+  </div>
+
+  <h3>5.4&nbsp;&nbsp;Why combine all three?</h3>
+  <p>Consider the question: <em>„Eine Person möchte sich anmelden, hat aber keine
+  Wohnungsgeberbestätigung.“</em> ("A person wants to register, but has no landlord's confirmation.")</p>
+  <ul>
+    <li><strong>Vector retrieval</strong> returns semantically related municipal documents — registration,
+    change of residence, deregistration procedures.</li>
+    <li><strong>Keyword retrieval</strong> returns chunks containing the relevant terminology —
+    <em>Wohnungsgeberbestätigung</em>, <em>Anmeldung</em> — wherever it literally occurs.</li>
+    <li><strong>Graph retrieval</strong> returns related administrative and legal entities — the
+    registration-law bases (REGULATION nodes) and authorities (ORGANIZATION nodes) the registration
+    documents reference.</li>
+  </ul>
+  <p>The three result sets are combined into one candidate pool. Each mechanism compensates for the blind
+  spots of the others; the question is then whether the pool actually <em>answers the question</em> — which
+  is decided much later, at verification (Section 9).</p>
+</section>
+
+<!-- ==================== 6 INTENT AND DOMAIN ==================== -->
+<section >
+  <h1 id="sec-6">6&nbsp;&nbsp;Intent and Domain Analysis</h1>
+
+  <p>Before anything is retrieved or computed, Verwaltungsassistent builds a structured understanding of the question.
+  The semantic intent parser extracts a <span class="mono">StructuredIntent</span>:
+  language (de/en/pt/fr), domain, intent type (<span class="mono">TRAVEL_ALLOWANCE</span>,
+  <span class="mono">SALARY_LOOKUP</span>, <span class="mono">PROCUREMENT_THRESHOLD</span>, or
+  <span class="mono">GENERAL</span>), and typed parameters (hours, distance in km, amount in EUR, salary
+  grade and step, overnight flag).</p>
+
+  <p>The default parser in the reference deployment is an LLM-based parser running at temperature 0
+  (deterministic decoding) on the local verifier model. Its prompt enforces semantic rules — a number
+  alone is not evidence of intent; amounts require a currency context; hours require a duration context —
+  and language-aware number parsing (e.g. distinguishing thousands separators from decimal separators in
+  German, English, French and Portuguese). A deterministic regex-based parser remains available as a
+  one-flag emergency fallback, preserving a no-LLM path for intent extraction.</p>
+
+  <h3>6.1&nbsp;&nbsp;Domains</h3>
+  <p>The reference deployment registers four administrative domains —
+  <span class="mono">PROCUREMENT</span>, <span class="mono">BUILDING</span>, <span class="mono">HR</span>,
+  <span class="mono">TRAVEL</span> — plus the neutral <span class="mono">GENERAL</span> domain.
+  Domain terminology (weighted terms per domain) is externalized in a YAML knowledge file, so domains can
+  be adapted to a new authority without code changes. A weighted keyword classifier
+  (<span class="mono">DomainClassifier</span>) exists as the legacy/fallback domain signal; when the LLM
+  parser supplies a domain, that domain is <em>authoritative</em> and is propagated through the entire
+  pipeline — into the retrieval plan and into the domain-aware ranking stage.</p>
+
+  <div class="principle">
+    <div class="p-title">Domain-coherence gate</div>
+    <p>A deterministic rule may execute only if the intent carries a domain matching the domain its rule
+    family requires (e.g. <span class="mono">TRAVEL_ALLOWANCE</span> requires domain
+    <span class="mono">TRAVEL</span>). An isolated parameter — even a plausible one — never triggers a rule
+    without a coherent domain. This prevents semantically similar but domain-irrelevant interpretations
+    from hijacking the deterministic path.</p>
+  </div>
+
+  <h3>6.2&nbsp;&nbsp;How domain information shapes ranking</h3>
+  <p>Domain influences candidate ranking through a <em>soft</em> gate, not a hard filter
+  (<span class="mono">DomainGate</span>). After hybrid fusion and reranking, each candidate's score is
+  multiplied by a domain relevance factor derived from its document title: documents matching the query's
+  domain (or domain-neutral documents) keep their score (factor 1.0); documents that clearly belong to a
+  <em>different</em> domain receive a mild penalty (factor 0.8) and are re-sorted accordingly. Cross-domain
+  documents are thus demoted, not deleted — a hard filter could drop a genuinely relevant cross-referenced
+  regulation. This mechanism is what keeps, for example, travel-expense regulations out of the top ranks
+  of a procurement question, without silently censoring the result set.</p>
+</section>
+
+<!-- ==================== 7 CANDIDATE RANKING ==================== -->
+<section >
+  <h1 id="sec-7">7&nbsp;&nbsp;Candidate Ranking: Fusion, Reranking and Evidence Selection</h1>
+
+  <p>Retrieval produces <em>candidates</em> — never guaranteed evidence. Three ranking steps transform the
+  raw pool into the compact evidence package that the generator sees.</p>
+
+  <h3>7.1&nbsp;&nbsp;Fusion of the three result sets</h3>
+  <p>Fusion happens at chunk level: when a chunk was found by more than one mechanism, its signals are
+  combined. The fused ranking score is a weighted combination of the keyword score, the vector score and a
+  confidence component, multiplied by a document-type weight derived from query intent (the weights are
+  configuration; the reference deployment uses 0.20 / 0.60 / 0.20):</p>
+  <div class="eq">rankingScore = (0.20 · keywordScore + 0.60 · vectorScore + 0.20 · confidenceScore) · documentTypeWeight</div>
+  <p>Graph hits add a modest additive boost to an existing candidate (15% of the graph score, capped at
+  1.0) rather than competing as a third proportional weight. This reflects the role of the graph as
+  structural evidence for documents already found by the text-level mechanisms. The pool is then
+  deduplicated to one record chunk per document: among chunks that literally carry question terminology,
+  the best fused score wins; only if a document has no lexically anchored chunk does its overall best
+  chunk represent it. After deduplication, a lexical anchor rule drops candidates with no overlap with
+  the question at all (skipped when it would leave fewer than two candidates), a relative semantic floor
+  (half of the best vector score, at least 0.20) removes weakly related tail candidates, and sister-chunk
+  expansion re-attaches adjacent passages (a 500-character window around each selected chunk) so split
+  sentences remain readable in the evidence package.</p>
+
+  <div class="note">
+    <div class="p-title">What the implementation is — and is not</div>
+    <p>The current implementation uses the fixed weighted fusion above with an intent-based document-type
+    multiplier, plus the additive graph boost. It does <em>not</em> use reciprocal-rank fusion, learned
+    weights, or a naive 40/30/30 split across the three mechanisms.</p>
+  </div>
+
+  <h3>7.2&nbsp;&nbsp;Reranking</h3>
+  <p>The reranking stage orders the fused candidates by ranking score. The platform also contains an
+  LLM-based cross-reranker (a local model scoring each candidate's relevance to the question, blended
+  80/20 with the retrieval score) — implemented, but <em>not enabled</em> in the current reference
+  configuration; the active reranking is the deterministic score sort followed by the domain gate.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 220" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#123a5f"/>
+        </marker>
+      </defs>
+      <rect x="20" y="30" width="150" height="44" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="95" y="57" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Vector candidates</text>
+      <rect x="20" y="100" width="150" height="44" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="95" y="127" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Keyword candidates</text>
+      <rect x="20" y="170" width="150" height="44" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="95" y="197" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Graph candidates</text>
+      <rect x="260" y="90" width="160" height="60" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="340" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="#123a5f">Candidate pool</text>
+      <text x="340" y="133" text-anchor="middle" font-size="10" fill="#34506b">fused · dedup per document</text>
+      <rect x="500" y="90" width="160" height="60" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="580" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#123a5f">Reranking</text>
+      <text x="580" y="130" text-anchor="middle" font-size="10" fill="#34506b">score sort · domain gate (×0.8)</text>
+      <rect x="740" y="90" width="100" height="60" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="790" y="112" text-anchor="middle" font-size="11.5" font-weight="700" fill="#123a5f">Top</text>
+      <text x="790" y="129" text-anchor="middle" font-size="11.5" font-weight="700" fill="#123a5f">candidates</text>
+      <line x1="170" y1="52" x2="260" y2="100" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar6)"/>
+      <line x1="170" y1="122" x2="260" y2="120" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar6)"/>
+      <line x1="170" y1="192" x2="260" y2="140" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar6)"/>
+      <line x1="420" y1="120" x2="500" y2="120" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar6)"/>
+      <line x1="660" y1="120" x2="740" y2="120" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar6)"/>
+    </svg>
+    <div class="figcaption">Figure 6 — Candidate ranking: three retrieval streams → one fused pool →
+    reranking with domain adjustment → top candidates. Still candidates: verification has not happened.</div>
+  </div>
+
+  <h3>7.3&nbsp;&nbsp;Evidence selection: the evidence package</h3>
+  <p>The final compression step (<span class="mono">EvidencePackageBuilder</span>) converts ranked
+  candidates into the small, high-quality package the generator may use:</p>
+  <ul>
+    <li><strong>Source cap</strong> — at most 4 documents per question.</li>
+    <li><strong>Diversity cap</strong> — at most 3 excerpts (paragraphs) per document.</li>
+    <li><strong>Excerpt limit</strong> — each excerpt truncated to 1,200 characters.</li>
+    <li><strong>Lexical relevance floor</strong> — a document must cover at least 30% of the question's
+    word mass; from the second document on, a relative floor applies as well (max(0.20, half of the best
+    document's coverage)), so weak tail documents fall away instead of diluting the prompt.</li>
+    <li><strong>Sufficiency label</strong> — the package counts as <em>sufficient</em> only when at least
+    two documents are used and the leading document's confidence reaches 0.6; a single strong document is
+    labelled <em>partial</em>, not sufficient.</li>
+  </ul>
+  <p>This discipline is deliberate: a focused prompt with 3–4 documents is far less likely to produce
+  unsupported claims than a 15-candidate dump. The total prompt stays below 3,800 characters, which also
+  bounds generation latency and cost.</p>
+</section>
+
+<!-- ==================== 8 EVIDENCE PROBLEM ==================== -->
+<section >
+  <h1 id="sec-8">8&nbsp;&nbsp;The Critical Evidence Problem</h1>
+
+  <div class="principle">
+    <div class="p-title">Semantic similarity &ne; evidentiary support</div>
+    <p><strong>A document can be highly similar to a question and still not contain the information
+    necessary to answer it.</strong> Retrieval ranks relatedness; only verification can establish support.
+    In Verwaltungsassistent every retrieved item is a <em>candidate</em> until the verification stage confirms it as
+    <em>evidence</em> for the specific claims of the specific answer.</p>
+  </div>
+
+  <p>The clearest demonstration comes from the reference deployment's own development history. Consider:</p>
+  <div class="german-quote">
+    „Eine Person will sich anmelden, hat aber keine Wohnungsgeberbestätigung.“<br>
+    <span class="small">"A person wants to register (their residence), but has no landlord's confirmation
+    of residence."</span>
+  </div>
+
+  <p>Retrieval for this question works <em>excellently</em> in the naive sense: the demo corpus contains 15
+  Berlin registration-related procedure documents, and vector, keyword and graph search all return
+  registration material — <em>Anmeldung</em>, change of residence, deregistration, their legal bases and
+  authorities. Every one of these documents is genuinely related to Berlin administration, and several are
+  genuinely about residence registration.</p>
+
+  <p>But none of them contains the specific piece of information the question asks for: the exception case
+  for registration <em>without</em> a Wohnungsgeberbestätigung. The retrieved documents describe the
+  standard procedure, in which the confirmation is required. Top-k similarity — even near-perfect topical
+  fit — does not answer the question. A naive RAG system would still generate an answer: the model would
+  plausibly describe the standard registration procedure, possibly adding a general caveat from its own
+  knowledge, cite the retrieved documents, and present the result confidently. The answer would look
+  grounded and would be wrong in exactly the way that matters.</p>
+
+  <div class="principle">
+    <div class="p-title">Retrieved candidate &ne; verified evidence</div>
+    <p>This distinction is the fundamental difference between Verwaltungsassistent and simplistic top-k RAG. Candidates
+    are inputs to verification, not outputs to the user. The user never sees "retrieved documents"
+    presented as proof; the user sees <em>verified citations</em> — and only if verification succeeded.</p>
+  </div>
+</section>
+
+<!-- ==================== 9 VERIFICATION ==================== -->
+<section >
+  <h1 id="sec-9">9&nbsp;&nbsp;Evidence Verification</h1>
+
+  <p>After generation, Verwaltungsassistent runs an <strong>independent verification stage</strong>. The generated answer
+  is decomposed into claims (its sections: <span class="mono">KURZANTWORT</span> (short answer),
+  <span class="mono">ENTSCHEIDUNG</span> (decision), <span class="mono">RECHTSGRUNDLAGE</span> (legal
+  basis), <span class="mono">VERFAHREN</span> (procedure), <span class="mono">NÄCHSTER SCHRITT</span> (next
+  step)); each claim is then judged against the retrieved evidence excerpts by a <em>separate</em> verifier
+  model — a different model instance and different LLM calls from the generator.</p>
+
+  <h3>9.1&nbsp;&nbsp;What the verifier receives</h3>
+  <ul>
+    <li>The extracted claims of the generated answer (each truncated to 400 characters).</li>
+    <li>The evidence excerpts from the evidence package (each truncated to 500 characters for the
+    verifier), identified as <span class="mono">E1…En</span> — at most the five highest-confidence
+    evidence items are submitted.</li>
+    <li>In the default batched strategy, additionally the <strong>user question itself</strong>, together with
+    "critical rules" — most importantly: <em>"Retrieved candidates are NOT automatically evidence. A high
+    retrieval similarity score does NOT mean a candidate is relevant to the USER QUESTION."</em> and
+    <em>"If the available evidence is insufficient …, the correct result is an insufficient-evidence
+    outcome (UNKNOWN for all claims) — never an inferred or invented answer."</em></li>
+  </ul>
+
+  <h3>9.2&nbsp;&nbsp;Verdicts</h3>
+  <p>For every claim/evidence relationship the verifier returns one of three verdicts with a confidence
+  and a reason:</p>
+  <table>
+    <tr><th style="width:34mm">Verdict</th><th>Meaning</th><th>Consequence for the claim</th></tr>
+    <tr><td class="mono">ENTAILED</td><td>The evidence logically supports the claim; the claim follows from the evidence.</td><td>Supported finding (primary). The claim may be presented, citing this evidence.</td></tr>
+    <tr><td class="mono">CONTRADICTED</td><td>The evidence contradicts the claim (negation, different numbers, opposite obligation).</td><td>Contradicted finding (secondary). Counts against grounding.</td></tr>
+    <tr><td class="mono">UNKNOWN</td><td>The evidence is insufficient to determine; the claim concerns different facts.</td><td>Unsupported finding (secondary). Counts against grounding.</td></tr>
+  </table>
+  <p>The verifier prompt is explicit about the traps that make this judgment hard: negation
+  ("not required" vs "required" is a contradiction, not a near-miss), differing numerical values
+  ("12 EUR" vs "24 EUR" contradict when the evidence fixes the value), obligation strength
+  ("must" vs "may"), exceptions, temporal qualifications and paraphrases.</p>
+
+  <h3>9.3&nbsp;&nbsp;Why an independent verifier — and what it cannot do</h3>
+  <p>The generator is asked to write a plausible answer; a model asked to check its own work inherits its
+  own blind spots. The verifier's task is narrower — judgment of logical entailment between a fixed claim
+  and a fixed excerpt — and it runs as separate calls with its own model configuration. In the reference
+  deployment the verifier runs on <span class="mono">qwen2.5:14b</span>; the validated
+  <span class="mono">qwen2.5:7b</span> verifier remains a one-variable rollback option, and both were
+  evaluated on a controlled entailment benchmark (see Section 13).</p>
+
+  <p>The verifier is <em>not infallible</em>: it is an LLM, and its judgments are probabilistic. Its
+  verdicts are recorded in the audit trail with reasons, and its failures degrade safely — a verification
+  error yields <span class="mono">UNKNOWN</span>, which counts against grounding, never for it.</p>
+
+  <h3>9.4&nbsp;&nbsp;Verification strategies (configurable)</h3>
+  <ul>
+    <li><span class="mono">claim_batch</span> (default) — one verifier call covering all claims and all
+    evidence items of the question, including the user question and the critical rules above. Reduces
+    verifier round-trips by roughly an order of magnitude while keeping the independent-verifier role.</li>
+    <li><span class="mono">pairwise</span> — one verifier call per claim/evidence pair. Maximally
+    isolated judgments; the historical baseline and the one-flag fallback.</li>
+  </ul>
+
+  <h3>9.5&nbsp;&nbsp;How verification shapes the final result</h3>
+  <p>Verification results feed the grounding decision, but the final present/withhold status is
+  deliberately <strong>deterministic</strong>: it is computed from stable artifacts only — evidence whose
+  excerpt or document title carries a specific term of the question (the <em>anchor rule</em>), and the
+  lexical support of the drafted core answer against that anchored evidence. Stochastic per-claim
+  verdicts inform the findings and the audit trail (a verified contradiction is treated as a blocker)
+  but cannot flip the status from run to run for the same question, corpus and retrieval. Citations are
+  re-scored against the final answer text (lexical overlap boost) and tiered into PRIMARY / SUPPORTING /
+  BACKGROUND, so the UI can distinguish the sources that actually carry the answer from peripheral
+  material.</p>
+</section>
+
+<!-- ==================== 10 FAIL-CLOSED ==================== -->
+<section >
+  <h1 id="sec-10">10&nbsp;&nbsp;Fail-Closed Answer Boundary</h1>
+
+  <p>The verification stage is not advisory. It is the <strong>authoritative safety boundary</strong> of
+  the system, enforced in code by a deterministic gate: an answer is presented only when the evidence
+  package contains at least one item <em>anchored</em> to the question — an excerpt or document title
+  carrying a specific term of the question — and the drafted core answer is lexically supported by that
+  anchored evidence. Otherwise the generated answer is <strong>not presented</strong>: the user receives
+  the system's explicit insufficient-knowledge response, and the citations are cleared:</p>
+
+  <div class="german-quote">
+    „Für diese Frage liegen in der Wissensbasis keine ausreichenden Informationen vor.“<br>
+    <span class="small">"The knowledge base does not contain sufficient information for this question."</span>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 860 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+      <defs>
+        <marker id="ar7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#123a5f"/>
+        </marker>
+      </defs>
+      <rect x="20" y="110" width="170" height="56" rx="6" fill="#e8f0f7" stroke="#123a5f" stroke-width="1.2"/>
+      <text x="105" y="133" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123a5f">Retrieved candidates</text>
+      <text x="105" y="152" text-anchor="middle" font-size="10" fill="#34506b">(evidence package)</text>
+      <rect x="280" y="110" width="170" height="56" rx="6" fill="#fdf6e3" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="365" y="133" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7a5f1c">Verification</text>
+      <text x="365" y="152" text-anchor="middle" font-size="10" fill="#5c5644">claims × evidence · verifier model</text>
+      <rect x="540" y="20" width="140" height="56" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="610" y="43" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c4c">Sufficient</text>
+      <text x="610" y="61" text-anchor="middle" font-size="10" fill="#1d4d42">anchored evidence present</text>
+      <rect x="720" y="20" width="120" height="56" rx="6" fill="#f0f7f4" stroke="#0e7c66" stroke-width="1.2"/>
+      <text x="780" y="43" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0a5c4c">Generate /</text>
+      <text x="780" y="60" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0a5c4c">present answer</text>
+      <rect x="540" y="200" width="140" height="56" rx="6" fill="#f7f4ec" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="610" y="223" text-anchor="middle" font-size="12" font-weight="700" fill="#7a5f1c">Insufficient</text>
+      <text x="610" y="241" text-anchor="middle" font-size="10" fill="#5c5644">no anchored evidence</text>
+      <rect x="720" y="200" width="120" height="56" rx="6" fill="#f7f4ec" stroke="#a8842c" stroke-width="1.2"/>
+      <text x="780" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">Refuse —</text>
+      <text x="780" y="238" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7a5f1c">insufficient info</text>
+      <line x1="190" y1="138" x2="280" y2="138" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar7)"/>
+      <line x1="450" y1="138" x2="540" y2="58" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar7)"/>
+      <line x1="450" y1="138" x2="540" y2="218" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar7)"/>
+      <line x1="680" y1="48" x2="720" y2="48" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar7)"/>
+      <line x1="680" y1="228" x2="720" y2="228" stroke="#123a5f" stroke-width="1.3" marker-end="url(#ar7)"/>
+      <text x="780" y="282" text-anchor="middle" font-size="9.5" fill="#4a5a6a">citations cleared — honest "we don't know" replaces the draft answer</text>
+    </svg>
+    <div class="figcaption">Figure 7 — The fail-closed boundary: verification decides between presenting
+    the grounded answer and replacing it with the insufficient-information response.</div>
+  </div>
+
+  <p>The boundary also holds in the retrieval-failure direction: if retrieval produces no usable sources
+  at all, the same insufficient-information response is returned, and the generation prompt itself
+  contains an explicit no-documents block (<em>„KEINE DOKUMENTE GEFUNDEN.“</em> — "NO DOCUMENTS FOUND")
+  instructing the model that the knowledge base contains no sufficient information. The unsupported and
+  contradicted findings remain recorded as the honest verification trail.</p>
+
+  <div class="principle">
+    <div class="p-title">Retrieval failure must not become fabricated certainty</div>
+    <p><strong>Fail-closed means: when the evidence does not support an answer, the system's answer is
+    "insufficient information" — not the model's best guess.</strong> For an administrative assistant this
+    is the single most important behavioral guarantee: users learn that a confident answer means verified
+    support, and that silence means the knowledge base has a gap — which the platform surfaces as a
+    corpus-coverage finding rather than hiding.</p>
+  </div>
+</section>
+
+<!-- ==================== 11 RULE-FIRST ==================== -->
+<section >
+  <h1 id="sec-11">11&nbsp;&nbsp;Rule-First Processing and Structured Knowledge</h1>
+
+  <p>Many high-value administrative questions are <em>computable</em>: they have exactly one correct
+  answer given the applicable table. For these, Verwaltungsassistent never asks a language model to reason. The router
+  looks up the answer in structured knowledge and the LLM is used only to <em>explain</em> the computed
+  decision — in the user's language, in a fixed format, with the legal basis attached. Retrieval is
+  structurally skipped on this path.</p>
+
+  <h3>11.1&nbsp;&nbsp;Structured knowledge tables in the reference deployment</h3>
+  <p>The municipal application registers three authoritative tables at startup (versioned, reloadable
+  registry). The core platform is generic: it iterates whatever tables an application registers — the
+  tables themselves are municipal data, not platform code.</p>
+
+  <table>
+    <tr><th style="width:40mm">Table</th><th>Source</th><th>Effective</th><th style="width:82mm">Representative values</th></tr>
+    <tr>
+      <td><strong>TV-L salary</strong> (Entgelttabellen)</td>
+      <td>TV-L 2025 collective agreement</td>
+      <td>2025-02-01</td>
+      <td>EG 1–15 × Stufen 1–6, e.g. EG 5 Stufe 2 = 3,362.72 €; EG 9b Stufe 3 = 4,117.53 €</td>
+    </tr>
+    <tr>
+      <td><strong>BRKG travel allowances</strong> (Reisekosten)</td>
+      <td>Bundesreisekostengesetz (BRKG)</td>
+      <td>2024-01-01</td>
+      <td>Tagegeld 24 h = 24 € · 11–24 h = 12 € · 8–11 h = 6 € · arrival/departure day = 12 € · mileage 0.35 €/km (car), 0.20 €/km (motorcycle) · accommodation 80 € (with receipt) / 20 € (flat rate)</td>
+    </tr>
+    <tr>
+      <td><strong>Procurement thresholds</strong> (Vergabeverfahren)</td>
+      <td>Ausführungsvorschriften zu § 55 LHO Berlin</td>
+      <td>2024-01-01</td>
+      <td>&lt;500 € no formal procedure · 500–1,000 € direct award with approval · 1,000–10,000 € direct award with procurement note · 10,000–100,000 € restricted tender (3 comparison quotes) · ≥100,000 € public/EU-wide tender · construction ≤20,000 € direct award</td>
+    </tr>
+  </table>
+
+  <p>Beyond these registered tables, the platform ships a <strong>generic structured-knowledge
+  store</strong>: items of kind <span class="mono">TABLE</span>, <span class="mono">THRESHOLD</span>,
+  <span class="mono">RULE</span>, <span class="mono">DEFINITION</span>,
+  <span class="mono">EXCEPTION</span> or <span class="mono">EFFECTIVE_DATE</span>, with the lifecycle
+  <span class="mono">CANDIDATE → VALIDATED → ACTIVE</span> (or rejected / superseded). Items can be
+  extracted from ingested documents by an LLM worker; before an item may become
+  <span class="mono">ACTIVE</span>, a validator requires provenance and numeric support and a successful
+  entailment check through the same claim-batch verification machinery used for answers. The extraction
+  worker is <em>disabled by default</em> in the shipped configuration: automated knowledge growth is an
+  explicit operator decision, not a silent side effect.</p>
+
+  <h3>11.2&nbsp;&nbsp;The deterministic path</h3>
+  <p>For a question such as <em>"Wir beschaffen Büromaterial für 3,500 € — welches Vergabeverfahren?"</em>,
+  the pipeline is: intent parse (<span class="mono">PROCUREMENT_THRESHOLD</span>, amount = 3,500 €) →
+  domain-coherence gate (domain <span class="mono">PROCUREMENT</span> required and present) → threshold
+  table lookup (1,000–10,000 € → <em>Direktauftrag</em> with <em>Vergabevermerk</em>) → deterministic
+  decision at confidence 0.98 → LLM explanation prompt containing the computed decision, the applied
+  threshold, the legal basis (AV § 55 LHO Berlin) and the responsible authority. The generation prompt
+  explicitly forbids the model from choosing a different procedure or performing its own calculations.
+  No retrieval, no verification against documents — the table <em>is</em> the authority, and the answer is
+  presented as grounded with the legal basis as primary authority reference.</p>
+
+  <p>Two further guards protect this path: a salary lookup requires <em>both</em> grade and step in the
+  question (no silent default for a missing step — the question falls through to retrieval instead of
+  inventing one), and each parameter class is authorized only by its matching intent type (an isolated
+  "12 hours" in a GENERAL question never triggers a travel rule).</p>
+
+  <h3>11.3&nbsp;&nbsp;Two answer classes, clearly separated</h3>
+  <table>
+    <tr><th style="width:52mm"></th><th>Deterministic rule answer</th><th>Retrieval-grounded generative answer</th></tr>
+    <tr><td><strong>Trigger</strong></td><td>Structured knowledge resolves the question exactly</td><td>No deterministic match — hybrid retrieval runs</td></tr>
+    <tr><td><strong>Computation</strong></td><td>Rule table lookup (exact)</td><td>LLM reasoning over verified evidence only</td></tr>
+    <tr><td><strong>LLM role</strong></td><td>Explain-only; forbidden to alter the decision</td><td>Generate; restricted to supplied evidence</td></tr>
+    <tr><td><strong>Verification</strong></td><td>Not needed — table is authoritative</td><td>Mandatory claim verification + fail-closed gate</td></tr>
+    <tr><td><strong>Citations</strong></td><td>Legal basis as primary authority reference</td><td>Verified excerpts with page numbers, tiered</td></tr>
+  </table>
+</section>
+
+<!-- ==================== 12 END-TO-END EXAMPLES ==================== -->
+<section >
+  <h1 id="sec-12">12&nbsp;&nbsp;End-to-End Examples</h1>
+
+  <p>Three worked examples follow the actual pipeline. Question texts are German, as used by the
+  reference deployment; English translations are given in parentheses.</p>
+
+  <h3>Example 1 — Deterministic rule: travel allowance</h3>
+  <div class="german-quote">„Wie hoch ist das Tagegeld bei einer Dienstreise von 12 Stunden?“<br>
+  <span class="small">"What is the daily allowance for a 12-hour business trip?"</span></div>
+  <div class="flowline">question → semantic intent parse → routing → structured lookup → rule answer</div>
+  <ol class="tight">
+    <li><strong>Intent:</strong> the LLM parser returns <span class="mono">TRAVEL_ALLOWANCE</span>, domain
+    <span class="mono">TRAVEL</span>, <span class="mono">hours = 12</span>, language de.</li>
+    <li><strong>Domain-coherence gate:</strong> <span class="mono">TRAVEL_ALLOWANCE</span> requires domain
+    <span class="mono">TRAVEL</span> — coherent, lookup proceeds.</li>
+    <li><strong>Structured lookup:</strong> the BRKG table resolves 12 h to the 11–24 h bracket:
+    <em>Tagegeld 12,00 €</em>. Decision confidence 0.99.</li>
+    <li><strong>Deterministic path:</strong> no retrieval. The explanation prompt carries the computed
+    decision ("Tagegeld: 12 € (11-24h)"), the legal basis <em>Bundesreisekostengesetz (BRKG)</em> and the
+    authority; the LLM formats it as <span class="mono">KURZANTWORT / ENTSCHEIDUNG / RECHTSGRUNDLAGE</span>.
+    The answer is presented as grounded with the BRKG as primary authority reference.</li>
+  </ol>
+
+  <h3>Example 2 — Deterministic rule: procurement threshold</h3>
+  <div class="german-quote">„Wir möchten Büromaterial im Wert von 3.500 € beschaffen. Welches Vergabeverfahren ist anzuwenden?“<br>
+  <span class="small">"We want to procure office supplies worth 3,500 €. Which award procedure applies?"</span></div>
+  <ol class="tight">
+    <li><strong>Intent:</strong> <span class="mono">PROCUREMENT_THRESHOLD</span>, domain
+    <span class="mono">PROCUREMENT</span>, <span class="mono">amountEur = 3500</span> (thousands separator
+    parsed correctly as 3500, not 3.5).</li>
+    <li><strong>Gate:</strong> domain coherent → threshold lookup authorized.</li>
+    <li><strong>Lookup:</strong> AV § 55 LHO Berlin, Lieferung/Dienstleistung, 1,000–10,000 € →
+    <em>Direktauftrag</em>, requirement: <em>Vergabevermerk</em> (procurement note). Confidence 0.98.</li>
+    <li><strong>Presentation:</strong> deterministic decision + legal basis (AV zu § 55 LHO Berlin) +
+    authority, explained by the LLM in the standard format. No retrieval, no document verification —
+    the rule table is the authoritative source.</li>
+  </ol>
+
+  <h3>Example 3 — Successful retrieval: applying for an identity card</h3>
+  <div class="german-quote">„Welche Unterlagen benötige ich, um einen Personalausweis zu beantragen?“<br>
+  <span class="small">"Which documents do I need to apply for an identity card?"</span></div>
+  <ol class="tight">
+    <li><strong>Routing:</strong> no structured table resolves this (intent <span class="mono">GENERAL</span>)
+    → retrieval path, graph-enhanced hybrid mode (Neo4j available).</li>
+    <li><strong>Hybrid retrieval:</strong> vector search finds the official procedure
+    <em>ServicePortal-120703 — Personalausweis beantragen</em> (semantically closest to the question, in
+    the demo corpus); keyword search confirms chunks literally containing the required-documents
+    terminology; graph search adds related identity procedures (e.g. passport, provisional identity card)
+    and the legal bases they cite.</li>
+    <li><strong>Fusion and ranking:</strong> the three streams merge into one candidate per document;
+    domain adjustment is neutral (question domain <span class="mono">GENERAL</span>); the evidence package
+    selects ≤4 documents × ≤3 excerpts of up to 1,200 characters — the identity-card procedure
+    dominating.</li>
+    <li><strong>Generation:</strong> the prompt contains only those evidence blocks plus the strict rules
+    ("use only the evidence, invent no regulations, quote numbers exactly"). The model drafts the answer
+    in the standard section format, citing documents.</li>
+    <li><strong>Verification:</strong> the excerpts are anchored to the question (they carry its specific
+    terms) and the drafted core answer is lexically supported by them — the required-documents claims
+    (biometric photo, previous identity document, registration certificate) are corroborated and nothing
+    is contradicted. The answer is presented as sourced, citations are tiered, and the user sees the
+    answer with links to the source document, page references and excerpts.</li>
+  </ol>
+
+  <h3>Example 4 — Unsupported retrieval: registration without a landlord's confirmation</h3>
+  <div class="german-quote">„Eine Person will sich anmelden, hat aber keine Wohnungsgeberbestätigung.“<br>
+  <span class="small">"A person wants to register, but has no landlord's confirmation."</span></div>
+  <ol class="tight">
+    <li><strong>Routing:</strong> no rule table matches → retrieval path.</li>
+    <li><strong>Retrieval:</strong> the demo corpus is rich in registration material; vector, keyword and
+    graph search all return related candidates — registration, change of residence, deregistration
+    procedures, their legal bases and authorities. Top-k retrieval looks highly successful.</li>
+    <li><strong>The evidence problem:</strong> none of the retrieved documents states the exception case
+    the question asks about (registration <em>without</em> the confirmation). The candidates are about
+    Berlin administration — and about registration — but they are not evidence <em>for this question</em>.</li>
+    <li><strong>Verification rejects the unsupported claims:</strong> the retrieved excerpts concern the
+    standard procedure — they do not carry the specific terms of the requested exception, so no anchored
+    evidence exists and the drafted claims find no lexical support.</li>
+    <li><strong>Fail-closed:</strong> the draft answer is discarded. The user receives
+    <em>„Für diese Frage liegen in der Wissensbasis keine ausreichenden Informationen vor.“</em> with
+    citations cleared. The unsupported findings remain in the audit trail, flagging a genuine knowledge-base
+    gap (the exception document is not yet in the corpus) — actionable for corpus management.</li>
+  </ol>
+
+  <div class="principle">
+    <div class="p-title">Example 4 is a safety feature, not a failure</div>
+    <p>A top-k RAG system would have produced a confident, cited, plausible — and wrong — answer here.
+    Verwaltungsassistent's refusal is the designed outcome of the candidate/evidence distinction and the fail-closed
+    boundary. In the reference deployment this exact case drove the introduction of the verification
+    gate.</p>
+  </div>
+</section>
+
+<!-- ==================== 13 PERFORMANCE ==================== -->
+<section >
+  <h1 id="sec-13">13&nbsp;&nbsp;Performance Considerations</h1>
+
+  <p>End-to-end latency is dominated by LLM inference, not by retrieval. Each question triggers at least
+  one LLM call (intent parsing), one generation call, and one or more verification calls; retrieval itself
+  consists of one SQL keyword query, one vector search round-trip and one graph query — each typically
+  measured in tens to hundreds of milliseconds on the demo host.</p>
+
+  <table>
+    <tr><th>Stage</th><th>Typical role</th><th>Relative cost</th></tr>
+    <tr><td>Intent parsing</td><td>LLM call, temperature 0, short output (JSON)</td><td>Low–medium (one small LLM call)</td></tr>
+    <tr><td>Keyword retrieval</td><td>Term-variant pattern matching over chunk text, scored in-process (PostgreSQL)</td><td>Low (database query + in-memory scoring)</td></tr>
+    <tr><td>Vector retrieval</td><td>One embedding + cosine search in Qdrant (over-fetched candidate depth)</td><td>Low (one embedding + index search)</td></tr>
+    <tr><td>Graph retrieval</td><td>Keyword match + 2-hop traversal (Neo4j)</td><td>Low (graph query)</td></tr>
+    <tr><td>Fusion / reranking / evidence package</td><td>In-memory arithmetic and sorting</td><td>Negligible</td></tr>
+    <tr><td>Answer generation</td><td>Generation model (14B local), ≤4k-char prompt</td><td>High (dominant single call)</td></tr>
+    <tr><td>Evidence verification</td><td>Verifier model: one batched call per question (claim_batch, default) or one call per claim/evidence pair</td><td>High (batched: constant; pairwise: scales with claims × evidence)</td></tr>
+  </table>
+
+  <div class="note">
+    <div class="p-title">Development measurements — not production guarantees</div>
+    <p>In a controlled verification experiment on the demo host (single NVIDIA Quadro P5000, 16 GB VRAM,
+    local Ollama serving, August 2026), the qwen2.5:7b verifier completed a verification batch in ≈2.2 s
+    with 100% correct verdicts on the entailment benchmark, while qwen2.5:14b took ≈4.8 s with 96.3%
+    correct verdicts. Both models were benchmarked because both are supported configurations; the 14B
+    model is the current default. These figures are development-environment measurements for sizing
+    intuition only and must not be read as production SLAs; production sizing depends on GPU class, batch
+    load and model choice, and the platform's model endpoints are fully configurable.</p>
+  </div>
+
+  <p>Because verification cost scales with the number of claims and evidence items, the evidence package
+  is deliberately small (≤4 documents, ≤3 paragraphs each, ≤5 claim sections), and the default
+  <span class="mono">claim_batch</span> strategy collapses verification into a single call per question.
+  Retrieval, by contrast, is cheap — which is why Verwaltungsassistent can afford three retrieval mechanisms where a
+  single vector search would cost marginally less but miss materially more.</p>
+</section>
+
+<!-- ==================== 14 AUDITABILITY ==================== -->
+<section >
+  <h1 id="sec-14">14&nbsp;&nbsp;Auditability and Explainability</h1>
+
+  <p>Administrative use requires that every answer be reconstructable. Verwaltungsassistent records the evidence trail at
+  every stage, into a dedicated audit store (PostgreSQL <span class="mono">audit_events</span>):</p>
+  <ul>
+    <li><strong>Retrieval events</strong> — per question: search mode, classified intent, candidate counts
+    per mechanism (keyword / vector / graph), merged result count.</li>
+    <li><strong>Inference events</strong> — per question: chosen strategy
+    (<span class="mono">RULE_ENGINE</span> / <span class="mono">GRAPH_REASONING</span> /
+    <span class="mono">HYBRID_RETRIEVAL</span>), whether retrieval executed, model used, overall confidence.</li>
+    <li><strong>Execution trace</strong> — per-stage timing (intent, routing, retrieval, prompt, LLM,
+    coverage, grounding) and per-stage logs.</li>
+    <li><strong>Verification trail</strong> — per claim: verdict, confidence, verifier reason, supporting
+    evidence references; contradicted and unsupported findings are retained even when the answer is
+    withheld.</li>
+    <li><strong>User-facing explanation</strong> — every presented answer carries its citations (document,
+    page, excerpt) tiered PRIMARY / SUPPORTING / BACKGROUND, its legal-basis references, and an overall
+    confidence profile; the UI marks answers as grounded ("durch Quellen belegt") or as having limited
+    sourcing, and audit-log views (with CSV export) are available to AUDITOR/ADMIN roles.</li>
+  </ul>
+
+  <p>Retrieval provenance is preserved per candidate: the system records <em>which</em> mechanism
+  discovered each cited chunk (KEYWORD / VECTOR / GRAPH, possibly several), so an auditor can see not only
+  what was cited but how it was found.</p>
+
+  <p>Answers produced in the case-workflow path are additionally stored as <strong>versioned analysis
+  runs</strong>: each run records its status, timestamps and the identity of the evidence it used
+  (document id plus version). A later review can therefore tell whether the evidence base has changed
+  since an answer was produced — replaced or removed evidence is detectable, not silently
+  overwritten.</p>
+</section>
+
+<!-- ==================== 15 SECURITY / ON-PREMISE ==================== -->
+<section >
+  <h1 id="sec-15">15&nbsp;&nbsp;Security, On-Premise and Air-Gapped Deployment</h1>
+
+  <p>Verwaltungsassistent is designed for authorities that cannot send administrative questions or document corpora to
+  external clouds. The entire runtime — PostgreSQL, Qdrant, Neo4j and the model server — runs on local
+  infrastructure; in the packaged VM deployment only the web port and SSH are exposed, while the database
+  and model ports remain VM-internal. All models (generation, verification, embeddings) run locally via
+  Ollama; no question, document or answer leaves the deployment. Runtime operation is air-gapped
+  capable; only initial model downloads require internet access.</p>
+
+  <p>Access control for the reference deployment: Spring Security form login with BCrypt (cost 12)
+  password hashing, CSRF protection, a managed session registry (bounded concurrent sessions, forced
+  re-login on expiry), and role-based authorization on every surface — assistant, decisions, audit log,
+  corpus management, administration (ADMIN), profile. Login, logout and administrative actions are
+  themselves audit events. The platform's API application uses the same user store with self-issued
+  short-lived JWTs (access 15 min / refresh 30 days) and refresh-token rotation. A hardened,
+  non-root container build and a reproducible VM image bundle complete the deployment story
+  (see References).</p>
+
+  <p><strong>Untrusted content boundary:</strong> ingested documents, email bodies and attachments are
+  data, never instructions. Every prompt that carries retrieved content prefixes it with an explicit
+  boundary marker stating that the following material comes from external, untrusted sources and must
+  not be followed as instructions — a structural defense against prompt-injection attempts hidden in
+  ingested documents.</p>
+</section>
+
+<!-- ==================== 16 COMPARISON ==================== -->
+<section >
+  <h1 id="sec-16">16&nbsp;&nbsp;Comparison with Conventional RAG</h1>
+
+  <p>The table compares architectural patterns, not specific vendor products. "Conventional vector RAG"
+  denotes the common pattern of embedding-based retrieval feeding a generator, without independent
+  verification.</p>
+
+  <table>
+    <tr><th style="width:86mm">Capability</th><th style="width:44mm">Conventional vector RAG</th><th>Verwaltungsassistent</th></tr>
+    <tr><td>Semantic (vector) retrieval</td><td>Yes</td><td>Yes (Qdrant, local embeddings)</td></tr>
+    <tr><td>Lexical / keyword retrieval</td><td>Varies (often absent)</td><td>Yes (PostgreSQL term-variant matching, weighted lexical-coverage scoring)</td></tr>
+    <tr><td>Knowledge-graph retrieval</td><td>Usually no</td><td>Yes (Neo4j, 2-hop traversal over enriched corpus)</td></tr>
+    <tr><td>Fusion of retrieval signals</td><td>Usually single mechanism</td><td>Weighted fusion per chunk + graph boost + document dedup</td></tr>
+    <tr><td>Domain-aware ranking</td><td>Usually limited</td><td>Yes — authoritative intent domain, soft cross-domain penalty</td></tr>
+    <tr><td>Candidate/evidence distinction</td><td>Often weak — retrieved = cited</td><td>Explicit: retrieved is candidate; verified is evidence</td></tr>
+    <tr><td>Independent verification</td><td>Often absent</td><td>Separate verifier model; per-claim ENTAILED / CONTRADICTED / UNKNOWN</td></tr>
+    <tr><td>Fail-closed on unsupported answers</td><td>Often absent</td><td>Enforced in code — explicit insufficient-information answer, citations cleared</td></tr>
+    <tr><td>Deterministic rule engine</td><td>No</td><td>Rule-first: salary, travel, procurement tables answered exactly, LLM explains only</td></tr>
+    <tr><td>Multi-language intent handling</td><td>Varies</td><td>Yes — de/en/pt/fr intent parsing, language-aware number formats</td></tr>
+    <tr><td>Auditability</td><td>Varies</td><td>Per-stage audit events, verification trail, retrieval provenance, CSV export</td></tr>
+    <tr><td>Deployment model</td><td>Often cloud-dependent</td><td>Fully local: on-premise / air-gapped capable, local models</td></tr>
+  </table>
+
+  <p>The differences are structural, not cosmetic: verification and the fail-closed gate are separate
+  pipeline stages with their own model and their own authority to suppress an answer; the rule path
+  removes the language model from computation entirely for the question classes where wrong arithmetic is
+  unacceptable.</p>
+</section>
+
+<!-- ==================== 17 LIMITATIONS ==================== -->
+<section >
+  <h1 id="sec-17">17&nbsp;&nbsp;Limitations</h1>
+
+  <p>Verwaltungsassistent is designed for trustworthiness, not omniscience. Its limitations are known and deliberately
+  surfaced:</p>
+  <ul>
+    <li><strong>Retrieval can still miss relevant information.</strong> Single-pass retrieval without
+    query rewriting is fast and auditable but can miss what a multi-round strategy might find; the
+    evidence package also truncates (≤4 documents) for quality, at the cost of completeness.</li>
+    <li><strong>Lexical search is deliberately simple.</strong> The current keyword mechanism is
+    term-variant pattern matching with deterministic coverage scoring — no full-text/BM25 ranking yet.
+    Very large corpora or heavily inflected languages would motivate upgrading this component.</li>
+    <li><strong>Graph completeness depends on ingestion enrichment.</strong> The graph is only as good as
+    the LLM-based enrichment that builds it; un-ingested or poorly enriched documents are invisible to
+    graph retrieval.</li>
+    <li><strong>LLM verification is probabilistic.</strong> The verifier can err; misjudged verdicts flow
+    into grounding. The design minimizes harm (errors default to UNKNOWN, which fails closed, and the
+    trail is auditable), but verification is not formal proof.</li>
+    <li><strong>Model latency.</strong> Local 14B-class generation and verification cost seconds per call;
+    interactive latency depends on available GPU capacity. The batched verification strategy (the
+    default) bounds this per question.</li>
+    <li><strong>Corpus coverage.</strong> The system can only know what was ingested. The
+    insufficient-information answer is honest, but its frequency is a function of corpus maintenance.</li>
+    <li><strong>Regulations change.</strong> Structured tables (BRKG, TV-L, AV § 55 LHO) are versioned
+    data with effective dates; keeping them current is an operational duty, and superseded tables require
+    explicit replacement.</li>
+    <li><strong>Current stage of maturity.</strong> The reference deployment is a validated pilot/demo
+    system (single municipal corpus, demo-scale infrastructure, one active application). It is not yet
+    proven at multi-tenant or large-corpus production scale.</li>
+  </ul>
+
+  <div class="principle">
+    <div class="p-title">Why the limitations list exists</div>
+    <p>Every one of these limitations is visible to operators: retrieval misses appear as corpus-coverage
+    gaps, verification errors as UNKNOWN verdicts in the audit trail, rule-table changes as versioned
+    data. A system that hides its failure modes cannot be trusted; Verwaltungsassistent's failure modes are first-class,
+    observable outcomes.</p>
+  </div>
+</section>
+
+<!-- ==================== 18 FUTURE DIRECTIONS ==================== -->
+<section >
+  <h1 id="sec-18">18&nbsp;&nbsp;Future Directions</h1>
+
+  <p class="small">Everything in this section is <strong>future work</strong>. None of it is part of the
+  current implementation described in Sections 3–16.</p>
+
+  <ul>
+    <li><strong>Customer-specific model adaptation</strong> — PEFT/LoRA-adapted models per authority or
+    domain, fine-tuned on the customer's own corpus.</li>
+    <li><strong>Additional document sources and automated ingestion</strong> — connectors for document
+    management systems, scheduled re-ingestion of changed regulations, automated corpus monitoring.</li>
+    <li><strong>Workflow integration</strong> — connecting the case workflow to external
+    document-management and workflow systems.</li>
+    <li><strong>Operational knowledge extraction</strong> — the generic structured-knowledge extraction
+    worker ships disabled; enabling it with operator review, and broadening domain-specific structured
+    knowledge (fees, deadlines, entitlements), is future work.</li>
+    <li><strong>Retrieval upgrades</strong> — full-text/BM25 lexical search, multi-round retrieval and
+    query rewriting, activation of the implemented LLM cross-reranker, per-domain collections and
+    authority filters (the retrieval plan already carries these fields; they are currently unused).</li>
+    <li><strong>Improved model serving</strong> — batched inference serving, model quantization options,
+    GPU scheduling for multi-tenant deployments.</li>
+    <li><strong>Scale-out</strong> — multi-tenant operation, larger corpora, production-grade operations
+    (monitoring, backup, disaster recovery) beyond the current pilot setup.</li>
+  </ul>
+</section>
+
+<!-- ==================== 19 CONCLUSION ==================== -->
+<section >
+  <h1 id="sec-19">19&nbsp;&nbsp;Conclusion</h1>
+
+  <p>The central architectural story of Verwaltungsassistent is the disciplined path from question to answer:</p>
+  <div class="flowline">
+    QUESTION → understand intent/domain → retrieve candidates through multiple complementary mechanisms<br>
+    → combine and rerank candidates → determine whether candidates actually support the question<br>
+    → verify evidence → only then generate and present an answer
+  </div>
+
+  <p>Two commitments make this more than a vector RAG system. First, <strong>RETRIEVED &ne; VERIFIED</strong>:
+  the system never confuses what it found with what it proved. Second, <strong>if the evidence is
+  insufficient, Verwaltungsassistent says so</strong> — an explicit, first-class answer, enforced in code, with the
+  unsupported draft discarded and the gap recorded. Combined with rule-first deterministic answers for the
+  question classes that admit exact computation, Verwaltungsassistent offers public administration something rare in
+  generative AI deployments: a boundary between confident answers and honest refusal, drawn
+  systematically, auditably, and on-premise.</p>
+</section>
+
+<!-- ==================== GLOSSARY ==================== -->
+<section  class="glossary">
+  <h1 id="glossary">Glossary</h1>
+  <dl>
+    <dt>RAG (Retrieval-Augmented Generation)</dt>
+    <dd>A pattern in which retrieved text passages are supplied to a language model as context for
+    generation. Verwaltungsassistent implements a verification-augmented variant of this pattern.</dd>
+    <dt>Embedding</dt>
+    <dd>A numerical vector representing the meaning of a text. In Verwaltungsassistent, chunks and questions are embedded
+    with the local <span class="mono">nomic-embed-text</span> model (768 dimensions).</dd>
+    <dt>Vector search</dt>
+    <dd>Search by embedding proximity (cosine distance) — finds semantically similar text regardless of
+    wording. In Verwaltungsassistent, served by Qdrant.</dd>
+    <dt>Lexical retrieval</dt>
+    <dd>Search by literal term matching. In Verwaltungsassistent, case-insensitive pattern matching over chunk text in
+    PostgreSQL using German term variants, scored deterministically by weighted lexical coverage.</dd>
+    <dt>Knowledge graph</dt>
+    <dd>A network of entities and relationships. In Verwaltungsassistent, Neo4j holds enriched document structure:
+    documents, entities, concepts, regulations, organizations and their relationships.</dd>
+    <dt>Reranking</dt>
+    <dd>Re-ordering of fused retrieval candidates by ranking score (optionally with domain adjustment) to
+    produce the final candidate order.</dd>
+    <dt>Candidate evidence</dt>
+    <dd>Material retrieved because it looked relevant. Not yet verified; input to verification, never
+    presented as proof.</dd>
+    <dt>Verified evidence / grounding</dt>
+    <dd>Evidence that actually supports the answer. An answer is presented only when the evidence package
+    contains at least one item anchored to the question (an excerpt or document title carrying a specific
+    question term) and the drafted core answer is lexically supported by it.</dd>
+    <dt>Verification</dt>
+    <dd>The independent LLM stage that judges whether each claim of a drafted answer is ENTAILED by,
+    CONTRADICTED by, or UNKNOWN relative to the retrieved evidence.</dd>
+    <dt>Fail-closed boundary</dt>
+    <dd>The enforced rule that an answer with no supported claims is replaced by the explicit
+    insufficient-information response and its citations cleared.</dd>
+    <dt>Structured knowledge</dt>
+    <dd>Versioned, authoritative rule tables (salary, travel allowances, procurement thresholds)
+    registered by the application and evaluated deterministically — plus a generic store for validated
+    rules, thresholds and tables.</dd>
+    <dt>Rule-first (RULE_ENGINE) path</dt>
+    <dd>The routing strategy in which structured knowledge resolves the question exactly; the LLM only
+    explains the computed decision. Retrieval is skipped.</dd>
+    <dt>Qdrant</dt>
+    <dd>Vector database storing chunk embeddings (collection <span class="mono">mda_chunks</span>,
+    768-d, cosine) and serving similarity search.</dd>
+    <dt>Neo4j</dt>
+    <dd>Graph database storing the enriched document graph and serving keyword + traversal queries.</dd>
+    <dt>PostgreSQL</dt>
+    <dd>Relational database storing documents, chunks, users, audit events — and serving the keyword
+    retrieval path.</dd>
+    <dt>Ollama</dt>
+    <dd>Local model server hosting the generation, verifier and embedding models on the deployment host.</dd>
+  </dl>
+</section>
+
+<!-- ==================== REFERENCES ==================== -->
+<section  class="refs">
+  <h1 id="references">References and Source Notes</h1>
+  <p>This white paper is grounded in direct inspection of the Verwaltungsassistent implementation (August 2026;
+  refreshed September 2026). Key implementation areas referenced in this document:</p>
+  <ul>
+    <li><strong>Reasoning core</strong> (<span class="mono">platform-ai-runtime</span>) — single execution
+    path (<span class="mono">AiService</span>), routing (<span class="mono">DecisionRouter</span>),
+    retrieval planning (<span class="mono">RetrievalPlanner</span>), domain gate
+    (<span class="mono">DomainGate</span>), evidence selection (<span class="mono">EvidencePackageBuilder</span>),
+    prompt construction (<span class="mono">DefaultPromptBuilder</span>, template
+    <span class="mono">compact-v9</span>), claim verification (<span class="mono">DefaultClaimVerifier</span>),
+    grounding and the fail-closed boundary (<span class="mono">DefaultGroundingService</span>),
+    semantic intent parsing (<span class="mono">LlmSemanticIntentParser</span> /
+    <span class="mono">RegexSemanticIntentParser</span>).</li>
+    <li><strong>Search services</strong> (<span class="mono">platform-search-runtime</span>,
+    <span class="mono">platform-search-qdrant</span>, <span class="mono">platform-neo4j</span>) — hybrid
+    fusion (<span class="mono">DefaultHybridRetrievalService</span>), keyword search
+    (<span class="mono">JpaKeywordSearchProvider</span>), vector search
+    (<span class="mono">QdrantVectorSearchProvider</span>), graph adapter
+    (<span class="mono">Neo4jGraphSearchAdapter</span>), indexing orchestration
+    (<span class="mono">DefaultIndexingOrchestrationService</span>).</li>
+    <li><strong>Reference deployment</strong> (<span class="mono">verwaltungsassistent-web</span>) —
+    municipal domains and structured tables (<span class="mono">MunicipalDomains</span>,
+    <span class="mono">MunicipalKnowledgeInitializer</span>), structured-knowledge extraction
+    (<span class="mono">StructuredKnowledgeExtractionService</span>,
+    <span class="mono">KnowledgeItemValidator</span>), domain terminology
+    (<span class="mono">domain-knowledge.yml</span>), ingestion processor, email intake
+    (<span class="mono">MailboxIngestionService</span>, <span class="mono">CommunicationClassifier</span>,
+    <span class="mono">IncomingCommunicationAnalysisService</span>), security configuration.</li>
+    <li><strong>Demo corpus</strong> — BRKG, AV zu § 55 LHO Berlin, Bauordnung Berlin, 15 official Berlin
+    Service-Portal procedure documents (registration, identity documents, driver's licence,
+    certifications, eID; retrieved 2026-08-15), plus the versioned knowledge base (GWB Part 4, TV-L 2025,
+    Bauvorlagenverordnung Berlin).</li>
+    <li><strong>Infrastructure</strong> — PostgreSQL 16 (pgvector image), Qdrant, Neo4j 5, local Ollama
+    model serving; Docker Compose profiles and a reproducible on-premise VM bundle
+    (<span class="mono">docs/deployer/</span>).</li>
+  </ul>
+  <p class="small">Named components (Qdrant, Neo4j, PostgreSQL, Ollama, PDFBox, Apache Tika) are the
+  trademarks of their respective owners and are referenced descriptively. All measurements are labelled
+  development measurements unless stated otherwise.</p>
+</section>
+
+</body>
+</html>

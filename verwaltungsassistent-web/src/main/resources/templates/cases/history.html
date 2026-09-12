@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Bearbeitungshistorie</h1>
+                    <a th:href="@{/cases/{id}(id=${caseId})}" class="btn" style="font-size: 0.8125rem;">← Zum Fall</a>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <strong th:text="${caseName}">Fallname</strong> — chronologische Ereignisse aus den
+                    tatsächlich gespeicherten Daten. Ereignisse ohne hinterlegten Benutzer werden mit „—“ angezeigt;
+                    es werden keine Ereignisse erfunden.
+                </p>
+            </div>
+
+            <th:block th:if="${history == null or history.isEmpty()}">
+                <div class="empty-state">
+                    <div class="empty-state__icon">🕘</div>
+                    <h3 class="empty-state__title">Keine Ereignisse</h3>
+                    <p class="empty-state__desc">Für diesen Fall sind noch keine Ereignisse erfasst.</p>
+                </div>
+            </th:block>
+
+            <table th:unless="${history == null or history.isEmpty()}" class="activity-table"
+                   style="margin-top: 1rem;">
+                <thead>
+                    <tr>
+                        <th>Zeitpunkt</th>
+                        <th>Benutzer</th>
+                        <th>Ereignis</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${history}">
+                        <td style="white-space: nowrap; font-size: 0.8125rem;" th:text="${e.date()}">Datum</td>
+                        <td style="font-size: 0.8125rem;" th:text="${e.user() != null ? e.user() : '—'}">Benutzer</td>
+                        <td style="font-size: 0.8125rem; font-weight: 600;" th:text="${e.title()}">Ereignis</td>
+                        <td style="font-size: 0.8125rem; color: var(--color-text-muted);"
+                            th:text="${e.detail() != null ? e.detail() : '—'}">Details</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,15 @@
+From: Familie Nowak <familie.nowak@example.de>
+To: info@verwaltungs-demo.de
+Subject: Müllsäcke vor der Sammelstelle
+Date: 2026-08-29T18:00:00+02:00
+Message-ID: msg-muell-2026-08-29
+
+--- body ab hier ---
+Betreff: Müllsäcke vor der Sammelstelle
+
+Sehr geehrte Damen und Herren,
+
+vor der Sammelstelle in der Lindenstraße liegen seit Tagen mehrere Müllsäcke. Bitte veranlassen Sie die Abholung.
+
+Mit freundlichen Grüßen
+Familie Nowak

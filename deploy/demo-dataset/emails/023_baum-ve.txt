@@ -1,0 +1,15 @@
+From: Sylvia Arnold <sylvia.arnold@example.de>
+To: demo12@verwaltungsassistent.local
+Subject: Baum verdeckt Verkehrsschild
+Date: 2026-08-31T20:00:00+02:00
+Message-ID: demo-catalog-23
+
+--- body ab hier ---
+Betreff: Verkehrsschild zugewachsen
+
+Sehr geehrte Damen und Herren,
+
+vor dem Kindergarten wird das Tempo-30-Schild durch einen Baum verdeckt. Bitte um Rückschnitt.
+
+Mit freundlichen Grüßen
+Sylvia Arnold

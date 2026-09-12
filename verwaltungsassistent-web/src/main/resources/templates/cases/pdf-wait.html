@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="'Entscheidungsvorlage wird erstellt – ' + ${caseName}">Entscheidungsvorlage wird erstellt</title>
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}"/>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}"/>
+    <link rel="stylesheet" th:href="@{/css/application.css}"/>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--color-bg, #0b1220);
+            color: var(--color-text, #e2e8f0);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .pdf-wait-card {
+            max-width: 38rem;
+            text-align: center;
+            padding: 2rem 2.25rem;
+            border: 1px solid var(--color-border-subtle, #1e2d4d);
+            border-radius: var(--radius, 12px);
+            background: var(--color-surface, #0f1a2e);
+        }
+        .pdf-wait-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 0.4rem;
+        }
+        .pdf-wait-hint {
+            font-size: 0.85rem;
+            color: var(--color-text-muted, #94a3b8);
+            line-height: 1.5;
+            margin: 0 0 1rem;
+        }
+        .pdf-wait-error {
+            display: none;
+            font-size: 0.85rem;
+            color: #fca5a5;
+            margin-top: 1rem;
+        }
+        .pdf-wait-card a {
+            color: var(--color-primary, #60a5fa);
+        }
+        /* Orange Pipeline-Visualisierung: VOLLSTÄNDIG über die gemeinsamen
+           Klassen aus application.css (pipeline-diagram/-nodes/-node inkl.
+           der Verbindungslinien ::after und der Zustände). Hier nur die
+           Einbettung ins Popup-Layout. */
+        .pdf-wait-nodes {
+            margin: 0.25rem 0 0.9rem;
+            text-align: left;
+        }
+        .pdf-wait-stage-list {
+            list-style: none;
+            margin: 0.75rem 0 0;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            font-size: 0.8rem;
+            background: rgba(13, 27, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: var(--radius, 12px);
+        }
+        .pdf-wait-stage-list li {
+            padding: 0.15rem 0;
+            color: var(--color-text-muted, #94a3b8);
+        }
+        .pdf-wait-stage-list li.pdf-wait-stage-list__active {
+            color: var(--color-primary, #60a5fa);
+        }
+    </style>
+</head>
+<body>
+    <!-- Reservierter Tab (Popup-Blocker-sicher): wird beim Analyse-Start
+         geöffnet, pollt den Analyse-Zustand und navigiert nach Abschluss
+         automatisch zur fertigen Entscheidungsvorlage. -->
+    <div class="pdf-wait-card" role="status" aria-live="polite">
+        <div class="pdf-wait-title">Entscheidungsvorlage wird erstellt …</div>
+        <p class="pdf-wait-hint">
+            Die Analyse läuft. Sobald sie abgeschlossen ist, wird die fertige
+            Entscheidungsvorlage in diesem Tab geöffnet.
+        </p>
+        <span class="pdf-wait-hint" id="pdf-wait-stage">Analyse wird vorbereitet …</span>
+        <!-- Orange Pipeline-Knoten (echte Analyse-Stufen aus dem Job) MIT den
+             Verbindungslinien — gleiche Klassen/Optik wie die interaktive
+             Pipeline-Visualisierung von Assistent und Entscheidungsseite.
+             Darunter bleibt die bisherige Verarbeitungs-/Status-Textliste
+             (✓ … / ▶ …) erhalten: Knoten und Meldungen sind komplementär. -->
+        <div id="pdf-wait-nodes" class="pdf-wait-nodes" aria-label="Aktuelle Verarbeitungsschritte der Analyse"
+             style="display: none;"></div>
+        <ul id="pdf-wait-stages" class="pdf-wait-stage-list"
+            aria-label="Statusmeldungen der Analyse"
+            style="display: none;"></ul>
+        <p class="pdf-wait-error" id="pdf-wait-error">
+            Die Analyse konnte nicht abgeschlossen werden.
+            <a id="pdf-wait-back" th:href="@{/cases/{id}/decision(id=${caseId})}">Zurück zur Entscheidungsseite</a>
+        </p>
+    </div>
+    <script th:inline="javascript">
+        (function () {
+            /* globals: [[${waitUrl}]] */
+            var stateUrl = /*[[${waitUrl}]]*/ '/cases/ID/decision/analysis-state';
+            var pdfUrl = /*[[${pdfUrl}]]*/ '/cases/ID/decision/export-pdf?inline=true';
+            var openedAt = Date.now();
+            var attempts = 0;
+            // Erster Poll erst nach kurzer Verzögerung: der Analyse-Start muss
+            // seinen RUNNING-Marker setzen, bevor wir den Zustand lesen.
+            var started = false;
+
+            // Status-/Verarbeitungsmeldungen (✓ abgeschlossen / ▶ aktuell) —
+            // komplementär zur Knoten-Visualisierung, nicht ersetzt durch sie.
+            function renderStages(messages) {
+                var list = document.getElementById('pdf-wait-stages');
+                if (!list || !messages || !messages.length) { return; }
+                list.style.display = 'block';
+                list.innerHTML = '';
+                for (var i = 0; i < messages.length; i++) {
+                    var li = document.createElement('li');
+                    var isLast = i === messages.length - 1;
+                    if (isLast) { li.className = 'pdf-wait-stage-list__active'; }
+                    li.textContent = (isLast ? '▶ ' : '✓ ') + messages[i];
+                    list.appendChild(li);
+                }
+            }
+
+            // Orange Pipeline-Knoten aus den echten Job-Stufen des Servers
+            // (Zustände done/active/pending — gleiche Klassen wie die
+            // interaktive Pipeline-Visualisierung in application.css).
+            function renderNodes(nodes) {
+                var host = document.getElementById('pdf-wait-nodes');
+                if (!host || !nodes || !nodes.length) {
+                    if (host) { host.style.display = 'none'; }
+                    return;
+                }
+                host.style.display = 'block';
+                host.innerHTML = '';
+                var diagram = document.createElement('div');
+                diagram.className = 'pipeline-diagram';
+                var row = document.createElement('div');
+                row.className = 'pipeline-nodes';
+                var defaultInfo = '';
+                nodes.forEach(function (n) {
+                    var node = document.createElement('div');
+                    node.className = 'pipeline-node pipeline-node--' + n.state;
+                    node.setAttribute('data-id', n.id);
+                    node.setAttribute('data-label', n.label);
+                    node.setAttribute('data-info', n.info || '');
+                    var dot = document.createElement('span');
+                    dot.className = 'pipeline-node__dot';
+                    dot.setAttribute('aria-hidden', 'true');
+                    var label = document.createElement('span');
+                    label.className = 'pipeline-node__label';
+                    label.textContent = n.label;
+                    node.appendChild(dot);
+                    node.appendChild(label);
+                    row.appendChild(node);
+                    if (n.state === 'active') {
+                        defaultInfo = n.label + ' — ' + (n.info || '');
+                    } else if (n.state === 'done' && !defaultInfo) {
+                        defaultInfo = n.label + ' — ' + (n.info || '');
+                    }
+                });
+                diagram.appendChild(row);
+                if (defaultInfo) {
+                    var info = document.createElement('div');
+                    info.className = 'pipeline-info';
+                    info.setAttribute('role', 'status');
+                    info.setAttribute('aria-live', 'polite');
+                    var infoText = document.createElement('span');
+                    infoText.className = 'pipeline-info__text';
+                    infoText.textContent = defaultInfo;
+                    info.appendChild(infoText);
+                    diagram.appendChild(info);
+                }
+                host.appendChild(diagram);
+            }
+
+            function check() {
+                attempts++;
+                fetch(stateUrl, { headers: { 'Accept': 'application/json' } })
+                    .then(function (r) { return r.ok ? r.json() : null; })
+                    .then(function (state) {
+                        if (!state) { schedule(); return; }
+                        var status = state.status || 'NONE';
+                        var completedAt = state.completedAt ? Number(state.completedAt) : null;
+                        if (status === 'RUNNING') {
+                            started = true;
+                            // Echte Pipeline-Zustände aus dem Analyse-Job anzeigen
+                            // (keine erfundenen Prozentwerte): orange Knoten mit
+                            // abgeschlossenen/aktivem Schritt + aktuelle Stufe
+                            // als Textzeile.
+                            if (state.messages && state.messages.length) {
+                                document.getElementById('pdf-wait-stage').textContent =
+                                    state.stageLabel || 'Die Analyse wird durchgeführt …';
+                            } else {
+                                document.getElementById('pdf-wait-stage').textContent =
+                                    'Die Analyse wird durchgeführt …';
+                            }
+                            renderNodes(state.nodes);
+                            renderStages(state.messages);
+                            schedule();
+                            return;
+                        }
+                        if (status === 'COMPLETED' && completedAt && completedAt >= openedAt - 1000) {
+                            window.location.replace(pdfUrl);
+                            return;
+                        }
+                        if (status === 'FAILED' || (started && status === 'NONE')) {
+                            showError();
+                            return;
+                        }
+                        // COMPLETED vor dem Öffnen (älterer Lauf) oder noch NONE:
+                        // geduldig weiterbeobachten.
+                        if (attempts > 600) { showError(); return; } // ~8 Minuten
+                        schedule();
+                    })
+                    .catch(function () {
+                        schedule();
+                    });
+            }
+
+            function schedule() {
+                window.setTimeout(check, 800);
+            }
+
+            function showError() {
+                document.getElementById('pdf-wait-stage').style.display = 'none';
+                var nodes = document.getElementById('pdf-wait-nodes');
+                if (nodes) { nodes.style.display = 'none'; }
+                var stages = document.getElementById('pdf-wait-stages');
+                if (stages) { stages.style.display = 'none'; }
+                document.getElementById('pdf-wait-error').style.display = 'block';
+            }
+
+            window.setTimeout(check, 1500);
+        })();
+    </script>
+</body>
+</html>

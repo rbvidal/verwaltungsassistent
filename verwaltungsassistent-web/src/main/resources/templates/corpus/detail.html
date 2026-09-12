@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title" th:text="'Beispiele: ' + ${corpusLabel}">Beispiele</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Kontrollierte Beispielfälle mit erwartetem Ergebnis. Die Auswertung eines Falls
+                    startet einen einzelnen, kontrollierten Durchlauf der bestehenden Pipeline.
+                </p>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+                    Diese Beispiele prüfen gezielt den deterministischen, regelbasierten Pfad
+                    („Regelbasiert“). Das System beantwortet darüber hinaus auch Fragen, die eine
+                    Suche in der Wissensbasis und KI-gestützte Analyse erfordern — diese Wege sind
+                    über den Assistenten und die Wissensbasis nutzbar.
+                </p>
+            </div>
+
+            <div id="case-evaluation">
+                <th:block th:replace="~{corpus/fragments :: caseEvaluation}"></th:block>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem;">
+                <div th:each="c : ${cases}" class="case-detail__header"
+                     style="border-left: 3px solid var(--color-border, #ccc); padding: 0.75rem 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <strong th:text="${c.id()} + ' — ' + ${c.domainLabel()}">ID</strong>
+                            <span class="badge badge--neutral"
+                                  th:text="${c.difficulty() == 'EASY' ? 'EINFACH' : (c.difficulty() == 'MEDIUM' ? 'MITTEL' : (c.difficulty() == 'HARD' ? 'SCHWIERIG' : c.difficulty()))}"
+                                  style="font-size: 0.6875rem;">—</span>
+                            <span class="badge badge--info" th:text="${c.strategyLabel()}" style="font-size: 0.6875rem;">—</span>
+                        </div>
+                        <!-- Leitungs-Konto (ADMIN): schreibgeschützt — Auswertung
+                             startet KI und ist serverseitig abgewiesen (403). -->
+                        <form th:if="${!supervisory}"
+                              th:action="@{/corpus/{n}/{id}/evaluate(n=${corpusName}, id=${c.id()})}" method="post"
+                              th:attr="hx-post=@{/corpus/{n}/{id}/evaluate(n=${corpusName}, id=${c.id()})},hx-target=|#case-evaluation|,hx-indicator=|#eval-spinner|,hx-disabled-elt=|this|">
+                            <button type="submit" class="btn btn--primary" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Fall auswerten</button>
+                        </form>
+                    </div>
+                    <p th:text="${c.question()}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.35rem;"></p>
+                    <div style="font-size: 0.75rem; color: var(--color-text-muted);">
+                        <span th:text="'Erwartet: ' + ${#strings.listJoin(c.expectedAuthorities(), ', ')}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="eval-spinner" class="htmx-indicator"
+                 style="margin-top: 1rem; padding: 1rem; text-align: center; border: 1px dashed var(--color-border, #ddd);">
+                <div class="spinner" role="status" aria-label="Werte Fall aus...">
+                    <div class="spinner__dot"></div>
+                    <div class="spinner__dot"></div>
+                    <div class="spinner__dot"></div>
+                </div>
+                <p style="margin-top: 0.5rem; font-weight: 600;">
+                    Fall wird ausgewertet …
+                </p>
+                <p style="margin-top: 0.25rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Das System analysiert den Fall anhand der verfügbaren Regeln und Informationen.
+                </p>
+            </div>
+        </div>
+
+        <script>
+            function renderMarkdownBold(container) {
+                if (!container) return;
+                container.querySelectorAll('.decision-package__recommendation').forEach(function (el) {
+                    if (el.dataset.mdRendered) return;
+                    var text = el.textContent || '';
+                    el.innerHTML = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                       .replace(/\n/g, '<br>');
+                    el.dataset.mdRendered = 'true';
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                renderMarkdownBold(document.getElementById('case-evaluation'));
+            });
+            document.body.addEventListener('htmx:afterSwap', function (evt) {
+                if (evt.detail.target.id === 'case-evaluation') {
+                    renderMarkdownBold(evt.detail.target);
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

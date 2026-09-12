@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- restoreResult: per-system status of the restore operation. A failed
+     system is always reported — the UI never claims overall success when
+     only part of the restore succeeded. -->
+<th:block th:fragment="restoreResult" th:object="${pg}">
+    <div th:if="${overall}" class="message message--success" role="alert"
+         style="margin-top: 0.5rem;">
+        Die Wiederherstellung wurde vollständig abgeschlossen.
+    </div>
+    <div th:unless="${overall}" class="message message--error" role="alert"
+         style="margin-top: 0.5rem;">
+        Die Wiederherstellung wurde nicht vollständig abgeschlossen. Bitte prüfen Sie den Status der einzelnen Systeme.
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem;">
+        <div class="admin-row">
+            <span style="font-weight: 600; font-size: 0.875rem;">PostgreSQL</span>
+            <span th:if="${pg.success()}" class="badge badge--success" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Wiederhergestellt</span>
+            <span th:unless="${pg.success()}" class="badge badge--error" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span> Wiederherstellung fehlgeschlagen</span>
+        </div>
+        <p th:unless="${pg.success()}" style="font-size: 0.75rem; color: var(--color-text-muted);"
+           th:text="${pg.message()}">Fehlerdetails</p>
+
+        <div class="admin-row">
+            <span style="font-weight: 600; font-size: 0.875rem;">Neo4j</span>
+            <span th:if="${neo4j.success()}" class="badge badge--success" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Wiederhergestellt</span>
+            <span th:unless="${neo4j.success()}" class="badge badge--error" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span> Wiederherstellung fehlgeschlagen</span>
+        </div>
+        <p th:unless="${neo4j.success()}" style="font-size: 0.75rem; color: var(--color-text-muted);"
+           th:text="${neo4j.message()}">Fehlerdetails</p>
+
+        <div class="admin-row">
+            <span style="font-weight: 600; font-size: 0.875rem;">Qdrant (Vektorindex)</span>
+            <span th:if="${qdrant.success()}" class="badge badge--success" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Wiederhergestellt</span>
+            <span th:unless="${qdrant.success()}" class="badge badge--error" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span> Wiederherstellung fehlgeschlagen</span>
+        </div>
+        <p th:unless="${qdrant.success()}" style="font-size: 0.75rem; color: var(--color-text-muted);"
+           th:text="${qdrant.message()}">Fehlerdetails</p>
+    </div>
+</th:block>
+
+<!-- deleteResult: outcome of "Alle Daten löschen". The uploaded source
+     documents are never part of this operation. -->
+<th:block th:fragment="deleteResult" th:object="${outcome}">
+    <div th:if="${outcome.chunksDeleted() and outcome.vectorsDeleted() and outcome.graphDeleted() and outcome.jobsDeleted()}"
+         class="message message--success" role="alert" style="margin-top: 0.5rem;">
+        Alle Index- und Datenbankdaten wurden gelöscht
+        (<span th:text="${outcome.documents()} + ' Dokumente, ' + ${outcome.chunks()} + ' Textabschnitte'"></span>).
+        Die hochgeladenen Originaldokumente bleiben erhalten und können über die
+        Dokumentenliste erneut indiziert werden.
+    </div>
+    <div th:unless="${outcome.chunksDeleted() and outcome.vectorsDeleted() and outcome.graphDeleted() and outcome.jobsDeleted()}"
+         class="message message--error" role="alert" style="margin-top: 0.5rem;">
+        Das Löschen wurde nicht vollständig abgeschlossen. Bitte prüfen Sie die Logs.
+    </div>
+    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.75rem;">
+        Die Dokumente in der Dokumentenliste werden nun als „Nicht indiziert“ angezeigt.
+    </p>
+</th:block>
+
+<!-- backupResult: per-component status of a backup job + refreshed history. -->
+<th:block th:fragment="backupResult">
+    <div th:if="${error != null}" class="message message--error" role="alert"
+         style="margin-top: 0.5rem;" th:text="${error}">Fehler</div>
+
+    <div th:if="${results != null and !results.isEmpty()}" style="margin-top: 0.5rem;">
+        <div th:each="r : ${results}" class="admin-row">
+            <span style="font-weight: 600; font-size: 0.875rem;" th:text="${r.component()}">Komponente</span>
+            <span th:if="${r.success()}" class="badge badge--success" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Gesichert</span>
+            <span th:unless="${r.success()}" class="badge badge--error" style="font-size: 0.75rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span> Fehlgeschlagen</span>
+        </div>
+        <p th:each="r : ${results}" th:unless="${r.success()}" style="font-size: 0.75rem; color: var(--color-text-muted);"
+           th:text="${r.component()} + ': ' + ${r.message()}">Fehlerdetails</p>
+    </div>
+
+    <th:block th:replace="~{admin/data-restore-fragments :: backupHistory(${backups})}"></th:block>
+</th:block>
+
+<!-- backupHistory: the list of available backups (component, timestamp, file, size, status). -->
+<th:block th:fragment="backupHistory(backups)">
+    <h3 style="font-size: 0.9375rem; font-weight: 600; margin: 1.25rem 0 0.5rem;">Vorhandene Sicherungen</h3>
+    <th:block th:if="${backups == null or backups.isEmpty()}">
+        <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+            Noch keine Sicherungen vorhanden.
+        </p>
+    </th:block>
+    <div th:unless="${backups == null or backups.isEmpty()}" class="data-table-container" style="margin-top: 0.5rem;">
+        <div class="data-table__responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th class="data-table__header" scope="col">Komponente</th>
+                        <th class="data-table__header" scope="col">Zeitpunkt</th>
+                        <th class="data-table__header" scope="col">Datei</th>
+                        <th class="data-table__header" scope="col">Pfad</th>
+                        <th class="data-table__header" scope="col">Größe</th>
+                        <th class="data-table__header" scope="col">Status</th>
+                        <th class="data-table__header" scope="col">Aktion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="b : ${backups}">
+                        <td data-label="Komponente" th:text="${b.component()}">PostgreSQL</td>
+                        <td data-label="Zeitpunkt" th:text="${b.timestamp()}">Datum</td>
+                        <td data-label="Datei" style="font-family: 'Consolas', 'Menlo', monospace; font-size: 0.75rem;"
+                            th:text="${b.fileName()}">Datei</td>
+                        <td data-label="Pfad" style="font-family: 'Consolas', 'Menlo', monospace; font-size: 0.6875rem; color: var(--color-text-muted); word-break: break-all;"
+                            th:text="${b.path()}">Pfad</td>
+                        <td data-label="Größe" th:text="${#numbers.formatDecimal(b.sizeBytes() / 1024.0, 1, 'POINT', 1, 'COMMA') + ' KB'}">0 KB</td>
+                        <td data-label="Status"><span class="badge badge--success" th:text="${b.status()}">Erfolgreich</span></td>
+                        <td data-label="Aktion">
+                            <a th:attr="href=|/admin/data-restore/backup/download?file=${b.fileName()}|"
+                               class="btn btn--sm" style="font-size: 0.6875rem; padding: 0.2rem 0.5rem;">Herunterladen</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+
+</html>

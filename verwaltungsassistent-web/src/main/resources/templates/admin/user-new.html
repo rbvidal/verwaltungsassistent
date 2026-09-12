@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'admin', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Benutzer anlegen</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Legen Sie einen neuen Mitarbeiter-Account mit den Stammdaten für die
+                    offizielle Korrespondenz an (Signatur, Abteilung, Urlaub).
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+            <div th:if="${errorMessage != null}" class="message message--error" role="alert"
+                 th:text="${errorMessage}" style="margin-bottom: 1rem;"></div>
+
+            <form th:action="@{/admin/users/new}" method="post" style="max-width: 640px;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.75rem;">Konto</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <label class="filter-bar__label" for="firstName">Vorname *</label>
+                        <input type="text" id="firstName" name="firstName" required class="form-field__input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="lastName">Nachname *</label>
+                        <input type="text" id="lastName" name="lastName" required class="form-field__input" style="width: 100%;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <label class="filter-bar__label" for="email">E-Mail *</label>
+                        <input type="email" id="email" name="email" required class="form-field__input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="password">Initialpasswort * (mind. 8 Zeichen)</label>
+                        <input type="password" id="password" name="password" required minlength="8" class="form-field__input" style="width: 100%;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label class="filter-bar__label" for="role">Rolle</label>
+                        <select id="role" name="role" class="filter-bar__select" style="width: 100%;">
+                            <option value="USER">Sachbearbeitung (USER)</option>
+                            <option value="ANALYST">Analyst</option>
+                            <!-- Administratoren kann nur die technische Verwaltung
+                                 (SUPERADMIN) anlegen — die Leitung bleibt aufsichtlich. -->
+                            <option value="ADMIN" th:if="${superadmin}">Administrator</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="salutation">Anrede</label>
+                        <select id="salutation" name="salutation" class="filter-bar__select" style="width: 100%;">
+                            <option value="">Neutral (ohne Anrede)</option>
+                            <option value="Frau">Frau</option>
+                            <option value="Herr">Herr</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.75rem;">Stammdaten / Signatur</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <label class="filter-bar__label" for="department">Abteilung</label>
+                        <input type="text" id="department" name="department" class="form-field__input" style="width: 100%;"
+                               placeholder="z. B. Abt. Bürgerdienste">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="office">Dienststelle / Amt</label>
+                        <input type="text" id="office" name="office" class="form-field__input" style="width: 100%;"
+                               placeholder="z. B. Bürgeramt Nordstadt">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <label class="filter-bar__label" for="phone">Telefon</label>
+                        <input type="text" id="phone" name="phone" class="form-field__input" style="width: 100%;"
+                               placeholder="z. B. 030/90295-1234">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="room">Büro / Raum</label>
+                        <input type="text" id="room" name="room" class="form-field__input" style="width: 100%;"
+                               placeholder="z. B. Raum 2.14">
+                    </div>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <label class="filter-bar__label" for="position">Funktion / Position</label>
+                    <input type="text" id="position" name="position" class="form-field__input" style="width: 100%;"
+                           placeholder="z. B. Sachbearbeiterin Bürgerangelegenheiten">
+                </div>
+
+                <h2 style="font-size: 1rem; font-weight: 600; margin: 0 0 0.75rem;">Abwesenheit / Urlaub</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                    <div>
+                        <label class="filter-bar__label" for="vacationFrom">Von</label>
+                        <input type="date" id="vacationFrom" name="vacationFrom" class="form-field__input" style="width: 100%;">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="vacationTo">Bis</label>
+                        <input type="date" id="vacationTo" name="vacationTo" class="form-field__input" style="width: 100%;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label class="filter-bar__label" for="vacationType">Art</label>
+                        <input type="text" id="vacationType" name="vacationType" class="form-field__input" style="width: 100%;"
+                               placeholder="z. B. Urlaub">
+                    </div>
+                    <div>
+                        <label class="filter-bar__label" for="vacationNote">Bemerkung</label>
+                        <input type="text" id="vacationNote" name="vacationNote" class="form-field__input" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.875rem;">
+                        <input type="checkbox" name="enabled" value="true" checked> Konto aktiv
+                    </label>
+                    <button type="submit" class="btn btn--primary">Benutzer speichern</button>
+                    <a th:href="@{/admin/users}" class="btn">Abbrechen</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

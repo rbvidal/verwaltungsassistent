@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Fall umbenennen</h1>
+                </div>
+            </div>
+
+            <form th:action="@{/cases/{id}/settings(id=${case.id()})}" method="post"
+                  th:object="${settingsForm}" class="auth-card__form" style="max-width: 600px;">
+                <th:block th:replace="~{fragments/components :: fieldErrors('name')}">
+                </th:block>
+
+                <div class="form-field">
+                    <label for="name" class="form-field__label">Name des Falls *</label>
+                    <input type="text"
+                           id="name"
+                           th:field="*{name}"
+                           class="form-field__input"
+                           placeholder="z.B. Baugenehmigung Carport Müller"
+                           required
+                           autofocus
+                           minlength="3"
+                           maxlength="255">
+                </div>
+
+                <div class="form-field">
+                    <label for="description" class="form-field__label">Beschreibung</label>
+                    <textarea id="description"
+                              th:field="*{description}"
+                              class="form-field__input"
+                              rows="4"
+                              placeholder="Beschreiben Sie den Fall kurz. Welche Entscheidung muss getroffen werden?"
+                              style="resize: vertical; min-height: 100px;"></textarea>
+                </div>
+
+                <div class="form-field">
+                    <span class="form-field__label">Typ</span>
+                    <span class="badge badge--neutral" th:text="${workspaceTypeLabel}">Typ</span>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                        Der Falltyp wird beim Anlegen festgelegt und kann hier nicht geändert werden.
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn--primary">Speichern</button>
+                    <a th:href="@{/cases/{id}(id=${case.id()})}" class="btn">Abbrechen</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

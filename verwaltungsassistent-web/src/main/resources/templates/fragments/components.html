@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- ==========================================================================
+     Verwaltungsassistent — Shared UI Component Library
+     Phase 2 Foundation: dataTable, pagination, filterBar, emptyState,
+     modal, confirmDelete, tabBar, badge, searchBox, fieldErrors,
+     globalErrors, phaseProgress, skeleton, spinner, infoMessage
+     ========================================================================== -->
+
+<!--
+     badge — Status/type badge pill
+     Usage: th:replace="~{fragments/components :: badge('Aktiv', 'success')}"
+     Variants: success, warning, error, info, neutral
+-->
+<th:block th:fragment="badge(text, variant)">
+    <span class="badge"
+          th:classappend="'badge--' + ${variant}"
+          th:text="${text}">Badge</span>
+</th:block>
+
+<!--
+     emptyState — Placeholder for empty lists/searches
+     Usage: th:replace="~{fragments/components :: emptyState('cta', 'Keine Fälle', 'Erstellen Sie Ihren ersten Fall.', '/cases/new', 'Fall erstellen')}"
+     Variants: simple, cta, search
+-->
+<th:block th:fragment="emptyState(variant, title, description, actionUrl, actionLabel)">
+    <div class="empty-state" role="status" aria-live="polite">
+        <div class="empty-state__icon material-symbols-outlined"
+             th:if="${variant == 'search'}" aria-hidden="true">search</div>
+        <h3 class="empty-state__title" th:text="${title}">Keine Ergebnisse</h3>
+        <p class="empty-state__desc" th:text="${description}">Beschreibung</p>
+        <th:block th:if="${variant == 'cta' and actionUrl != null}">
+            <a th:href="${actionUrl}" class="btn btn--primary empty-state__action"
+               th:text="${actionLabel} ?: 'Erstellen'">Aktion</a>
+        </th:block>
+        <th:block th:if="${variant == 'search' and actionUrl != null}">
+            <a th:href="${actionUrl}" class="empty-state__reset-link"
+               th:text="${actionLabel} ?: 'Filter zurücksetzen'">Filter zurücksetzen</a>
+        </th:block>
+    </div>
+</th:block>
+
+<!--
+     pagination — Page navigation control
+     Usage: th:replace="~{fragments/components :: pagination(page=0, totalPages=5, baseUrl='/cases', queryParams='status=ACTIVE', targetId='table-container')}"
+     page is 0-based
+-->
+<th:block th:fragment="pagination(page, totalPages, baseUrl, queryParams, targetId)">
+    <nav class="pagination" aria-label="Pagination" th:if="${totalPages > 1}"
+         th:with="qs=${queryParams != null && !queryParams.isEmpty() ? '&' + queryParams : ''}">
+        <th:block th:if="${page > 0}">
+            <button class="pagination__prev"
+                    th:attr="hx-get=${baseUrl + '?page=' + (page - 1) + qs},hx-target=${'#' + targetId}"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                    aria-label="Vorherige Seite">
+                <span aria-hidden="true">&lsaquo;</span> Zurück
+            </button>
+        </th:block>
+        <th:block th:unless="${page > 0}">
+            <span class="pagination__prev pagination--disabled" aria-disabled="true">
+                <span aria-hidden="true">&lsaquo;</span> Zurück
+            </span>
+        </th:block>
+
+        <span class="pagination__indicator">
+            Seite <strong th:text="${page + 1}" aria-current="page">1</strong>
+            von <span th:text="${totalPages}">1</span>
+        </span>
+
+        <th:block th:if="${page < totalPages - 1}">
+            <button class="pagination__next"
+                    th:attr="hx-get=${baseUrl + '?page=' + (page + 1) + qs},hx-target=${'#' + targetId}"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                    aria-label="Nächste Seite">
+                Weiter <span aria-hidden="true">&rsaquo;</span>
+            </button>
+        </th:block>
+        <th:block th:unless="${page < totalPages - 1}">
+            <span class="pagination__next pagination--disabled" aria-disabled="true">
+                Weiter <span aria-hidden="true">&rsaquo;</span>
+            </span>
+        </th:block>
+    </nav>
+</th:block>
+
+<!--
+     filterBar — Horizontal filter form
+     Usage: th:replace="~{fragments/components :: filterBar(filters=${filters}, baseUrl='/cases', targetId='table-container')}"
+     filters: List<{name, label, type, options, value}>
+     type: 'select' | 'text' | 'date'
+     Each filter control triggers hx-get on change (debounced for text)
+-->
+<th:block th:fragment="filterBar(filters, baseUrl, targetId)">
+    <form class="filter-bar"
+          th:attr="hx-get=${baseUrl},hx-target=${'#' + targetId}"
+          hx-swap="outerHTML"
+          hx-push-url="true"
+          hx-trigger="change"
+          aria-label="Filter">
+        <div class="filter-bar__row">
+            <th:block th:each="filter : ${filters}">
+                <div class="filter-bar__field">
+                    <label class="filter-bar__label"
+                           th:for="'filter-' + ${filter.name}"
+                           th:text="${filter.label}">Label</label>
+                    <!-- Select filter -->
+                    <select th:if="${filter.type == 'select'}"
+                            th:id="'filter-' + ${filter.name}"
+                            th:name="${filter.name}"
+                            class="filter-bar__input filter-bar__select"
+                            th:attr="hx-get=${baseUrl},hx-target=${'#' + targetId}"
+                            hx-swap="outerHTML"
+                            hx-push-url="true">
+                        <option value="" th:selected="${filter.value == null || filter.value == ''}">Alle</option>
+                        <option th:each="opt : ${filter.options}"
+                                th:value="${opt.value}"
+                                th:text="${opt.label}"
+                                th:selected="${filter.value == opt.value}">Option</option>
+                    </select>
+                    <!-- Text filter -->
+                    <input th:if="${filter.type == 'text'}"
+                           th:id="'filter-' + ${filter.name}"
+                           th:name="${filter.name}"
+                           type="text"
+                           class="filter-bar__input"
+                           th:placeholder="${filter.placeholder ?: 'Suchen...'}"
+                           th:value="${filter.value}"
+                           th:attr="hx-get=${baseUrl},hx-target=${'#' + targetId}"
+                           hx-swap="outerHTML"
+                           hx-push-url="true"
+                           hx-trigger="keyup changed delay:300ms" />
+                    <!-- Date filter -->
+                    <input th:if="${filter.type == 'date'}"
+                           th:id="'filter-' + ${filter.name}"
+                           th:name="${filter.name}"
+                           type="date"
+                           class="filter-bar__input"
+                           th:value="${filter.value}"
+                           th:attr="hx-get=${baseUrl},hx-target=${'#' + targetId}"
+                           hx-swap="outerHTML"
+                           hx-push-url="true" />
+                </div>
+            </th:block>
+            <div class="filter-bar__field filter-bar__field--submit">
+                <button type="submit" class="btn btn--primary filter-bar__submit">Filtern</button>
+            </div>
+        </div>
+    </form>
+</th:block>
+
+<!--
+     dataTable — Paginated, sortable data table
+     Usage: th:replace="~{fragments/components :: dataTable(
+         headers=${headers}, page=0, totalPages=5,
+         baseUrl='/cases', queryParams='',
+         emptyMessage='Keine Ergebnisse', hasData=${!items.isEmpty()},
+         targetId='table-container', rows=~{this :: table-rows})}"
+     headers: List<{key, label, sortable}>
+     The caller provides tbody content via a named fragment referenced with ~{this :: name}.
+
+     IMPORTANT — Mobile responsive data-label requirement:
+     On mobile (< 768px), tables become stacked card lists. Each <td> MUST include
+     a data-label attribute matching the column header for the card layout to work.
+     The CSS generates labels via td::before { content: attr(data-label); }.
+
+     Example caller fragment:
+       <th:block th:fragment="table-rows">
+         <tr th:each="item : ${items}">
+           <td data-label="Name" th:text="${item.name}">Name</td>
+           <td data-label="Status"><span class="badge">Aktiv</span></td>
+           <td data-label="Phase" th:text="${item.phase}">Phase</td>
+         </tr>
+       </th:block>
+-->
+<th:block th:fragment="dataTable(headers, page, totalPages, baseUrl, queryParams, emptyMessage, hasData, targetId, rows)">
+    <div th:attr="id=${targetId}" class="data-table-container">
+        <th:block th:if="${hasData}">
+            <div class="data-table__responsive">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th:block th:each="header : ${headers}">
+                                <th:block th:if="${header.sortable}">
+                                    <th class="data-table__header data-table__header--sortable"
+                                        scope="col"
+                                        th:text="${header.label}"
+                                        aria-sort="none"
+                                        th:attr="hx-get=${baseUrl + '?sort=' + header.key + '&page=0' + (queryParams != null && !queryParams.isEmpty() ? '&' + queryParams : '')},hx-target=${'#' + targetId}"
+                                        hx-trigger="click"
+                                        hx-swap="outerHTML"
+                                        hx-push-url="true"
+                                        tabindex="0"
+                                        role="columnheader">
+                                    </th>
+                                </th:block>
+                                <th:block th:unless="${header.sortable}">
+                                    <th class="data-table__header"
+                                        scope="col"
+                                        th:text="${header.label}"
+                                        role="columnheader">
+                                    </th>
+                                </th:block>
+                            </th:block>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:if="${rows != null}" th:replace="${rows}"></th:block>
+                    </tbody>
+                </table>
+            </div>
+            <th:block th:replace="~{::pagination(page=${page}, totalPages=${totalPages}, baseUrl=${baseUrl}, queryParams=${queryParams}, targetId=${targetId})}"></th:block>
+        </th:block>
+
+        <th:block th:unless="${hasData}">
+            <div class="empty-state" role="status" aria-live="polite">
+                <h3 class="empty-state__title" th:text="${emptyMessage} ?: 'Keine Ergebnisse'">Keine Ergebnisse</h3>
+                <p class="empty-state__desc">Passen Sie Ihre Filter an oder erstellen Sie einen neuen Eintrag.</p>
+            </div>
+        </th:block>
+    </div>
+</th:block>
+
+<!--
+     modal — Alpine.js modal dialog wrapper
+     Usage: th:replace="~{fragments/components :: modal(
+         id='delete-modal', title='Bestätigen', content=~{::modal-content})}"
+     Uses Alpine.js for open/close, focus trapping, escape key, click-outside.
+
+     Recommended pattern for opening a modal from a button:
+     Wrap both the trigger button and the modal in a shared Alpine.js scope:
+
+       <div x-data="{ myModalOpen: false }">
+         <button @click="myModalOpen = true">Modal öffnen</button>
+         <div class="modal-overlay" x-cloak x-show="myModalOpen" x-trap.noscroll="myModalOpen"
+              @keydown.escape.window="myModalOpen = false" @click.self="myModalOpen = false"
+              role="dialog" aria-modal="true" aria-labelledby="my-modal-title">
+           <div class="modal-dialog">
+             <div class="modal__header">
+               <h2 class="modal__title" id="my-modal-title">Titel</h2>
+               <button class="modal__close" @click="myModalOpen = false"
+                       aria-label="Schließen">&times;</button>
+             </div>
+             <div class="modal__body">Inhalt</div>
+           </div>
+         </div>
+       </div>
+
+     For reusable modal fragments, copy the modal fragment's markup and wrap it
+     with a parent Alpine.js scope. The fragment itself is stateless — the
+     surrounding scope controls visibility.
+-->
+<th:block th:fragment="modal(id, title, content)">
+    <div class="modal-overlay"
+         th:id="${id}"
+         x-data="{ open: false }"
+         x-show="open"
+         x-trap.noscroll="open"
+         @keydown.escape.window="open = false"
+         @click.self="open = false"
+         th:attr="aria-labelledby=${id + '-title'}"
+         x-transition:enter="modal-enter"
+         x-transition:leave="modal-leave"
+         role="dialog"
+         aria-modal="true"
+         x-cloak>
+        <div class="modal-dialog">
+            <div class="modal__header">
+                <h2 class="modal__title"
+                    th:id="${id + '-title'}"
+                    th:text="${title}">Title</h2>
+                <button class="modal__close"
+                        @click="open = false"
+                        aria-label="Schließen">&times;</button>
+            </div>
+            <div class="modal__body">
+                <th:block th:replace="${content}"></th:block>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--
+     confirmDelete — Delete confirmation dialog (extends modal pattern)
+     Usage: wrap trigger button and modal in ONE Alpine scope:
+       <span x-data="{ open: false }">
+         <button type="button" @click="open = true">Löschen</button>
+         <th:block th:replace="~{fragments/components :: confirmDelete(
+             id='delete-case-modal', itemName='Fall Müller',
+             deleteUrl='/cases/123', targetId='table-container',
+             confirmMessage='Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?')}">
+         </th:block>
+       </span>
+     The modal binds x-show to the enclosing scope's `open`; the trigger must
+     live in the SAME scope, otherwise Alpine never binds its click handler.
+     Uses Alpine.js + HTMX: confirm button triggers hx-delete
+-->
+<th:block th:fragment="confirmDelete(id, itemName, deleteUrl, targetId, confirmMessage)">
+    <div class="modal-overlay"
+         th:id="${id}"
+         th:style="'display: none'"
+         x-show="open === true"
+         x-trap.noscroll="open"
+         @keydown.escape.window="open = false"
+         @click.self="open = false"
+         th:attr="aria-labelledby=${id + '-title'}"
+         x-transition
+         role="dialog"
+         aria-modal="true"
+         x-cloak>
+        <div class="modal-dialog modal-dialog--confirm">
+            <div class="modal__header">
+                <h2 class="modal__title"
+                    th:id="${id + '-title'}">Löschen bestätigen</h2>
+                <button class="modal__close"
+                        @click="open = false"
+                        aria-label="Schließen">&times;</button>
+            </div>
+            <div class="modal__body">
+                <p class="modal__message"
+                   th:text="${confirmMessage} ?: 'Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?'">
+                    Möchten Sie diesen Eintrag wirklich löschen?
+                </p>
+                <p class="modal__item-name"
+                   th:if="${itemName != null}"
+                   th:text="${itemName}">Item Name</p>
+            </div>
+            <div class="modal__actions">
+                <button class="btn modal__btn-cancel"
+                        @click="open = false">Abbrechen</button>
+                <button class="btn btn--primary modal__btn-confirm"
+                        th:attr="hx-delete=${deleteUrl},hx-target=${'#' + targetId}"
+                        hx-swap="outerHTML"
+                        @click="open = false">
+                    Löschen
+                </button>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--
+     tabBar — Accessible tab navigation with Alpine.js + optional HTMX lazy loading
+     Usage: th:replace="~{fragments/components :: tabBar(
+         tabs=${tabs}, activeTab='overview', panelId='case-tabs')}"
+     tabs: List<{id, label, url, content}>
+       - url (optional): HTMX endpoint for lazy-loaded content
+       - content (optional): fragment expression for preloaded content
+       - Preloaded tabs use Alpine.js x-show, lazy tabs use HTMX hx-get
+-->
+<th:block th:fragment="tabBar(tabs, activeTab, panelId, fallbackContent)">
+    <div class="tab-bar-container"
+         th:attr="x-data='{ activeTab: \'' + ${activeTab} + '\' }'">
+        <div class="tab-bar" role="tablist" th:attr="aria-label=${panelId + '-tabs'}">
+            <button th:each="tab : ${tabs}"
+                    class="tab-bar__tab"
+                    th:classappend="${tab.id == activeTab} ? 'tab-bar__tab--active'"
+                    role="tab"
+                    th:attr="aria-selected=${tab.id == activeTab ? 'true' : 'false'},aria-controls='panel-' + ${tab.id},id='tab-' + ${tab.id},data-tab=${tab.id},onclick=|tabBarSelect(this)|"
+                    th:text="${tab.label}"
+                    th:if="${tab.url == null}">
+                Tab
+            </button>
+            <button th:each="tab : ${tabs}"
+                    class="tab-bar__tab"
+                    th:classappend="${tab.id == activeTab} ? 'tab-bar__tab--active'"
+                    role="tab"
+                    th:attr="aria-selected=${tab.id == activeTab ? 'true' : 'false'},aria-controls='panel-' + ${tab.id},id='tab-' + ${tab.id},data-tab=${tab.id},onclick=|tabBarSelect(this)|,hx-get=${tab.url},hx-target=${'#panel-' + tab.id}"
+                    th:text="${tab.label}"
+                    hx-swap="innerHTML"
+                    hx-trigger="click"
+                    th:if="${tab.url != null}">
+                Tab
+            </button>
+        </div>
+
+        <th:block th:each="tab : ${tabs}">
+            <div class="tab-panel"
+                 th:id="${'panel-' + tab.id}"
+                 role="tabpanel"
+                 th:attr="aria-labelledby='tab-' + ${tab.id},x-show=|activeTab === '${tab.id}'|">
+                <th:block th:if="${tab.content != null}">
+                    <th:block th:replace="${tab.content}"></th:block>
+                </th:block>
+                <th:block th:if="${tab.content == null and tab.url == null}">
+                    <th:block th:if="${tab.id == activeTab and fallbackContent != null}">
+                        <th:block th:replace="${fallbackContent}"></th:block>
+                    </th:block>
+                    <th:block th:unless="${tab.id == activeTab and fallbackContent != null}">
+                        <div class="empty-state">
+                            <div class="empty-state__desc">Kein Inhalt verfügbar</div>
+                        </div>
+                    </th:block>
+                </th:block>
+            </div>
+        </th:block>
+    </div>
+</th:block>
+
+<!--
+     spinner — HTMX loading indicator
+     Usage: th:replace="~{fragments/components :: spinner('Lade...')}"
+-->
+<th:block th:fragment="spinner(text)">
+    <div class="loading-spinner htmx-indicator" aria-busy="true" aria-label="Lade...">
+        <span class="loading-spinner__icon"></span>
+        <span class="loading-spinner__text" th:text="${text} ?: 'Lade...'">Lade...</span>
+    </div>
+</th:block>
+
+<!--
+     infoMessage — Info alert banner (variant FB8)
+     Usage: th:replace="~{fragments/components :: infoMessage('Hier finden Sie alle Ihre Fälle.')}"
+-->
+<th:block th:fragment="infoMessage(message)">
+    <div class="message message--info" role="status" th:text="${message}">
+        Info message
+    </div>
+</th:block>
+
+<!--
+     aiCapacityRecoveryWatch — lightweight HTMX watcher shown next to an
+     AI-capacity rejection ("KI-Verarbeitung ausgelastet"). Polls once per
+     5 s while the rejection is visible; when the guard has a usable slot
+     again the server answers with aiCapacityRecoveryNotice (green) and the
+     polling stops. The rejected request itself is never queued or retried.
+     Embedded in the swap target of a chat/result area, so it disappears
+     automatically on the next request or page navigation.
+-->
+<th:block th:fragment="aiCapacityRecoveryWatch">
+    <div hx-get="/assistant/ai-capacity/notice"
+         hx-trigger="every 5000ms"
+         hx-target="#ai-capacity-recovery-slot"
+         hx-swap="innerHTML"
+         hx-params="none"></div>
+    <div id="ai-capacity-recovery-slot"></div>
+</th:block>
+
+<!--
+     aiCapacityRecoveryNotice — green success/info notice that AI processing
+     is available again after a capacity rejection. Delivered exactly once by
+     /assistant/ai-capacity/notice; dismissible; replaced on the next ask.
+-->
+<th:block th:fragment="aiCapacityRecoveryNotice">
+    <div class="message message--success" role="status" aria-live="polite"
+         style="margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+        <span>Die KI-Verarbeitung ist wieder verfügbar. Sie können Ihre Anfrage jetzt erneut stellen.</span>
+        <button type="button" aria-label="Hinweis schließen"
+                onclick="this.parentElement.remove()"
+                style="background: none; border: none; cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0 0.15rem;">×</button>
+    </div>
+</th:block>
+
+<!--
+     sourcesDialog — Evidence sources shown behind a grounded answer
+     Usage: wrap trigger + dialog in one Alpine scope:
+       <span x-data="{ sourcesOpen: false }">
+         <button @click="sourcesOpen = true">Quellen anzeigen</button>
+         <th:block th:replace="~{fragments/components :: sourcesDialog(${citations})}"></th:block>
+       </span>
+     sources: List<DocumentViewerService.SourceView> — the actual evidence
+     behind THIS answer, enriched with chunk/document provenance.
+     Uses literal /documents/{id} URLs because this fragment is also rendered
+     from background threads (corpus evaluation) where @{...} is unavailable.
+-->
+<th:block th:fragment="sourcesDialog(sources, highlightQuery)">
+    <div class="modal-overlay" x-cloak x-show="sourcesOpen" x-trap.noscroll="sourcesOpen"
+         @keydown.escape.window="sourcesOpen = false" @click.self="sourcesOpen = false"
+         x-effect="if (sourcesOpen) highlightEvidence($el)"
+         role="dialog" aria-modal="true" aria-label="Quellen dieser Antwort">
+        <div class="modal-dialog modal-dialog--sources">
+            <div class="modal__header">
+                <h2 class="modal__title">Quellen</h2>
+                <button class="modal__close" @click="sourcesOpen = false" aria-label="Schließen">&times;</button>
+            </div>
+            <div class="modal__body">
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.875rem;">
+                    Diese Quellen wurden zur Beantwortung der Frage herangezogen.
+                    Markierte Begriffe dienen nur der Orientierung (Textmarker) –
+                    die Einstufung entsteht durch die kombinierte Suche und inhaltliche Prüfung,
+                    nicht durch eine einfache Stichwortsuche.
+                </p>
+                <div th:each="s, iter : ${sources}" class="source-card">
+                    <div class="source-card__header">
+                        <!-- Titel öffnet den Dokument-Viewer; mit highlightQuery
+                             werden die relevanten Stellen im Dokument markiert. -->
+                        <span x-data="{ viewerOpen: false }">
+                            <button type="button" @click="viewerOpen = true"
+                                    th:attr="hx-get=@{/documents/{id}/view(id=${s.documentId()}, q=${highlightQuery}, chunks=${s.chunkIds() != null ? #strings.listJoin(s.chunkIds(), ',') : null})},
+                                             hx-target=|#srcv-${iter.index}-body|, hx-swap=innerHTML"
+                                    hx-trigger="click once"
+                                    class="source-card__title"
+                                    style="background: none; border: none; padding: 0; cursor: pointer; font: inherit; text-align: left;">
+                                <span th:text="${s.title()}">Titel</span>
+                            </button>
+                            <th:block th:replace="~{fragments/components :: documentViewerModal(
+                                id=|srcv-${iter.index}|,
+                                docUrl=@{/documents/{id}/view(id=${s.documentId()}, q=${highlightQuery}, chunks=${s.chunkIds() != null ? #strings.listJoin(s.chunkIds(), ',') : null})})}">
+                            </th:block>
+                        </span>
+                        <span th:if="${s.documentVersion() > 0}" class="badge badge--neutral"
+                              th:text="'Version ' + ${s.documentVersion()}" style="font-size: 0.625rem;">Version</span>
+                        <span th:if="${s.chunkCount() != null and s.chunkCount() > 1}" class="badge badge--neutral"
+                              th:text="${s.chunkCount()} + ' Abschnitte'" style="font-size: 0.625rem;">Abschnitte</span>
+                        <span th:if="${s.pageNumber() != null and s.pageNumber() > 0}" class="badge badge--neutral"
+                              th:text="'S. ' + ${s.pageNumber()}" style="font-size: 0.625rem;">Seite</span>
+                    </div>
+                    <div th:if="${s.documentTypeLabel() != null or s.categoryLabel() != null}"
+                         class="source-card__meta" style="margin-top: 0.125rem;">
+                        <span th:if="${s.documentTypeLabel() != null and s.documentTypeLabel() != '—'}"
+                              class="badge badge--neutral" th:text="${s.documentTypeLabel()}"
+                              style="font-size: 0.625rem;">TYP</span>
+                        <span th:if="${s.categoryLabel() != null and s.categoryLabel() != '—'}"
+                              class="badge badge--neutral" th:text="${s.categoryLabel()}"
+                              style="font-size: 0.625rem;">KATEGORIE</span>
+                    </div>
+                    <blockquote class="source-card__excerpt evidence-highlight"
+                                th:if="${s.excerpt() != null and !s.excerpt().isEmpty()}"
+                                th:text="${s.excerpt()}">Auszug aus dem Dokument</blockquote>
+                    <details th:if="${s.chunkText() != null and !s.chunkText().isEmpty()}"
+                             class="source-card__fulltext">
+                        <summary>Volltext des Abschnitts anzeigen</summary>
+                        <pre th:text="${s.chunkText()}">Volltext</pre>
+                    </details>
+                    <div class="source-card__meta">
+                        <span th:if="${s.confidenceScore() > 0}"
+                              th:text="'Konfidenz: ' + ${#numbers.formatDecimal(s.confidenceScore(), 1, 'POINT', 2, 'COMMA')}">0</span>
+                        <span th:if="${s.tierLabel() != null}" class="badge"
+                              th:classappend="'badge--' + ${s.tierVariant()}"
+                              th:text="${s.tierLabel()}" style="font-size: 0.625rem;">TIER</span>
+                        <span th:if="${s.chunkId() != null}" class="source-card__docid"
+                              th:text="'Chunk-ID: ' + ${#strings.substring(s.chunkId().toString(), 0, 8)}">CID</span>
+                        <span th:if="${s.documentId() != null}" class="source-card__docid"
+                              th:text="'Dokument: ' + ${s.documentId()}">ID</span>
+                    </div>
+                    <div th:if="${s.retrievalSources() != null and !s.retrievalSources().isEmpty()}"
+                         class="source-card__meta" style="margin-top: 0.375rem;">
+                        <span style="font-weight: 600;">Gefunden über:</span>
+                        <span th:each="rs, i : ${s.retrievalSources()}"
+                              th:text="${rs + (i.last ? '' : ', ')}">Kanal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--
+     documentViewerModal — reusable document viewer dialog shell.
+     Usage: wrap trigger + modal in one Alpine scope:
+       <span x-data="{ viewerOpen: false }">
+         <button @click="viewerOpen = true"
+                 th:attr="hx-get=${docUrl},hx-target=|#${id}-body|,hx-swap=innerHTML"
+                 hx-trigger="click once">Titel</button>
+         <th:block th:replace="~{fragments/components :: documentViewerModal(
+             id='viewer-abc', docUrl='/documents/abc/view')}"></th:block>
+       </span>
+     id: unique element id prefix for this modal instance
+     docUrl: endpoint returning the documentViewer fragment (GET /documents/{id}/view)
+-->
+<th:block th:fragment="documentViewerModal(id, docUrl)">
+    <div class="modal-overlay" x-cloak x-show="viewerOpen" x-trap.noscroll="viewerOpen"
+         @keydown.escape.window="viewerOpen = false" @click.self="viewerOpen = false"
+         role="dialog" aria-modal="true" aria-label="Dokumentansicht">
+        <div class="modal-dialog modal-dialog--viewer">
+            <div class="modal__header">
+                <h2 class="modal__title">Dokument</h2>
+                <button class="modal__close" @click="viewerOpen = false" aria-label="Schließen">&times;</button>
+            </div>
+            <div class="modal__body" th:id="${id + '-body'}">
+                <th:block th:replace="~{fragments/components :: spinner('Dokument wird geladen...')}"></th:block>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--
+     searchBox — HTMX search-as-you-type input
+     Usage: th:replace="~{fragments/components :: searchBox(
+         name='q', placeholder='Fälle durchsuchen...',
+         baseUrl='/cases', targetId='table-container')}"
+     Supports optional search icon and clear button
+-->
+<th:block th:fragment="searchBox(name, placeholder, baseUrl, targetId, showIcon, showClear)">
+    <div class="search-box">
+        <span class="search-box__icon material-symbols-outlined" aria-hidden="true"
+              th:if="${showIcon != false}">search</span>
+        <input type="search"
+               th:name="${name}"
+               class="search-box__input"
+               th:placeholder="${placeholder} ?: 'Suchen...'"
+               th:attr="hx-get=${baseUrl},hx-target=${'#' + targetId}"
+               hx-swap="outerHTML"
+               hx-push-url="true"
+               hx-trigger="keyup changed delay:300ms"
+               aria-label="Suche" />
+        <button class="search-box__clear"
+                type="button"
+                aria-label="Suche zurücksetzen"
+                th:if="${showClear != false}"
+                th:attr="onclick='this.previousElementSibling.value=\'\';this.previousElementSibling.dispatchEvent(new Event(\'input\',{bubbles:true}));this.previousElementSibling.focus()'"
+                style="display: none;">
+            &times;
+        </button>
+    </div>
+</th:block>
+
+<!--
+     fieldErrors — Per-field Bean Validation error display
+     Usage: th:replace="~{fragments/components :: fieldErrors('name')}"
+     Renders th:errors for the named field using the design system's form-field__error style
+-->
+<th:block th:fragment="fieldErrors(field)">
+    <span class="form-field__error" th:if="${#fields.hasErrors(field)}"
+          th:errors="*{${field}}"
+          role="alert">Fehler</span>
+</th:block>
+
+<!--
+     globalErrors — Object-level validation error display
+     Usage: th:replace="~{fragments/components :: globalErrors()}"
+     Compatible with Spring MVC BindingResult. Renders all global (object-level) errors.
+-->
+<th:block th:fragment="globalErrors()">
+    <th:block th:if="${#fields.hasErrors('*')}">
+        <div th:each="err : ${#fields.errors('*')}" class="message message--error" role="alert" th:text="${err}">
+            Global error
+        </div>
+    </th:block>
+</th:block>
+
+<!--
+     phaseProgress — Multi-stage phase progress indicator
+     Usage: th:replace="~{fragments/components :: phaseProgress(
+         stages=${stages}, currentIndex=2, label='Phase')}"
+     stages: List<{label}> — stage display names
+     currentIndex: 0-based index of the active stage
+     label: aria-label prefix (e.g. "Phase" → "Phase 3 von 5: Analyse")
+     States: complete (green), current (blue), remaining (gray)
+     Reused by: Case Detail, Decision Workspace
+-->
+<th:block th:fragment="phaseProgress(stages, currentIndex, label)">
+    <th:block th:with="stageCount=${#lists.size(stages)}, stepLabel=${label != null ? label : 'Schritt'}">
+    <div class="phase-progress"
+         role="progressbar"
+         th:attr="aria-valuenow=${currentIndex + 1},aria-valuemin=1,aria-valuemax=${stageCount},aria-label=${stepLabel + ' ' + (currentIndex + 1) + ' von ' + stageCount}">
+        <div class="phase-progress__label" aria-hidden="true">
+            <span th:text="${label != null ? label : 'Schritt'}">Schritt</span>
+            <strong th:text="${currentIndex + 1}">1</strong>
+            von
+            <span th:text="${stageCount}">5</span>
+        </div>
+        <div class="phase-progress__track">
+            <th:block th:each="stage, iterStat : ${stages}">
+                <th:block th:with="segClass=${iterStat.index < currentIndex ? 'complete' : (iterStat.index == currentIndex ? 'current' : 'remaining')}">
+                <div class="phase-progress__segment"
+                     th:classappend="'phase-progress__segment--' + ${segClass}">
+                    <div class="phase-progress__dot"
+                         th:attr="aria-label=${stage.label + ' — ' + (iterStat.index < currentIndex ? 'Abgeschlossen' : (iterStat.index == currentIndex ? 'Aktiv' : 'Ausstehend'))}">
+                    </div>
+                    <span class="phase-progress__stage-label"
+                          th:text="${stage.label}"
+                          th:classappend="${iterStat.index == currentIndex} ? 'phase-progress__stage-label--active'">Stage</span>
+                </div>
+                </th:block>
+            </th:block>
+        </div>
+    </div>
+    </th:block>
+</th:block>
+
+<!--
+     skeleton — Content placeholder animation for loading states
+     Usage: th:replace="~{fragments/components :: skeleton(5)}"
+     rows: number of placeholder lines (default 3)
+     The last line is always rendered at 60% width for visual variety
+-->
+<th:block th:fragment="skeleton(rows)">
+    <div class="loading-skeleton" aria-busy="true" aria-label="Inhalt wird geladen...">
+        <th:block th:each="i : ${#numbers.sequence(1, rows != null ? rows : 3)}">
+            <div class="loading-skeleton__line"
+                 th:style="${i == (rows != null ? rows : 3)} ? 'width: 60%' : ''">
+            </div>
+        </th:block>
+    </div>
+</th:block>
+
+</html>

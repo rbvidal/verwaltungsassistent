@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- emailResult: initial/error state of the analysis area -->
+<th:block th:fragment="emailResult">
+    <div th:if="${analyzeError != null}" class="message message--error" role="alert"
+         th:text="${analyzeError}" style="margin-bottom: 1rem;"></div>
+
+    <div th:unless="${analyzeError != null}" class="empty-state" role="status" aria-live="polite">
+        <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">mail</div>
+        <h3 class="empty-state__title">E-Mail analysieren</h3>
+        <p class="empty-state__desc">Wählen Sie links eine Beispiel-E-Mail aus oder fügen Sie den Text einer
+            eingehenden Bürger-E-Mail ein. Das System erkennt das Anliegen, gleicht die Wissensbasis
+            und bestehende Fälle ab und schlägt die nächsten Arbeitsschritte vor. Es wird nichts
+            nach außen versendet.</p>
+    </div>
+</th:block>
+
+<!--
+     emailAnalysis: the PRELIMINARY triage result of an analyzed e-mail.
+     Conceptual boundary (visible in the UI): the e-mail panel answers
+     "Worum geht es hier und was sollte die Mitarbeiterin als Nächstes tun?"
+     It deliberately does NOT produce a full case/decision analysis — that
+     requires the Vorgang workflow (Einrichtung → Ingestion → Analyse →
+     Überprüfung → Abschluss).
+-->
+<th:block th:fragment="emailAnalysis" th:object="${outcome}">
+    <!-- htmx OOB update: after the analysis, the e-mail context bar status
+         (emails/index.html #email-status-badge) reflects the persisted state. -->
+    <span th:if="${emailStatusLabel != null}" id="email-status-badge" hx-swap-oob="true"
+          class="badge" th:classappend="'badge--' + ${emailStatusVariant != null ? emailStatusVariant : 'info'}"
+          th:text="${emailStatusLabel}" style="font-size: 0.6875rem;">Status</span>
+    <!-- OOB update der Aktionsleiste: Der Start der Analyse übernimmt die
+         E-Mail serverseitig — nach Abschluss zeigt die Leiste ehrlich
+         "In Bearbeitung durch Sie" (bzw. den Bearbeiter) statt des
+         überflüssigen Übernehmen-Buttons. Die th:if-Wächterklausel muss auf
+         einem WRAPPER-Block liegen: th:replace hat höhere Priorität als
+         th:if/th:unless und würde die Wächterklausel ignorieren. -->
+    <th:block th:if="${emailEntity != null}">
+        <th:block th:replace="~{emails/fragments :: emailActionArea(emailEntity=${emailEntity}, currentUserEmail=${currentUserEmail}, oob=true)}"></th:block>
+    </th:block>
+    <div class="decision-package" style="margin-top: 0.5rem;"
+         x-data="{ similarOpen: false, draftCopied: false }">
+
+        <!-- Header: preliminary analysis is explicitly labeled as such. Bei
+             einer VOLLSTÄNDIGEN KI-Analyse (Antwort + Belege im gespeicherten
+             Ergebnis, aiAnswer != null) wird das ehrlich als abgeschlossene
+             KI-Analyse ausgewiesen statt als bloße Vorprüfung (Phase 2D.12). -->
+        <div class="decision-package__header" style="margin-bottom: 1rem;">
+            <h2 class="decision-package__title" style="font-size: 1.0625rem;"
+                th:text="*{aiAnswer != null and !#strings.isEmpty(aiAnswer)} ? 'E-Mail-Analyse abgeschlossen' : 'Vorläufige E-Mail-Analyse'">
+                Vorläufige E-Mail-Analyse
+            </h2>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; align-items: center;">
+                <span class="badge" style="font-size: 0.6875rem;"
+                      th:classappend="*{aiAnswer != null and !#strings.isEmpty(aiAnswer)} ? 'badge--success' : 'badge--info'"
+                      th:text="*{aiAnswer != null and !#strings.isEmpty(aiAnswer)} ? 'Vollständige KI-Analyse' : 'Vorprüfung / Triage'">Vorprüfung / Triage</span>
+                <span th:if="*{topicLabel() != null and topicLabel() != 'Allgemeines Anliegen'}"
+                      class="badge badge--neutral" style="font-size: 0.6875rem;"
+                      th:text="'Thema: ' + *{topicLabel()}">Thema</span>
+                <span th:if="*{domainLabel() != null}" class="badge badge--neutral"
+                      style="font-size: 0.6875rem;"
+                      th:text="'Fachbereich: ' + *{domainLabel()}">Fachbereich</span>
+                <button th:if="${similarCount != null and similarCount > 0}" type="button"
+                        class="btn btn--sm" style="font-size: 0.75rem;"
+                        @click="similarOpen = true"
+                        th:attr="hx-get=|/emails/analyses/similar?q=${similarQueryParam}&exclude=${analysisId}|,hx-target=${'#similar-list'},hx-swap=innerHTML"
+                        hx-trigger="click">
+                    Ähnliche Anfragen (<span th:text="${similarCount}">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- 1. Anliegen: short structured summary for the Mitarbeiterin -->
+        <section style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Anliegen</h3>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted);" th:text="*{subject()}">Betreff</p>
+            <p th:if="*{topicLabel() == null or topicLabel() == 'Allgemeines Anliegen'}"
+               style="font-size: 0.875rem; margin: 0.35rem 0 0;">
+                Die Bürgerin bzw. der Bürger hat eine Anfrage im Bürgeramt eingereicht.
+            </p>
+            <p th:unless="*{topicLabel() == null or topicLabel() == 'Allgemeines Anliegen'}"
+               style="font-size: 0.875rem; margin: 0.35rem 0 0;">
+                Die Bürgerin bzw. der Bürger fragt nach den Voraussetzungen und Unterlagen im
+                Zusammenhang mit: <span th:text="*{topicLabel()}">Thema</span>.
+            </p>
+        </section>
+
+        <!-- 2. Vorläufige Einschätzung: explicit limitation -->
+        <section style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Vorläufige Einschätzung</h3>
+            <div class="message message--info" role="note" style="margin: 0; font-size: 0.8125rem;">
+                Eine abschließende Entscheidung ist anhand der vorliegenden E-Mail allein nicht möglich.
+                Für die Prüfung müssen die persönlichen Voraussetzungen geklärt und die einschlägigen
+                Unterlagen erfasst und gesichtet werden. Diese Analyse ist eine Vorprüfung, keine
+                Entscheidungsanalyse.
+            </div>
+        </section>
+
+        <!-- 2b. Vorgangs-Intake (Phase 2C.3b): automatisch erstellt, bestehendem
+             Vorgang zugeordnet oder Prüfung erforderlich (ungültige Nummer). -->
+        <section th:if="*{intake != null}" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Vorgang</h3>
+            <div class="case-detail__header"
+                 th:classappend="*{intake.mode.name() == 'REVIEW_REQUIRED'} ? 'case-detail__header--identity' : ''"
+                 style="border-left: 3px solid var(--color-primary); padding: 0.6rem 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <th:block th:if="*{intake.mode.name() == 'NEW_CASE'}">
+                            <span class="badge badge--success" style="font-size: 0.6875rem;">Vorgang erstellt</span>
+                            <strong style="margin-left: 0.4rem;" th:text="*{intake.caseCode}">WS-XXXXXXXX</strong>
+                        </th:block>
+                        <th:block th:if="*{intake.mode.name() == 'EXISTING_CASE'}">
+                            <span class="badge badge--info" style="font-size: 0.6875rem;">Bestehender Vorgang</span>
+                            <strong style="margin-left: 0.4rem;" th:text="*{intake.caseCode}">WS-XXXXXXXX</strong>
+                            <span th:if="*{intake.caseName != null}" style="font-size: 0.8125rem; color: var(--color-text-muted);"
+                                  th:text="' · ' + *{intake.caseName}">Fall</span>
+                        </th:block>
+                        <th:block th:if="*{intake.mode.name() == 'REVIEW_REQUIRED'}">
+                            <span class="badge badge--warning" style="font-size: 0.6875rem;">Prüfung erforderlich</span>
+                            <strong style="margin-left: 0.4rem;" th:text="*{intake.invalidCaseId}">WS-XXXXXXXX</strong>
+                        </th:block>
+                        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.2rem;">
+                            Kommunikation:
+                            <span th:if="*{intake.classification != null}" th:switch="*{intake.classification.communicationType.name()}">
+                                <span th:case="'APPLICATION'">Antrag</span>
+                                <span th:case="'QUESTION'">Frage</span>
+                                <span th:case="'INFORMATION_REQUEST'">Informationsanfrage</span>
+                                <span th:case="'FOLLOW_UP'">Folgefrage</span>
+                                <span th:case="'CLARIFICATION'">Rückfrage</span>
+                                <span th:case="'COMPLAINT'">Beschwerde</span>
+                                <span th:case="*">Sonstiges</span>
+                            </span>
+                            <span th:if="*{intake.classification == null}">—</span>
+                            · Antwort erforderlich:
+                            <span th:text="*{intake.classification != null and intake.classification.requiresResponse() ? 'Ja' : 'Nein'}">Ja</span>
+                            · Verwaltungsarbeit erforderlich:
+                            <span th:text="*{intake.classification != null and intake.classification.requiresAdministrativeWork() ? 'Ja' : 'Nein'}">Ja</span>
+                            · Zuständig:
+                            <span th:text="*{intake.assignedTo != null and !#strings.isEmpty(intake.assignedTo) ? intake.assignedTo : 'Nicht zugewiesen'}">—</span>
+                        </p>
+                        <p th:if="*{intake.classification != null and intake.classification.suggestedAction() != null and !#strings.isEmpty(intake.classification.suggestedAction())}"
+                           style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.2rem;">
+                            Empfohlene nächste Aktion:
+                            <span th:text="*{intake.classification.suggestedAction()}">Aktion</span>
+                        </p>
+                        <p th:if="*{intake.mode.name() == 'REVIEW_REQUIRED'}" style="font-size: 0.75rem; margin-top: 0.2rem;">
+                            Die angegebene Vorgangsnummer existiert nicht. Es wurde bewusst KEIN neuer
+                            Vorgang angelegt — bitte prüfen, ob der Bürger eine falsche oder veraltete
+                            Nummer angegeben hat.
+                        </p>
+                    </div>
+                    <a th:if="${associatedCaseId != null}" th:href="'/cases/' + ${associatedCaseId}"
+                       class="btn btn--sm btn--primary" style="font-size: 0.75rem;">Fall öffnen</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Vorläufiger Antwortentwurf: complete correspondence draft with
+             the employee signature (all values from the account profile). -->
+        <section style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Vorläufiger Antwortentwurf</h3>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                Entwurf für die Rückantwort an die Bürgerin bzw. den Bürger — vor dem Versand
+                individuell anzupassen.
+            </p>
+            <div class="answer-draft" id="answer-draft"
+                 style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--color-surface-row); padding: 0.75rem 1rem;">
+                <div class="answer-draft__block" style="margin-bottom: 0.5rem;">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">Betreff</span>
+                    <div style="font-size: 0.875rem;" data-draft-part="betreff">
+                        Antwort auf Ihre Anfrage vom
+                        <span th:text="${#temporals.format(#temporals.createToday(), 'dd.MM.yyyy')}">Datum</span>
+                        <th:block th:if="*{subject() != null and !#strings.isEmpty(subject())}"
+                                  th:text="' — ' + *{subject()}"></th:block>
+                    </div>
+                </div>
+                <div class="answer-draft__block" style="margin-bottom: 0.5rem;">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">Anrede</span>
+                    <div style="font-size: 0.875rem;" data-draft-part="anrede">
+                        Sehr geehrte Bürgerin, sehr geehrter Bürger,
+                    </div>
+                </div>
+                <div class="answer-draft__block" style="margin-bottom: 0.5rem;">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">Antworttext</span>
+                    <div th:if="*{topicLabel() == null or topicLabel() == 'Allgemeines Anliegen'}"
+                         style="font-size: 0.875rem; line-height: 1.55; white-space: pre-line;" data-draft-part="antwort">
+                        Vielen Dank für Ihre Anfrage. Für eine abschließende Prüfung benötigen wir
+                        weitere Angaben bzw. Unterlagen. Wir bitten um etwas Geduld und werden uns
+                        zeitnah bei Ihnen melden.
+                    </div>
+                    <div th:unless="*{topicLabel() == null or topicLabel() == 'Allgemeines Anliegen'}"
+                         style="font-size: 0.875rem; line-height: 1.55; white-space: pre-line;" data-draft-part="antwort">
+                        Vielen Dank für Ihre Anfrage. Ob in Ihrem Fall eine Bearbeitung Ihres Anliegens
+                        im Zusammenhang mit <span th:text="*{topicLabel()}">Thema</span> in Betracht
+                        kommt, hängt von den persönlichen Voraussetzungen und dem konkreten Sachverhalt
+                        ab. Für eine abschließende Prüfung benötigen wir weitere Angaben bzw. Unterlagen.
+                    </div>
+                </div>
+                <div class="answer-draft__block" style="margin-bottom: 0.5rem;">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">Grußformel</span>
+                    <div style="font-size: 0.875rem;" data-draft-part="gruss">Mit freundlichen Grüßen</div>
+                </div>
+                <div class="answer-draft__block">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">Mitarbeiter-Signatur</span>
+                    <div style="font-size: 0.875rem; line-height: 1.5; margin-top: 0.15rem;" data-draft-part="signatur">
+                        <th:block th:if="${signature != null}">
+                            <div th:if="${signature.fullName() != null}" th:text="${signature.fullName()}">Name</div>
+                            <div th:if="${signature.position() != null}" th:text="${signature.position()}">Funktion</div>
+                            <div th:if="${signature.department() != null or signature.office() != null}"
+                                 th:text="${(signature.department() != null ? signature.department() : '') + (signature.department() != null and signature.office() != null ? ' · ' : '') + (signature.office() != null ? signature.office() : '')}">Abteilung</div>
+                            <div th:if="${signature.phone() != null}" th:text="'Telefon: ' + ${signature.phone()}">Telefon</div>
+                            <div th:if="${signature.email() != null}" th:text="${signature.email()}">E-Mail</div>
+                            <div th:if="${signature.room() != null}" th:text="'Raum: ' + ${signature.room()}">Raum</div>
+                        </th:block>
+                        <span th:if="${signature == null}" style="color: var(--color-text-muted);">
+                            (Keine Mitarbeiter-Signatur hinterlegt — Profil in der Administration prüfen.)
+                        </span>
+                    </div>
+                </div>
+                <div class="answer-draft__block" style="margin-top: 0.5rem;">
+                    <span class="answer-draft__label" style="font-weight: 600; font-size: 0.75rem; color: var(--color-text-muted);">IT-Sicherheitshinweis</span>
+                    <div style="font-size: 0.75rem; line-height: 1.45; color: var(--color-text-muted); margin-top: 0.15rem;" data-draft-part="sicherheit">
+                        Zur Erhöhung der IT-Sicherheit werden keine E-Mails mit zip-Anhängen oder veralteten
+                        Office-Formaten zugestellt. Wir bitten Sie, E-Mail-Anhänge in den Formaten ab
+                        Office 2010 aufwärts (*.docx, *.xlsx, *.pptx) zu übersenden. Office Dokumente,
+                        wie beispielsweise *.doc, *.xls, *.ppt oder auch Dateiformate mit Makros werden
+                        nicht mehr entgegengenommen. Die E-Mail-Adresse ist aus technischen Gründen nicht
+                        für den Empfang elektronisch signierter Mails geeignet.
+                    </div>
+                </div>
+                <div style="margin-top: 0.75rem;">
+                    <button type="button" class="btn btn--sm" style="font-size: 0.75rem;"
+                            @click="(() => { var t = $el.closest('#answer-draft').querySelector('[data-draft-part=betreff]').innerText.trim() + '\n\n' + $el.closest('#answer-draft').querySelector('[data-draft-part=anrede]').innerText.trim() + '\n\n' + $el.closest('#answer-draft').querySelector('[data-draft-part=antwort]').innerText.trim() + '\n\n' + $el.closest('#answer-draft').querySelector('[data-draft-part=gruss]').innerText.trim() + '\n\n' + $el.closest('#answer-draft').querySelector('[data-draft-part=signatur]').innerText.trim() + '\n\n' + $el.closest('#answer-draft').querySelector('[data-draft-part=sicherheit]').innerText.trim(); if (navigator.clipboard) { navigator.clipboard.writeText(t); } else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); } draftCopied = true; setTimeout(() => draftCopied = false, 2000); })()"
+                            x-text="draftCopied ? 'Kopiert!' : 'Kompletten Entwurf kopieren'">Kompletten Entwurf kopieren</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4a. Zugeordneter Fall: die E-Mail gehört bereits zu diesem Vorgang.
+             Primärweg ist "Fall öffnen" — kein "Vorgang aus E-Mail anlegen". Die
+             Zuordnung kann explizit aufgehoben werden (danach sind Zuordnung
+             und Neuanlage wieder verfügbar). -->
+        <section th:if="${associatedCaseId != null}" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Zugeordneter Fall</h3>
+            <div class="case-detail__header"
+                 style="border-left: 3px solid var(--color-primary); padding: 0.6rem 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <strong th:text="${associatedCaseName}">Fall</strong>
+                        <span class="badge badge--info" style="font-size: 0.6875rem; margin-left: 0.4rem;">Vorgang</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <a th:href="'/cases/' + ${associatedCaseId}" class="btn btn--sm btn--primary"
+                           style="font-size: 0.75rem;">Fall öffnen</a>
+                        <form th:if="${!supervisory and analysisId != null}"
+                              th:action="'/emails/' + ${analysisId} + '/unassign-case'" method="post"
+                              style="display: inline;">
+                            <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                            <button type="submit" class="btn btn--sm" style="font-size: 0.75rem;">
+                                Zuordnung aufheben
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.4rem;">
+                Diese E-Mail ist dem Vorgang zugeordnet — die Bearbeitung des Anliegens erfolgt im
+                Vorgang (Unterlagen, Fall-Analyse, Entscheidung).
+                Nach dem Aufheben der Zuordnung kann die E-Mail einem anderen Fall zugeordnet werden.
+            </p>
+        </section>
+
+        <!-- 4. Vollständige Prüfung: explicit path into the case workflow.
+             Nicht als Normalaktion, wenn die E-Mail bereits einem Fall zugeordnet ist. -->
+        <section th:if="${associatedCaseId == null}" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Vollständige Prüfung</h3>
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.6rem;">
+                Für eine vollständige fallbezogene Prüfung kann aus dieser Anfrage ein Vorgang angelegt
+                werden. Anschließend werden relevante Unterlagen erfasst, geprüft und in die
+                Entscheidungsanalyse einbezogen — Ablauf: Einrichtung → Ingestion → Analyse →
+                Überprüfung → Abschluss.
+            </p>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                Hinweis: Der Vorgang startet <strong>ohne Dokumente</strong> — Unterlagen können im
+                Vorgang nachträglich ergänzt werden, bevor eine Entscheidungsanalyse aussagekräftig ist.
+            </p>
+            <th:block th:if="${analysisId != null}">
+                <!-- Die Zuordnung zu einem VORSCHLAG erfolgt AUSSCHLIESSLICH an der
+                     jeweiligen Fall-Zeile im Abschnitt "Möglicher passender Fall" —
+                     hier gibt es keinen generischen Zuordnen-Button mehr. Als
+                     explizite Alternative bleibt das Anlegen eines neuen Falls. -->
+                <form th:if="${!supervisory}" th:action="'/emails/' + ${analysisId} + '/create-case'" method="post">
+                    <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                    <button type="submit" class="btn"
+                            th:classappend="${matchedCases == null or matchedCases.isEmpty()} ? 'btn--primary' : ''"
+                            style="font-size: 0.8125rem;">
+                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">add_circle</span>
+                        <th:block th:if="*{matchedCases != null and !matchedCases.isEmpty()}">
+                            Neuen Fall anlegen (abweichend vom Treffer)
+                        </th:block>
+                        <th:block th:unless="*{matchedCases != null and !matchedCases.isEmpty()}">
+                            Vorgang aus E-Mail anlegen
+                        </th:block>
+                    </button>
+                </form>
+            </th:block>
+            <p th:unless="${analysisId != null}" style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0;">
+                Der Vorgang kann aus der gespeicherten Analyse angelegt werden (Analyse erneut öffnen).
+            </p>
+        </section>
+
+        <!-- 5. Matching/suggested cases: the matching algorithm found a similar
+             existing Fall. This is a VORSCHLAG — it is NOT the Fall this e-mail
+             already belongs to (that one is shown as "Zugeordneter Fall" above).
+             Assigning is an explicit action. -->
+        <section th:if="*{matchedCases == null or matchedCases.isEmpty()}" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Möglicher passender Fall</h3>
+            <p style="font-size: 0.875rem; color: var(--color-text-muted);">
+                Kein ähnlicher bestehender Fall erkannt — die Anfrage kann über „Vollständige Prüfung"
+                als neuer Vorgang angelegt werden.
+            </p>
+        </section>
+
+        <section th:if="*{matchedCases != null and !matchedCases.isEmpty()}" style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Möglicher passender Fall</h3>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                Vorschlag aus dem Abgleich mit bestehenden Fällen — keine feste Zuordnung.
+                Die Zuordnung erfolgt erst durch die explizite Aktion an der jeweiligen Fall-Zeile.
+            </p>
+            <div th:each="c, iter : *{matchedCases}" th:if="${iter.index == 0}"
+                 class="case-detail__header"
+                 th:classappend="${c.matchType() == 'EMAIL_IDENTITY' or c.matchType() == 'NAME_IDENTITY' or c.matchType() == 'THREAD_IDENTITY'} ? 'case-detail__header--identity' : ''"
+                 style="border-left: 3px solid var(--color-primary); padding: 0.6rem 0.75rem; margin-bottom: 0.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <strong th:text="${c.name()}">Fall</strong>
+                        <span class="badge badge--info" style="font-size: 0.6875rem; margin-left: 0.4rem;"
+                              th:text="${c.matchType() == 'EMAIL_IDENTITY'} ? 'Identität bestätigt' : (${c.matchType() == 'THREAD_IDENTITY'} ? 'Thread-Zugehörigkeit' : (${c.matchType() == 'NAME_IDENTITY'} ? 'Mögliche Personenübereinstimmung' : (${c.matchType() == 'SEMANTIC'} ? 'Semantisch ähnlicher Vorgang' : 'Thematisch ähnlicher Vorgang')))">Vorschlag</span>
+                        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.2rem;"
+                           th:text="${c.reason()}">Grund</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <!-- Zuordnung GENAU für diesen Fall — immer eine EXPLIZITE
+                             Aktion. Bei einem unsicheren Treffer (SIMILAR) heißt
+                             der Button "Diesem Vorgang zuordnen": Die
+                             Mitarbeiterin entscheidet, nichts wird stillschweigend
+                             zugeordnet (Phase 2C.1). -->
+                        <form th:if="${!supervisory and analysisId != null and (c.matchType() == 'EMAIL_IDENTITY' or c.matchType() == 'THREAD_IDENTITY' or c.matchType() == 'NAME_IDENTITY')}"
+                              th:action="'/emails/' + ${analysisId} + '/assign-case'" method="post"
+                              style="display: inline;">
+                            <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                            <input type="hidden" name="caseId" th:value="${c.id()}">
+                            <button type="submit" class="btn btn--sm btn--primary" style="font-size: 0.75rem;">
+                                Diesem Fall zuordnen
+                            </button>
+                        </form>
+                        <form th:if="${!supervisory and analysisId != null and (c.matchType() == 'SIMILAR' or c.matchType() == 'SEMANTIC')}"
+                              th:action="'/emails/' + ${analysisId} + '/assign-case'" method="post"
+                              style="display: inline;">
+                            <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                            <input type="hidden" name="caseId" th:value="${c.id()}">
+                            <button type="submit" class="btn btn--sm btn--primary" style="font-size: 0.75rem;">
+                                Diesem Vorgang zuordnen
+                            </button>
+                        </form>
+                        <a th:href="'/cases/' + ${c.id()}" class="btn btn--sm"
+                           style="font-size: 0.75rem;">Fall öffnen</a>
+                    </div>
+                </div>
+            </div>
+            <th:block th:if="${#lists.size(outcome.matchedCases) > 1}">
+                <h4 style="font-size: 0.8125rem; font-weight: 600; margin: 0.6rem 0 0.3rem;">
+                    Weitere mögliche Vorgänge
+                </h4>
+                <div th:each="c, iter : *{matchedCases}" th:if="${iter.index > 0}"
+                     style="border-left: 3px solid var(--color-border); padding: 0.5rem 0.75rem; margin-bottom: 0.4rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <strong th:text="${c.name()}" style="font-weight: 500;">Fall</strong>
+                            <span class="badge badge--neutral" style="font-size: 0.6875rem; margin-left: 0.4rem;"
+                                  th:text="${c.matchType() == 'EMAIL_IDENTITY'} ? 'Identität bestätigt' : (${c.matchType() == 'THREAD_IDENTITY'} ? 'Thread-Zugehörigkeit' : (${c.matchType() == 'NAME_IDENTITY'} ? 'Mögliche Personenübereinstimmung' : (${c.matchType() == 'SEMANTIC'} ? 'Semantisch ähnlicher Vorgang' : 'Thematisch ähnlicher Vorgang')))">Referenz</span>
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.2rem;"
+                               th:text="${c.reason()}">Grund</p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <form th:if="${!supervisory and analysisId != null and (c.matchType() == 'EMAIL_IDENTITY' or c.matchType() == 'THREAD_IDENTITY' or c.matchType() == 'NAME_IDENTITY')}"
+                                  th:action="'/emails/' + ${analysisId} + '/assign-case'" method="post"
+                                  style="display: inline;">
+                                <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                                <input type="hidden" name="caseId" th:value="${c.id()}">
+                                <button type="submit" class="btn btn--sm" style="font-size: 0.75rem;">
+                                    Diesem Fall zuordnen
+                                </button>
+                            </form>
+                            <form th:if="${!supervisory and analysisId != null and (c.matchType() == 'SIMILAR' or c.matchType() == 'SEMANTIC')}"
+                                  th:action="'/emails/' + ${analysisId} + '/assign-case'" method="post"
+                                  style="display: inline;">
+                                <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}">
+                                <input type="hidden" name="caseId" th:value="${c.id()}">
+                                <button type="submit" class="btn btn--sm" style="font-size: 0.75rem;">
+                                    Diesem Vorgang zuordnen
+                                </button>
+                            </form>
+                            <a th:href="'/cases/' + ${c.id()}" class="btn btn--sm"
+                               style="font-size: 0.75rem;">Fall öffnen</a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <p th:if="${#lists.size(outcome.matchedCases) == 1 and outcome.matchedCases[0].matchType() == 'SIMILAR'}"
+               style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.4rem;">
+                Der Vorgang ist nur thematisch ähnlich — es erfolgt bewusst keine automatische Zuordnung.
+                Ordnen Sie die E-Mail über „Diesem Vorgang zuordnen" ausdrücklich an der Vorgangs-Zeile zu
+                oder ordnen Sie sie einem anderen Vorgang zu.
+            </p>
+            <p th:if="${#lists.size(outcome.matchedCases) == 1 and outcome.matchedCases[0].matchType() == 'SEMANTIC'}"
+               style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.4rem;">
+                Der Vorgang wurde über die semantische Ähnlichkeit seiner Unterlagen vorgeschlagen —
+                es erfolgt bewusst keine automatische Zuordnung. Die Ähnlichkeitsangabe beschreibt den
+                Vektor-Abgleich, keine bestätigte Personen- oder Fallbeziehung.
+            </p>
+        </section>
+
+        <!-- 6. KI-Beantwortung: belegte Antwort auf die Bürgerfrage -->
+        <section style="margin-bottom: 1rem;" th:if="*{aiAnswer != null and !#strings.isEmpty(aiAnswer)}"
+                 x-data="{}" th:attr="data-question=${emailText}">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">
+                Beantwortung auf Basis der Wissensbasis
+            </h3>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                Die Antwort wurde aus den abgerufenen Dokumenten erzeugt und gegen die Quellen geprüft
+                (Retrieval → Belege → Prüfung). Passende Textstellen sind hervorgehoben.
+            </p>
+            <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius);
+                        background: var(--color-surface-row); padding: 0.75rem 1rem;">
+                <div style="font-size: 0.875rem; line-height: 1.6; white-space: pre-line;"
+                     th:text="*{aiAnswer}">Antwort</div>
+                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.6rem;">
+                    <span class="badge" th:classappend="*{aiGrounded} ? 'badge--success' : 'badge--warning'"
+                          th:text="*{aiGrounded} ? 'Quellenbelegt' : 'Eingeschränkte Quellenlage'"
+                          style="font-size: 0.6875rem;">Status</span>
+                    <span th:if="*{aiConfidence != null}" class="badge badge--neutral"
+                          th:text="'Konfidenz ' + *{aiConfidence} + ' %'" style="font-size: 0.6875rem;">Konfidenz</span>
+                </div>
+            </div>
+
+            <div th:if="*{aiEvidence != null and !#lists.isEmpty(aiEvidence)}"
+                 style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                <p style="font-size: 0.75rem; font-weight: 600; margin: 0;">Belege</p>
+                <div th:each="ev, evStat : *{aiEvidence}" class="decision-package__evidence-item"
+                     style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.6rem 0.85rem;"
+                     th:attr="data-highlight-terms=${emailHighlightTerms != null ? emailHighlightTerms : ''}"
+                     x-init="highlightEvidence($el)">
+                    <div style="display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                        <strong style="font-size: 0.8125rem;" th:text="${ev.title()}">Quelle</strong>
+                        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                            <span th:if="${ev.pageNumber() != null}" class="badge badge--neutral"
+                                  th:text="'S. ' + ${ev.pageNumber()}" style="font-size: 0.6875rem;"></span>
+                            <span th:if="${ev.tier() != null and ev.tier() != ''}" class="badge badge--info"
+                                  th:text="${ev.tier()}" style="font-size: 0.6875rem;"></span>
+                            <span th:if="${ev.score() != null}" class="badge badge--neutral"
+                                  th:text="'Quellenrelevanz ' + ${#numbers.formatDecimal(ev.score() * 100, 1, 'COMMA', 0, 'POINT')} + '%'"
+                                  style="font-size: 0.6875rem;"></span>
+                        </div>
+                    </div>
+                    <blockquote class="decision-package__evidence-excerpt evidence-highlight"
+                                th:text="${ev.excerpt()}"
+                                style="margin: 0.4rem 0 0; font-size: 0.8125rem; line-height: 1.6;">
+                        Auszug
+                    </blockquote>
+                    <!-- Phase 2C.11: Quelle öffnen → Dokument-Viewer auf den
+                         EVIDENCE-Chunk (exakte Passage, nur Belege werden
+                         markiert); ohne Chunk-Referenz ehrlich das Dokument. -->
+                    <span th:if="${ev.documentId() != null}" x-data="{ srcOpen: false }"
+                          style="display: inline-block; margin-top: 0.5rem;">
+                        <button type="button" class="btn btn--sm" style="font-size: 0.75rem;"
+                                th:attr="hx-get=${(ev.chunkId() != null and ev.chunkId() != '')
+                                    ? '/documents/' + ev.documentId() + '/view?q=' + (subjectQueryParam != null ? subjectQueryParam : '') + '&chunks=' + ev.chunkId()
+                                    : '/documents/' + ev.documentId() + '/view?q=' + (subjectQueryParam != null ? subjectQueryParam : '')},
+                                hx-target=|#evsrc-${evStat.index}-body|,hx-swap=innerHTML"
+                                hx-trigger="click once"
+                                @click="srcOpen = true">
+                            <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 0.875rem; vertical-align: middle;">open_in_new</span>
+                            Quelle öffnen
+                        </button>
+                        <th:block th:replace="~{fragments/components :: documentViewerModal(
+                            id=|evsrc-${evStat.index}|,
+                            docUrl=|/documents/${ev.documentId()}/view?q=${subjectQueryParam != null ? subjectQueryParam : ''}${ev.chunkId() != null and ev.chunkId() != '' ? '&chunks=' + ev.chunkId() : ''}|)}">
+                        </th:block>
+                    </span>
+                </div>
+            </div>
+            <p th:if="*{aiEvidence == null or #lists.isEmpty(aiEvidence)}"
+               style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                Keine Belege für die Antwort — die Antwort ist eine Einschätzung ohne Quellengrundlage.
+            </p>
+        </section>
+
+        <!-- Antwortentwurf (Phase 2C.8): bearbeitbarer Entwurfs-Vorschlag auf
+             Basis des Analyse-Ergebnisses — kein Versand, kein automatischer
+             Abgang nach außen. Sichtbar nur wenn ein Entwurf vorliegt oder die
+             Kommunikation eine Antwort erfordert (responseMode != NONE). -->
+        <th:block th:replace="~{emails/fragments :: emailDraftArea}"></th:block>
+
+        <!-- 7. Relevant documents -->
+        <section style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Relevante Dokumente in der Wissensbasis</h3>
+            <th:block th:if="*{relevantDocuments != null and !relevantDocuments.isEmpty()}">
+                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <!-- From an analysis result the document opens as a content viewer
+                         (chunks with the query terms highlighted), not the metadata page:
+                         the analysis context must stay visible. -->
+                    <li th:each="d : *{relevantDocuments}" style="font-size: 0.875rem;"
+                        x-data="{ viewerOpen: false }">
+                        <button type="button" class="doc-title-link" style="font-weight: 500;"
+                                @click="viewerOpen = true"
+                                th:attr="hx-get=|/documents/${d.id()}/view?q=${subjectQueryParam}|,hx-target=${'#emdoc-' + d.id() + '-body'},hx-swap=innerHTML"
+                                hx-trigger="click once">
+                            <span th:text="${d.title()}">Titel</span>
+                        </button>
+                        <span class="badge badge--neutral" style="font-size: 0.6875rem; margin-left: 0.5rem;"
+                              th:text="'Relevanz ' + ${#numbers.formatDecimal(d.score(), 1, 'POINT', 2, 'COMMA')}">0.85</span>
+                        <th:block th:replace="~{fragments/components :: documentViewerModal(
+                            id=|emdoc-${d.id()}|, docUrl=|/documents/${d.id()}/view|)}"></th:block>
+                    </li>
+                </ul>
+            </th:block>
+            <p th:unless="*{relevantDocuments != null and !relevantDocuments.isEmpty()}"
+               style="font-size: 0.875rem; color: var(--color-text-muted);">
+                Keine ausreichend belegten Treffer in der Wissensbasis.
+            </p>
+        </section>
+
+        <!-- 7. Missing documents -->
+        <section style="margin-bottom: 1rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.4rem;">Fehlende Unterlagen prüfen</h3>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                Typische Unterlagen zum erkannten Thema — prüfen Sie, welche bereits vorliegen und welche fehlen.
+            </p>
+            <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                <li th:each="m : *{missingDocuments}" style="font-size: 0.875rem; display: flex; gap: 0.5rem; align-items: flex-start;">
+                    <input type="checkbox" style="margin-top: 0.2rem;" aria-label="Unterlage geprüft">
+                    <span th:text="${m}">Unterlage</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Similar earlier analyses: each entry re-opens its stored result
+             in the analysis area; loading a result replaces this whole
+             fragment, so the dialog closes itself. -->
+        <div class="modal-overlay" x-show="similarOpen" x-trap.noscroll="similarOpen"
+             @keydown.escape.window="similarOpen = false" @click.self="similarOpen = false"
+             role="dialog" aria-modal="true" aria-label="Ähnliche Anfragen" x-cloak>
+            <div class="modal-dialog">
+                <div class="modal__header">
+                    <h2 class="modal__title">Ähnliche Anfragen</h2>
+                    <button class="modal__close" @click="similarOpen = false" aria-label="Schließen">&times;</button>
+                </div>
+                <div class="modal__body" id="similar-list">
+                    <th:block th:replace="~{fragments/components :: spinner('Ähnliche Analysen werden gesucht …')}"></th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!--
+     emailActionArea: Aktionsleiste der E-Mail-Kontextleiste (emails/index.html).
+     Zwei Render-Kontexte:
+       · oob=false → initialer Seitenaufbau (kein hx-swap-oob-Attribut)
+       · oob=true  → innerhalb der Analyse-Antwort; htmx ersetzt die Leiste
+                     im lebenden DOM (die E-Mail ist durch den Analysestart
+                     verbindlich dem aktuellen Mitarbeiter zugeordnet).
+     Zustände:
+       · assignedTo == currentUserEmail → "In Bearbeitung durch Sie"
+       · assignedTo != null (andere/r)  → "In Bearbeitung durch: <E-Mail>"
+       · nur Empfänger-Adresse          → "Zugewiesen an: <E-Mail> (Empfänger)"
+       · sonst (wirklich frei)          → "E-Mail-Bearbeitung übernehmen"
+-->
+<th:block th:fragment="emailActionArea(emailEntity, currentUserEmail, oob)">
+    <div id="email-action-area" th:if="${!supervisory}"
+         th:attr="hx-swap-oob=${oob} ? 'true' : null"
+         style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem; align-items: center;">
+        <!-- Nur wirklich unzugewiesene allgemeine E-Mails können übernommen
+             werden — direkt adressierte E-Mails sind dem Empfänger zugeordnet.
+             Bewusst KEINE @{}-URLs: das Fragment wird auch aus der rohen
+             TemplateEngine (Worker-Thread der Analyse) gerendert. -->
+        <form th:if="${emailEntity.effectiveAssignee() == null}"
+              class="email-takeover-form"
+              th:action="'/emails/' + ${emailEntity.getId()} + '/assign'" method="post" style="display: inline;">
+            <button type="submit" class="btn btn--primary" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">
+                E-Mail-Bearbeitung übernehmen
+            </button>
+        </form>
+        <span th:if="${emailEntity.getAssignedTo() != null and emailEntity.getAssignedTo() == currentUserEmail}"
+              class="badge badge--info" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;">
+            In Bearbeitung durch Sie
+        </span>
+        <span th:if="${emailEntity.getAssignedTo() != null and emailEntity.getAssignedTo() != currentUserEmail}"
+              class="badge badge--info" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;"
+              th:text="'In Bearbeitung durch: ' + ${emailEntity.getAssignedTo()}">In Bearbeitung durch</span>
+        <span th:if="${emailEntity.getAssignedTo() == null and emailEntity.isAssignedByRecipient()}"
+              class="badge badge--neutral" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;"
+              th:text="'Zugewiesen an: ' + ${emailEntity.getAddressedToEmail()} + ' (Empfänger)'">Zugewiesen an</span>
+        <!-- Erledigt ist der explizite Abschluss einer Bearbeitung (In Bearbeitung → Erledigt). -->
+        <form th:if="${emailEntity.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).IN_PROGRESS}"
+              th:action="'/emails/' + ${emailEntity.getId()} + '/complete'" method="post" style="display: inline;">
+            <button type="submit" class="btn" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">
+                Als erledigt markieren
+            </button>
+        </form>
+        <a th:href="'/emails/' + ${emailEntity.getId()}" class="btn"
+           style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">Detail öffnen</a>
+    </div>
+</th:block>
+
+<!--
+     emailDraftArea: Antwortentwurf einer analysierten E-Mail (Phase 2C.8).
+     Deterministisch aus dem EmailOutcome zusammengestellt (bzw. vom
+     Mitarbeiter bearbeitet und gespeichert). Reine Kommunikations-Hilfe —
+     es wird nichts gesendet und kein Vorgang verändert. Modell-Attribute:
+     emailDraft (EmailController.EmailDraft, kann null sein), draftAllowed,
+     analysisId, supervisory (Leitungs-Konto liest nur).
+-->
+<th:block th:fragment="emailDraftArea">
+    <section id="email-draft-area"
+             th:if="${emailDraft != null or (draftAllowed and !supervisory)}"
+             style="margin-bottom: 1rem; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; background: var(--color-surface-row);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin: 0;">Antwortentwurf</h3>
+            <span style="display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap;">
+                <span class="badge badge--neutral" style="font-size: 0.625rem;">Nur Entwurf · kein Versand</span>
+                <!-- Lokale Entwurfs-Stände (Phase 2C.9): KEIN ENTWURF /
+                     KI-ENTWURF / MANUELL BEARBEITET / ENTWURF GEPRÜFT. -->
+                <span th:if="${emailDraft == null}" class="badge badge--neutral"
+                      style="font-size: 0.625rem;">Kein Entwurf</span>
+                <span th:if="${emailDraft != null and emailDraft.reviewed()}"
+                      class="badge badge--success" style="font-size: 0.625rem;">Entwurf geprüft · lokal</span>
+                <span th:if="${emailDraft != null and !emailDraft.reviewed() and emailDraft.edited()}"
+                      class="badge badge--warning" style="font-size: 0.625rem;">Manuell bearbeitet</span>
+                <span th:if="${emailDraft != null and !emailDraft.reviewed() and !emailDraft.edited()}"
+                      class="badge badge--info" style="font-size: 0.625rem;">KI-Entwurf</span>
+                <span th:if="${emailDraft != null and emailDraft.generatedAt() != null}"
+                      class="badge badge--neutral" style="font-size: 0.625rem;"
+                      th:text="'Erstellt: ' + ${emailDraft.generatedAt()}">Erstellt</span>
+            </span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.6rem;">
+            Lokaler Textvorschlag auf Basis der E-Mail-Analyse und der abgerufenen Belege —
+            er wird <strong>nicht automatisch versendet</strong>. Bitte prüfen und bearbeiten;
+            „Entwurf geprüft“ ist nur ein interner Vermerk für die Aktenlage.
+        </p>
+        <div th:if="${emailDraft != null}">
+            <textarea id="email-draft-text" name="text" rows="12" class="form-field__input"
+                      th:text="${emailDraft.text()}"
+                      th:attr="readonly=${supervisory} ? 'readonly' : null"
+                      style="width: 100%; resize: vertical; font-family: inherit; line-height: 1.55;"></textarea>
+            <div th:if="${emailDraft.reviewed() and emailDraft.reviewedBy() != null}"
+                 style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.35rem;"
+                 th:text="'Geprüft von ' + ${emailDraft.reviewedBy()} + ' am ' + ${emailDraft.reviewedAt()}">Geprüft</div>
+            <div th:if="${!supervisory}" style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.6rem;">
+                <button type="button" class="btn btn--primary"
+                        th:attr="hx-post=|/emails/${analysisId}/draft/save|,hx-include=|#email-draft-text|,hx-target=|#email-draft-area|,hx-swap=outerHTML">
+                    Entwurf speichern
+                </button>
+                <button type="button" class="btn"
+                        th:if="${!emailDraft.reviewed()}"
+                        th:attr="hx-post=|/emails/${analysisId}/draft/review|,hx-target=|#email-draft-area|,hx-swap=outerHTML">
+                    Entwurf geprüft
+                </button>
+                <button type="button" class="btn" hx-vals='{"force":"true"}'
+                        th:attr="hx-post=|/emails/${analysisId}/draft/generate|,hx-target=|#email-draft-area|,hx-swap=outerHTML,
+                                 hx-confirm=${emailDraft.edited()} ? 'Der manuell bearbeitete Entwurf wird durch einen neuen Entwurf ersetzt. Fortfahren?' : null">
+                    Neu erstellen
+                </button>
+            </div>
+        </div>
+        <div th:if="${emailDraft == null and draftAllowed and !supervisory}">
+            <button type="button" class="btn btn--primary" hx-vals='{"force":"true"}'
+                    th:attr="hx-post=|/emails/${analysisId}/draft/generate|,hx-target=|#email-draft-area|,hx-swap=outerHTML">
+                Antwortentwurf erstellen
+            </button>
+        </div>
+        <p th:if="${supervisory}" style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.5rem 0 0;">
+            Leitungs-Konto: Entwürfe werden nur lesend eingesehen.
+        </p>
+    </section>
+</th:block>
+
+</th:block>
+
+<!-- similarAnalyses: entry list for the "Ähnliche Anfragen" dialog. The
+     current analysis is excluded server-side; an empty result shows an honest
+     empty state instead of silently rendering nothing. -->
+<th:block th:fragment="similarAnalyses">
+    <th:block th:if="${similarAnalyses == null or similarAnalyses.isEmpty()}">
+        <div class="empty-state" role="status">
+            <h3 class="empty-state__title" style="font-size: 0.9375rem;">Keine ähnlichen Anfragen gefunden</h3>
+            <p class="empty-state__desc" style="font-size: 0.8125rem;">
+                Es liegen keine früheren Analysen mit überlappenden Begriffen vor.
+            </p>
+        </div>
+    </th:block>
+    <th:block th:unless="${similarAnalyses == null or similarAnalyses.isEmpty()}">
+        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+            Frühere Analysen mit überlappenden Begriffen — eine Analyse öffnet das gespeicherte Ergebnis.
+        </p>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+            <li th:each="a : ${similarAnalyses}" style="font-size: 0.875rem;">
+                <button type="button" class="doc-title-link" style="text-align: left;"
+                        th:attr="hx-get=|/emails/analyses/${a.id()}|,hx-target=${'#email-result'},hx-swap=innerHTML"
+                        hx-trigger="click">
+                    <span th:text="${a.subject()}">Betreff</span>
+                </button>
+                <span style="font-size: 0.75rem; color: var(--color-text-muted); margin-left: 0.5rem;"
+                      th:text="${#temporals.format(a.createdAt(), 'dd.MM.yyyy HH:mm')}">Datum</span>
+            </li>
+        </ul>
+    </th:block>
+</th:block>
+
+</html>

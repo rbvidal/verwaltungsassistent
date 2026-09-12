@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+     Case List — HTMX Fragments
+     Rendered by CaseController when HX-Request header is present.
+     Each fragment returns a self-contained partial for HTMX swap.
+-->
+
+<!-- caseTable: Full table container including rows and pagination -->
+<th:block th:fragment="caseTable">
+    <th:block th:if="${cases.isEmpty()}">
+        <th:block th:replace="~{fragments/components :: emptyState(
+            'cta',
+            'Keine Fälle',
+            'Sie haben noch keine Fälle angelegt. Erstellen Sie Ihren ersten Fall, um mit der Bearbeitung zu beginnen.',
+            '/cases/new',
+            'Ersten Fall erstellen')}">
+        </th:block>
+    </th:block>
+
+    <th:block th:unless="${cases.isEmpty()}">
+        <th:block th:replace="~{fragments/components :: dataTable(
+            headers=${headers}, page=${page}, totalPages=${totalPages},
+            baseUrl=${baseUrl}, queryParams=${queryParams},
+            emptyMessage='Keine Fälle gefunden',
+            hasData=${!cases.isEmpty()},
+            targetId='case-table',
+            rows=~{this :: caseTableRows})}">
+        </th:block>
+    </th:block>
+
+    <!-- Hidden toast trigger for delete success -->
+    <div id="toast-trigger" hx-swap-oob="true"
+         th:if="${deleteSuccess}"
+         th:attr="hx-trigger='load delay:100ms',hx-post='/dev/null'">
+    </div>
+</th:block>
+
+<!-- caseTableRows: Table body rows rendered by dataTable -->
+<th:block th:fragment="caseTableRows">
+    <tr th:each="c : ${cases}">
+        <td data-label="Name">
+            <a th:href="@{/cases/{id}(id=${c.id()})}"
+               th:text="${c.name() != null ? c.name() : c.workspaceCode()}">Name</a>
+            <!-- Zugehörigkeit (Phase 2D.12): "Mir zugewiesen" vs. "Arbeitspool"
+                 direkt an der Zeile — die Warteschlange beantwortet damit,
+                 was auf die Mitarbeiterin wartet bzw. im Pool liegt. -->
+            <span th:if="${caseQueueInfo != null and caseQueueInfo[c.id()] != null and caseQueueInfo[c.id()].scopeLabel() != null}"
+                  class="badge" th:classappend="'badge--' + ${caseQueueInfo[c.id()].scopeVariant()}"
+                  style="font-size: 0.625rem; margin-left: 0.4rem;"
+                  th:text="${caseQueueInfo[c.id()].scopeLabel()}">Arbeitspool</span>
+            <!-- Der von der Systemempfehlung vorgeschlagene nächste Vorgang. -->
+            <span th:if="${caseQueueInfo != null and caseQueueInfo[c.id()] != null and caseQueueInfo[c.id()].recommended()}"
+                  class="badge badge--success" style="font-size: 0.625rem; margin-left: 0.4rem;"
+                  title="Vorgeschlagener nächster Vorgang (Systemempfehlung)">
+                Als Nächstes empfohlen
+            </span>
+        </td>
+        <td data-label="Priorität">
+            <!-- Prioritätsklasse aus dem bestehenden Planungsstand (dieselbe
+                 wie Systemempfehlung und Fallseite). -->
+            <th:block th:if="${caseQueueInfo != null and caseQueueInfo[c.id()] != null and caseQueueInfo[c.id()].priorityLabel() != null}">
+                <th:block th:replace="~{fragments/components :: badge(
+                    text=${caseQueueInfo[c.id()].priorityLabel()},
+                    variant=${caseQueueInfo[c.id()].priorityVariant()})}">
+                </th:block>
+            </th:block>
+            <span th:if="${caseQueueInfo == null or caseQueueInfo[c.id()] == null or caseQueueInfo[c.id()].priorityLabel() == null}"
+                  th:text="'—'" style="color: var(--color-text-muted); font-size: 0.75rem;">—</span>
+        </td>
+        <td data-label="Status">
+            <th:block th:replace="~{fragments/components :: badge(
+                text=${c.statusLabel()}, variant=${c.statusVariant()})}">
+            </th:block>
+        </td>
+        <td data-label="Phase">
+            <span class="phase-tracker">
+                <th:block th:each="i, iter : ${#numbers.sequence(0, 4)}"
+                          th:with="done=${i < c.phaseIndex()}, current=${i == c.phaseIndex()}">
+                    <th:block th:if="${!iter.first}">
+                        <span class="phase-tracker-connector"
+                              th:classappend="${done} ? 'phase-tracker-connector--done' : ''"></span>
+                    </th:block>
+                    <span th:class="'phase-tracker-dot' + (${done} ? ' phase-tracker-dot--done' : '')
+                                   + (${current} ? ' phase-tracker-dot--current' : '')"></span>
+                </th:block>
+            </span>
+            <span style="display: block; margin-top: 4px; font-size: 0.6875rem; color: var(--color-text-muted);"
+                  th:text="${c.phaseLabel()}">Phase</span>
+        </td>
+        <td data-label="Dokumente" th:text="${c.documentCount()}">0</td>
+        <td data-label="Aktualisiert" th:text="${c.updatedAt()}">Datum</td>
+        <td data-label="" class="data-table__actions">
+            <a th:href="@{/cases/{id}(id=${c.id()})}"
+               class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">
+                Öffnen
+            </a>
+            <!-- Operative Aktionen erscheinen dem Leitungs-Konto nicht
+                 (serverseitig zusätzlich abgewiesen, Phase 2C.5). -->
+            <a th:if="${!supervisory}" th:href="@{/cases/{id}/settings(id=${c.id()})}"
+               class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border);">
+                Umbenennen
+            </a>
+            <!-- Schließen (Abgeschlossen) is separate from Archivieren -->
+            <form th:if="${!supervisory and (c.statusLabel() == 'Entwurf' or c.statusLabel() == 'Aktiv')}"
+                  th:action="@{/cases/{id}/close(id=${c.id()})}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn--sm"
+                        style="padding: 0.25rem 0.625rem; font-size: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border);">
+                    Schließen
+                </button>
+            </form>
+            <form th:if="${!supervisory and c.statusLabel() == 'Geschlossen'}"
+                  th:action="@{/cases/{id}/reopen(id=${c.id()})}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">Wieder öffnen</button>
+            </form>
+            <form th:if="${!supervisory and c.statusLabel() == 'Archiviert'}" th:action="@{/cases/{id}/restore(id=${c.id()})}" method="post"
+                  style="display: inline;">
+                <button type="submit" class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">Wiederherstellen</button>
+            </form>
+            <!-- Geovorgänge sind unveränderliche Demo-Bestände: kein
+                 Archivieren (serverseitig gesperrt, hier zusätzlich verborgen). -->
+            <span th:if="${!supervisory and (c.workspaceType() == null or c.workspaceType() != 'GEO') and c.statusLabel() != 'Archiviert' and c.statusLabel() != 'Geschlossen'}" x-data="{ open: false }">
+                <button type="button" class="btn btn--sm"
+                        style="padding: 0.25rem 0.625rem; font-size: 0.75rem; background: var(--color-bg); border: 1px solid var(--color-border);"
+                        @click="open = true">
+                    Archivieren
+                </button>
+                <!-- Inline confirmDelete modal for this row -->
+                <th:block th:replace="~{fragments/components :: confirmDelete(
+                    id=|delete-modal-${c.id()}|,
+                    itemName=${c.name() != null ? c.name() : c.workspaceCode()},
+                    deleteUrl=|/cases/${c.id()}|,
+                    targetId='case-list-container',
+                    confirmMessage='Sind Sie sicher, dass Sie diesen Fall archivieren möchten? Archivierte Fälle erscheinen unter dem Filter „Archiviert“ und können wiederhergestellt werden.')}">
+                </th:block>
+            </span>
+        </td>
+    </tr>
+</th:block>
+
+</html>

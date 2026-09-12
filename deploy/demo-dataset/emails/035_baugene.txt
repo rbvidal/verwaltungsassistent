@@ -1,0 +1,15 @@
+From: Bernd Vogel <bernd.vogel@example.de>
+To: info@verwaltungs-demo.de
+Subject: Baugenehmigung – Carport Nachfrage
+Date: 2026-09-03T15:00:00+02:00
+Message-ID: msg-mailbox-bau-01
+
+--- body ab hier ---
+Betreff: Baugenehmigung Carport
+
+Guten Tag,
+
+ich möchte auf meinem Grundstück einen Carport bauen. Ist dafür eine Baugenehmigung erforderlich und welche Unterlagen brauche ich?
+
+Mit freundlichen Grüßen
+Bernd Vogel

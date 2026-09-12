@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="messages">
+    <th:block th:if="${loginError}">
+        <div class="message message--error" role="alert" th:text="${loginError}"></div>
+    </th:block>
+    <th:block th:if="${logoutMessage}">
+        <div class="message message--success" role="alert" th:text="${logoutMessage}"></div>
+    </th:block>
+    <th:block th:if="${expiredMessage}">
+        <div class="message message--warning" role="alert" th:text="${expiredMessage}"></div>
+    </th:block>
+    <th:block th:if="${registeredMessage}">
+        <div class="message message--success" role="alert" th:text="${registeredMessage}"></div>
+    </th:block>
+    <!-- Temporäre Erfolgsmeldung (z. B. "Fall … wurde angelegt"): verschwindet
+         nach ~7 Sekunden automatisch (Ausblenden per CSS-Transition, danach
+         Entfernen aus dem DOM). Dauerhaft relevante Zustände (Planungs-/
+         Arbeitshinweise, Fehler) sind davon unabhängig. Bei Mauskontakt/Fokus
+         pausiert der Timer, damit niemandem die Meldung entgeht. -->
+    <th:block th:if="${message}">
+        <div id="global-flash-message" class="message message--success" role="alert" th:text="${message}"></div>
+        <script>
+            (function () {
+                var el = document.getElementById('global-flash-message');
+                if (!el) { return; }
+                var timer = null;
+                function start() {
+                    if (timer) { return; }
+                    timer = setTimeout(function () {
+                        el.style.transition = 'opacity 0.6s ease';
+                        el.style.opacity = '0';
+                        setTimeout(function () { el.remove(); }, 650);
+                    }, 7000);
+                }
+                function stop() {
+                    if (timer) { clearTimeout(timer); timer = null; }
+                }
+                el.addEventListener('mouseenter', stop);
+                el.addEventListener('focusin', stop);
+                el.addEventListener('mouseleave', start);
+                el.addEventListener('focusout', start);
+                start();
+            })();
+        </script>
+    </th:block>
+    <th:block th:if="${errorMessage}">
+        <div class="message message--error" role="alert" th:text="${errorMessage}"></div>
+    </th:block>
+    <th:block th:if="${infoMessage}">
+        <div class="message message--info" role="status" th:text="${infoMessage}"></div>
+    </th:block>
+</th:block>
+</html>

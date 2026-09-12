@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'emails', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title" th:text="${email.getSubject()}">Betreff</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    E-Mail-Detail mit Metadaten, Bearbeitungsstatus, Analyse und Antwortentwurf.
+                </p>
+                <div style="margin-top: 0.75rem;">
+                    <a th:href="@{/emails/mine}" class="btn btn--sm">← Meine bearbeiteten E-Mails</a>
+                    <a th:href="@{/emails}" class="btn btn--sm">← Zu den E-Mails</a>
+                </div>
+            </div>
+
+            <div class="decision-package__section" style="margin-top: 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">E-Mail</h2>
+                <dl style="display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1rem; font-size: 0.8125rem; margin: 0 0 0.75rem;">
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Von</dt>
+                    <dd style="margin: 0;" th:text="${email.getSenderName()}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Absender</dt>
+                    <dd style="margin: 0;"
+                        th:text="${email.getSenderEmail() != null and !#strings.isEmpty(email.getSenderEmail()) ? email.getSenderEmail() : '—'}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Eingegangen</dt>
+                    <dd style="margin: 0;"
+                        th:text="${email.getReceivedAt() != null ? #temporals.format(email.getReceivedAt(), 'dd.MM.yyyy HH:mm') : '—'}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">An</dt>
+                    <dd style="margin: 0;"
+                        th:text="${email.getAddressedTo() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.AddressedTo).EMPLOYEE
+                            ? (email.getAddressedToEmail() != null ? email.getAddressedToEmail() : 'Mitarbeiter/in')
+                            : (email.getAddressedToEmail() != null
+                                ? (mailboxLabels != null and mailboxLabels[email.getAddressedToEmail()] != null
+                                    ? mailboxLabels[email.getAddressedToEmail()] : email.getAddressedToEmail())
+                                : 'Bürgeramt – Allgemeine Anfragen')}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Status</dt>
+                    <dd style="margin: 0;">
+                        <span th:text="${T(verwaltungsassistent.web.controller.EmailController).statusLabelFor(email, emailDetailAnalysisFull)}">—</span>
+                        <!-- Phase 2D.13: Prüfbedarf (ungültige Vorgangsnummer) auch
+                             hier sichtbar — gleiche Vokabel wie die Warteschlange. -->
+                        <span th:if="${email.isReviewRequired()}" class="badge badge--warning"
+                              style="font-size: 0.625rem; margin-left: 0.4rem;">Prüfung erforderlich</span>
+                    </dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Quelle</dt>
+                    <dd style="margin: 0;"
+                        th:text="${email.getSourceType() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.SourceType).MANUAL ? 'Manuell eingestellt' : 'Automatische Zustellung (Mailbox)'}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;">Zugewiesen an</dt>
+                    <dd style="margin: 0;" th:text="${email.getAssignedTo() != null ? email.getAssignedTo() : 'Nicht zugewiesen'}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;" th:if="${email.getAssignedAt() != null}">Zugewiesen am</dt>
+                    <dd style="margin: 0;" th:if="${email.getAssignedAt() != null}"
+                        th:text="${#temporals.format(email.getAssignedAt(), 'dd.MM.yyyy HH:mm')}">—</dd>
+                    <dt style="color: var(--color-text-muted); font-weight: 500;" th:if="${email.getCompletedAt() != null}">Erledigt am</dt>
+                    <dd style="margin: 0;" th:if="${email.getCompletedAt() != null}"
+                        th:text="${#temporals.format(email.getCompletedAt(), 'dd.MM.yyyy HH:mm')}">—</dd>
+                </dl>
+                <pre style="font-size: 0.875rem; line-height: 1.55; white-space: pre-wrap; font-family: inherit;
+                            background: var(--color-surface-row); border: 1px solid var(--color-border-subtle);
+                            border-radius: var(--radius); padding: 0.75rem 1rem; margin: 0;"
+                     th:text="${email.getText()}">E-Mail-Text</pre>
+            </div>
+
+            <!-- Anhänge (Phase 2C.10): aus der E-Mail übernommene Fall-Dokumente —
+                 dieselben Dokumente wie im Vorgang, keine Duplikate. -->
+            <div th:if="${emailAttachments != null and !#lists.isEmpty(emailAttachments)}"
+                 class="decision-package__section" style="margin-top: 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">ANHÄNGE</h2>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                    Aus dieser E-Mail übernommene Dokumente — sie liegen im zugehörigen Vorgang als
+                    Fall-Dokumente vor (keine Duplikate).
+                </p>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <li th:each="a : ${emailAttachments}" style="font-size: 0.875rem;">
+                        <a th:href="'/documents/' + ${a.documentId()}" target="_blank" rel="noopener"
+                           class="doc-title-link" style="font-weight: 500;"
+                           th:text="${a.title()}">Anhang</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Zugehöriger Vorgang: für eine bearbeitete E-Mail ist der Fall
+                 der primäre Weg — nicht die erneute Analyse. -->
+            <div th:if="${associatedCaseId != null}" class="decision-package__section" style="margin-top: 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">Zugehöriger Vorgang</h2>
+                <div class="case-detail__header"
+                     style="border-left: 3px solid var(--color-primary); padding: 0.6rem 0.75rem;
+                            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <strong th:text="${associatedCaseName}">Fall</strong>
+                        <span class="badge badge--info" style="font-size: 0.6875rem; margin-left: 0.4rem;">Vorgang</span>
+                        <span th:if="${email.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).COMPLETED}"
+                              class="badge badge--success" style="font-size: 0.6875rem; margin-left: 0.4rem;">Vorgang abgeschlossen</span>
+                    </div>
+                    <a th:href="'/cases/' + ${associatedCaseId}" class="btn btn--sm btn--primary"
+                       style="font-size: 0.75rem;">Vorgang öffnen</a>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.4rem;">
+                    Diese E-Mail gehört zum Vorgang <span th:text="${associatedCaseName}">Fall</span> —
+                    alle zugehörigen E-Mails, Dokumente und der Bearbeitungsstand sind dort einsehbar.
+                </p>
+            </div>
+
+            <!-- Kommunikationsverlauf: chronologische Übersicht aller E-Mails
+                 des Vorgangs (diese E-Mail hervorgehoben). -->
+            <div th:if="${caseThread != null and !#lists.isEmpty(caseThread)}"
+                 class="decision-package__section" style="margin-top: 1rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem;">Kommunikationsverlauf</h2>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem;">
+                    <li th:each="t : ${caseThread}"
+                        style="display: flex; gap: 0.75rem; align-items: baseline; font-size: 0.8125rem;
+                               border-left: 3px solid ${t.getId() == email.getId()} ? 'var(--color-primary)' : 'var(--color-border)';
+                               padding: 0.35rem 0.75rem; border-radius: 0 var(--radius) var(--radius) 0;
+                               background: ${t.getId() == email.getId()} ? 'var(--color-surface-row)' : 'transparent';">
+                        <span style="color: var(--color-text-muted); white-space: nowrap; min-width: 8.5rem;"
+                              th:text="${t.getReceivedAt() != null ? #temporals.format(t.getReceivedAt(), 'dd.MM.yyyy HH:mm') : '—'}">Datum</span>
+                        <span style="font-weight: ${t.getId() == email.getId()} ? 700 : 500;"
+                              th:text="${t.getSenderName()}">Absender</span>
+                        <span style="color: var(--color-text-muted); flex: 1;"
+                              th:text="${t.getSubject()}">Betreff</span>
+                        <span class="badge" style="font-size: 0.625rem;"
+                              th:classappend="'badge--' + ${T(verwaltungsassistent.web.controller.EmailController).statusVariant(t.getStatus())}"
+                              th:text="${T(verwaltungsassistent.web.controller.EmailController).statusLabel(t.getStatus())}">Status</span>
+                        <a th:href="'/emails/' + ${t.getId()}" style="font-size: 0.75rem; color: var(--color-primary);">Öffnen</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Analysis + generated answer (reuses the emailAnalysis presentation).
+                 id="email-result" = htmx-Ziel der "Ähnliche Anfragen"-Einträge, damit
+                 ein Klick auch auf dieser Seite das gespeicherte Ergebnis öffnet. -->
+            <div th:if="${outcome != null}" id="email-result" style="margin-top: 1rem;">
+                <th:block th:replace="~{emails/fragments :: emailAnalysis}"></th:block>
+            </div>
+            <!-- Zustands-Leerflächen (Phase 2D.13): Leitungs-/Superadmin-Konto
+                 ist read-only — es bekommt hier NIE einen Analyse-Auslöser,
+                 sondern nur ehrliche neutrale Zustands-Information. -->
+            <div th:if="${outcome == null and email.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).COMPLETED}"
+                 class="empty-state" role="status" style="margin-top: 1rem;">
+                <h3 class="empty-state__title">Analyse bereits durchgeführt</h3>
+                <p class="empty-state__desc">
+                    Diese E-Mail wurde bereits bearbeitet und als <strong>Erledigt</strong> abgeschlossen.
+                    <span th:if="${associatedCaseId != null}">
+                        Der zugehörige Vorgang ist <span th:text="${associatedCaseName}">Fall</span> —
+                        dort finden Sie Analyseergebnis, Dokumente und Bearbeitungsstand.
+                    </span>
+                    <span th:unless="${associatedCaseId != null}">
+                        Ein gespeichertes Analyseergebnis ist nicht mehr verfügbar.
+                    </span>
+                </p>
+                <a th:if="${!supervisory and associatedCaseId == null}"
+                   th:href="@{/emails(email=${email.getId()})}" class="btn">Zur Analyse öffnen</a>
+            </div>
+            <div th:if="${outcome == null and email.getStatus() != T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).COMPLETED}"
+                 class="empty-state" role="status" style="margin-top: 1rem;">
+                <h3 class="empty-state__title"
+                    th:text="${supervisory} ? 'Noch keine KI-Analyse vorhanden' : 'Noch keine Analyse'">Noch keine Analyse</h3>
+                <p class="empty-state__desc" th:if="${supervisory}">
+                    Diese E-Mail wurde bisher nicht durch die Sachbearbeitung vollständig analysiert.
+                </p>
+                <p class="empty-state__desc" th:unless="${supervisory}">
+                    Diese E-Mail wurde noch nicht analysiert. Starten Sie die Analyse über die
+                    E-Mail-Warteschlange.
+                </p>
+                <a th:if="${!supervisory}" th:href="@{/emails(email=${email.getId()})}"
+                   class="btn btn--primary">Zur Analyse öffnen</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, 'Dashboard', 'dashboard', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content">
+        <div class="dashboard" style="max-width: none;">
+
+            <!-- Hero banner: greeting, system status, primary operational actions -->
+            <div class="dash-hero">
+                <div>
+                    <div class="dash-hero__pill">
+                        <!-- Echter Systemstatus (Phase 2D.12): nie "betriebsbereit"
+                             behaupten, wenn eine Kern-Abhängigkeit nicht
+                             erreichbar ist. -->
+                        <span class="status-dot"
+                              th:classappend="${systemStatus != null and systemStatus.ok()} ? 'status-dot--green' : 'status-dot--red'"></span>
+                        Kommunaler Verwaltungsassistent ·
+                        <span th:text="${systemStatus != null and systemStatus.ok()} ? 'System betriebsbereit' : 'Systemfehler — siehe Systemstatus'">System betriebsbereit</span>
+                        <span class="dash-hero__version">v<span th:text="${appVersion}">1.0.0-RC2</span></span>
+                    </div>
+                    <h1 class="dash-hero__title">Willkommen zurück, <span th:text="${dashboard.userName()}">Benutzer</span></h1>
+                    <p class="dash-hero__sub" th:if="${!supervisory}">
+                        Es stehen <span class="dash-hero__accent" th:text="${dashboard.readyDocuments()} + ' bereite Dokumente'">0 bereite Dokumente</span>
+                        in der Wissensbasis und <span class="dash-hero__accent" th:text="${dashboard.activeWorkspaces()} + ' aktive Akten'">0 aktive Akten</span>
+                        zur Bearbeitung bereit.
+                    </p>
+                    <!-- Leitungs-Übersicht: aufsichtliche Gesamtlage statt persönlicher
+                         Bearbeitungszahlen (Phase 2C.5). -->
+                    <p class="dash-hero__sub" th:if="${supervisory}"
+                       th:text="${supervision.heroLine()}">Leitungs-Übersicht der gesamten Verwaltung.</p>
+                </div>
+                <div class="dash-hero__actions">
+                    <a th:href="@{/assistant}" th:if="${!demoMode}" class="btn btn--primary"
+                       sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')">
+                        <span class="material-symbols-outlined" style="font-size: 17px;">psychology</span>
+                        Assistent starten
+                    </a>
+                    <a th:href="@{/decisions}" th:if="${!demoMode}" class="btn"
+                       sec:authorize="hasAnyRole('USER','ANALYST','AUDITOR','ADMIN')">
+                        <span class="material-symbols-outlined" style="font-size: 17px;">gavel</span>
+                        Entscheidungsvorbereitung
+                    </a>
+                </div>
+            </div>
+
+            <!-- Vorgeschlagener nächster Vorgang (Phase 2B): deterministisch,
+                 erklärbar. Die Mitarbeiterin sieht EINEN verständlichen
+                 Vorschlag — internes Ranking (Rank, Score, Prioritätsklasse)
+                 liegt unter "Empfehlungsdetails" als sekundäre Transparenz.
+                 [Vorgang übernehmen] ist eine explizite, protokollierte
+                 Mitarbeiter-Aktion. [Nächsten Vorgang] (Phase 2D.12) ist reine
+                 Navigation durch die BESTEHENDE Empfehlungs-Reihung (Offset in
+                 rankedCandidates, keine Zustandsänderung). -->
+            <div th:if="${!supervisory and recommendation != null and recommendation.recommended() != null}"
+                 class="dash-card" style="margin-top: 1.25rem; border: 1px solid var(--color-primary);">
+                <div class="dash-card__head">
+                    <span class="dash-card__title"
+                          style="font-size: 1.0625rem; font-weight: 800; letter-spacing: 0.04em;
+                                 color: var(--color-primary); text-transform: uppercase;">
+                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1.3rem; vertical-align: -0.22em;">flag</span>
+                        VORGESCHLAGENER NÄCHSTER VORGANG
+                    </span>
+                </div>
+                <div style="padding: 0.875rem 1rem;">
+                    <!-- Phase 2D.13-Folge: Hierarchie — erst WELCHER VORGANG
+                         (Name groß), direkt daneben die PRIORITÄTSKLASSE, dann
+                         Empfehlungs-Erklärung, Gründe, Aktionen. -->
+                    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                        <span style="font-size: 1.45rem; font-weight: 700; line-height: 1.25;"
+                              th:text="${recommendation.recommended().caseName()}">Fall</span>
+                        <span class="badge"
+                              style="font-size: 0.8125rem; padding: 0.3rem 0.7rem; text-transform: uppercase; letter-spacing: 0.03em;"
+                              th:classappend="'badge--' + ${T(verwaltungsassistent.web.planning.NextBestWorkService).priorityBadgeVariant(recommendation.recommended().priorityClassLabel())}"
+                              th:text="${recommendation.recommended().priorityClassLabel()}">Sehr hoch</span>
+                    </div>
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0.45rem 0 0; max-width: 46rem;">
+                        Systemempfehlung auf Basis von Priorität, Fristen und Aufwand —
+                        <strong>keine automatische Zuordnung</strong>: Übernehmen Sie den Vorgang
+                        ausdrücklich oder bearbeiten Sie zuerst einen anderen Fall.
+                    </p>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.6rem;">
+                        <!-- Empfehlungs-Level mit semantischer Farb-Abstufung
+                             (sehr hoch → hoch → mittel → gering), siehe CSS. -->
+                        <span class="badge" style="font-size: 0.6875rem;"
+                              th:classappend="'badge--' + ${T(verwaltungsassistent.web.planning.NextBestWorkService).recommendationLevelBadgeVariant(recommendation.recommended().rank())}"
+                              th:text="${T(verwaltungsassistent.web.planning.NextBestWorkService).recommendationLevelLabel(recommendation.recommended().rank())}">Sehr hohe Empfehlung</span>
+                        <span class="badge badge--neutral" style="font-size: 0.6875rem;"
+                              th:text="'Restaufwand: ca. ' + ${recommendation.recommended().remainingEffortMinutes()} + ' Min.'">Aufwand</span>
+                        <span th:if="${recOffset != null and recOffset > 0}" class="badge badge--neutral"
+                              style="font-size: 0.6875rem;"
+                              th:text="'Vorschlag ' + ${recOffset + 1} + ' von ' + ${recSize}">Position</span>
+                    </div>
+
+                    <p style="font-size: 0.8125rem; font-weight: 600; margin: 0.9rem 0 0.3rem;">Warum dieser Vorgang?</p>
+                    <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                        <li th:each="r : ${recommendation.recommended().reasons()}" th:text="${r}">Grund</li>
+                    </ul>
+
+                    <div style="display: flex; gap: 0.75rem; margin-top: 0.9rem; flex-wrap: wrap; align-items: center;">
+                        <a th:href="@{/cases/{id}(id=${recommendation.recommended().caseId()})}"
+                           class="btn btn--sm">Vorgang öffnen</a>
+                        <form th:action="@{/cases/{id}/assign(id=${recommendation.recommended().caseId()})}"
+                              method="post" style="display: inline;">
+                            <input type="hidden" name="assignee" th:value="${currentUserEmail}">
+                            <!-- start=true: explizite Übernahme = Zuordnung + Arbeitsaufnahme.
+                                 Die Übergabe über die Mitarbeiter-Auswahl startet NICHT automatisch. -->
+                            <input type="hidden" name="start" value="true">
+                            <button type="submit" class="btn btn--sm btn--primary">Vorgang übernehmen</button>
+                        </form>
+                        <!-- "Vorheriger Vorgang": NUR Navigation zum vorherigen
+                             Kandidaten der bestehenden Empfehlungs-Reihung —
+                             keine Zuordnung, keine Zustandsänderung. -->
+                        <a th:if="${recSize != null and recOffset != null and recOffset > 0}"
+                           th:href="@{/dashboard(empfehlung=${recOffset - 1})}"
+                           class="btn btn--sm"
+                           title="Vorherigen empfohlenen Vorgang anzeigen (reine Navigation — der Vorgang bleibt in Ihrer Arbeitsliste)">
+                            ← Vorheriger Vorgang
+                        </a>
+                        <!-- "Nächsten Vorgang": NUR Navigation zum nächsten
+                             Kandidaten der bestehenden Empfehlungs-Reihung —
+                             kein Überspringen/Blockieren, keine Zuordnung,
+                             keine Zustandsänderung. Am Ende der Liste endet die
+                             Navigation mit einem ehrlichen Hinweis. -->
+                        <a th:if="${recSize != null and recOffset != null and recOffset + 1 < recSize}"
+                           th:href="@{/dashboard(empfehlung=${recOffset + 1})}"
+                           class="btn btn--sm"
+                           title="Nächsten empfohlenen Vorgang anzeigen (reine Navigation — der Vorgang bleibt in Ihrer Arbeitsliste)">
+                            Nächsten Vorgang
+                        </a>
+                        <span th:if="${recExhausted}" style="font-size: 0.75rem; color: var(--color-text-muted);">
+                            Keine weiteren empfohlenen Vorgänge — alle übrigen offenen Fälle sind derzeit nicht bearbeitbar.
+                            <a th:href="@{/dashboard}" style="color: var(--color-primary);">Erste Empfehlung anzeigen</a>
+                        </span>
+                    </div>
+
+                    <details style="margin-top: 0.75rem;">
+                        <summary style="cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--color-primary);">
+                            Empfehlungsdetails
+                        </summary>
+                        <div style="padding: 0.6rem 0 0.2rem; display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8125rem;">
+                            <span th:text="'Priorität: ' + ${recommendation.recommended().priorityClassLabel()}">Priorität</span>
+                            <span th:text="'Position in Ihrer Arbeitsliste: ' + ${recommendation.recommended().rank()}">Position</span>
+                            <span th:text="'Bearbeitbarkeit: Vollständig bearbeitbar'">Bearbeitbarkeit</span>
+                            <span th:text="'Geschätzter Restaufwand: ca. ' + ${recommendation.recommended().remainingEffortMinutes()} + ' Min.'">Aufwand</span>
+                            <p th:if="${recommendation.recommended().tradeOffs() != null and !recommendation.recommended().tradeOffs().isEmpty()}"
+                               style="font-size: 0.8125rem; font-weight: 600; margin: 0.6rem 0 0.3rem;">Warum nicht andere Vorgänge?</p>
+                            <ul style="margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                                <li th:each="t : ${recommendation.recommended().tradeOffs()}" th:text="${t}">Gegenüberstellung</li>
+                            </ul>
+                            <p th:if="${#lists.size(recommendation.rankedCandidates()) > 1}"
+                               style="font-size: 0.75rem; font-weight: 600; margin: 0.6rem 0 0.3rem;">Weitere geeignete Vorgänge</p>
+                            <span th:each="alt, iter : ${recommendation.rankedCandidates()}"
+                                  th:if="${iter.index >= 1 and iter.index <= 3}"
+                                  th:text="${alt.rank()} + '. ' + ${alt.caseName()} + ' — ca. ' + ${alt.remainingEffortMinutes()} + ' Min.'">Alternative</span>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Leerer Zustand: keine bearbeitbaren Kandidaten -->
+            <div th:if="${!supervisory and recommendation != null and recommendation.recommended() == null}"
+                 class="dash-card" style="margin-top: 1.25rem;">
+                <div class="dash-card__head">
+                    <span class="dash-card__title">VORGESCHLAGENER NÄCHSTER VORGANG</span>
+                </div>
+                <div style="padding: 0.875rem 1rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Derzeit keine geeigneten Vorgänge für Sie — Ihre offenen Fälle sind blockiert oder
+                    warten auf Unterlagen. Sobald ein Vorgang bearbeitbar ist, erscheint er hier.
+                </div>
+            </div>
+
+            <!-- Leitungs-Übersicht: aufsichtliche Kennzahlen + Team-Sicht (nur
+                 Leitungs-Konto; Mitarbeiterinnen sehen den Dashboard-Teil unten). -->
+            <th:block th:if="${supervisory}">
+                <div class="dash-metrics" style="margin-top: 1.25rem;">
+                    <a th:href="@{/cases}" class="dash-metric">
+                        <div class="dash-metric__head">
+                            <span class="dash-metric__label">OFFENE VORGÄNGE</span>
+                            <span class="dash-metric__icon dash-metric__icon--indigo material-symbols-outlined">folder_open</span>
+                        </div>
+                        <div class="dash-metric__value" th:text="${supervision.openCases()}">0</div>
+                        <div class="dash-metric__foot">
+                            <span>alle Mitarbeiterinnen + Pool</span>
+                            <strong>Aktiv</strong>
+                        </div>
+                    </a>
+                    <a th:href="@{/cases}" class="dash-metric">
+                        <div class="dash-metric__head">
+                            <span class="dash-metric__label">NICHT ZUGEWIESEN</span>
+                            <span class="dash-metric__icon material-symbols-outlined">inbox</span>
+                        </div>
+                        <div class="dash-metric__value" th:text="${supervision.poolCases()}">0</div>
+                        <div class="dash-metric__foot">
+                            <span>allgemeiner Arbeitspool</span>
+                            <strong>Offen</strong>
+                        </div>
+                    </a>
+                    <a th:href="@{/cases}" class="dash-metric">
+                        <div class="dash-metric__head">
+                            <span class="dash-metric__label">IN BEARBEITUNG</span>
+                            <span class="dash-metric__icon dash-metric__icon--amber material-symbols-outlined">engineering</span>
+                        </div>
+                        <div class="dash-metric__value" th:text="${supervision.inWorkCases()}">0</div>
+                        <div class="dash-metric__foot">
+                            <span>Mitarbeiterinnen zugewiesen</span>
+                            <strong>Offen</strong>
+                        </div>
+                    </a>
+                    <a th:href="@{/cases}" class="dash-metric">
+                        <div class="dash-metric__head">
+                            <span class="dash-metric__label">PAUSIERT · WARTEND</span>
+                            <span class="dash-metric__icon material-symbols-outlined">pause_circle</span>
+                        </div>
+                        <div class="dash-metric__value" th:text="${supervision.pausedCases()}">0</div>
+                        <div class="dash-metric__foot">
+                            <span>warten auf Unterlagen/Rückmeldung</span>
+                            <strong>Angehalten</strong>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="dash-card" style="margin-top: 1.25rem;">
+                    <div class="dash-card__head">
+                        <span class="dash-card__title">
+                            <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1.1rem; vertical-align: middle;">visibility</span>
+                            GESAMTÜBERSICHT
+                        </span>
+                        <a th:href="@{/emails}" class="dash-card__link"
+                           th:text="${supervision.openEmails()} + ' offene E-Mail-Eingänge · heute: ' + ${supervision.emailsToday()}">E-Mail-Eingänge</a>
+                    </div>
+                    <div style="padding: 0.875rem 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;"
+                         class="supervision-grid">
+                        <div>
+                            <h3 class="dashboard__section-title" style="margin-top: 0;">Vorgänge im Team</h3>
+                            <div th:if="${supervision.byEmployee().isEmpty()}" class="empty-state">
+                                <div class="empty-state__title">Keine zugewiesenen Vorgänge</div>
+                                <div class="empty-state__desc">Alle offenen Vorgänge liegen im allgemeinen Pool.</div>
+                            </div>
+                            <table th:unless="${supervision.byEmployee().isEmpty()}" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="data-table__header">Mitarbeiterin</th>
+                                        <th class="data-table__header" style="text-align: right;">Offene Vorgänge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="e : ${supervision.byEmployee()}">
+                                        <td style="font-size: 0.8125rem;" th:text="${e.email()}">demo01@verwaltungsassistent.local</td>
+                                        <td style="text-align: right; font-weight: 600;" th:text="${e.openCount()}">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <!-- Phase 2D.13: kompakte Tabellen statt Fließtext-
+                                 Zeilen — Vorgang, Zuständigkeit (Nicht zugewiesen
+                                 ist ein legitimer Pool-Zustand, keine Auto-
+                                 Zuordnung), Phase/Status und Zeitpunkt. -->
+                            <h3 class="dashboard__section-title" style="margin-top: 0;">Zuletzt angelegt</h3>
+                            <th:block th:if="${supervision.recentlyCreated().isEmpty()}">
+                                <p style="font-size: 0.8125rem; color: var(--color-text-muted);">Keine Vorgänge vorhanden.</p>
+                            </th:block>
+                            <div th:unless="${supervision.recentlyCreated().isEmpty()}" class="table-scroll">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="data-table__header">Vorgang</th>
+                                            <th class="data-table__header">Zuständigkeit</th>
+                                            <th class="data-table__header">Phase/Status</th>
+                                            <th class="data-table__header">Aktualisiert</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="c : ${supervision.recentlyCreated()}">
+                                            <td style="font-size: 0.8125rem;">
+                                                <a th:href="@{/cases/{id}(id=${c.id()})}" style="font-weight: 600;"
+                                                   th:text="${c.name()}">Vorgang</a>
+                                            </td>
+                                            <td style="font-size: 0.8125rem;" th:text="${c.owner()}">Zuständigkeit</td>
+                                            <td style="font-size: 0.8125rem;"
+                                                th:text="${c.phaseLabel()} + ' · ' + ${c.statusLabel()}">Phase · Status</td>
+                                            <td style="font-size: 0.8125rem; color: var(--color-text-muted); white-space: nowrap;"
+                                                th:text="${c.dateLabel()}">Datum</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h3 class="dashboard__section-title" style="margin-top: 1rem;">Zuletzt abgeschlossen</h3>
+                            <th:block th:if="${supervision.recentlyClosed().isEmpty()}">
+                                <p style="font-size: 0.8125rem; color: var(--color-text-muted);">Noch keine abgeschlossenen Vorgänge.</p>
+                            </th:block>
+                            <div th:unless="${supervision.recentlyClosed().isEmpty()}" class="table-scroll">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="data-table__header">Vorgang</th>
+                                            <th class="data-table__header">Zuständigkeit</th>
+                                            <th class="data-table__header">Phase/Status</th>
+                                            <th class="data-table__header">Abgeschlossen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="c : ${supervision.recentlyClosed()}">
+                                            <td style="font-size: 0.8125rem;">
+                                                <a th:href="@{/cases/{id}(id=${c.id()})}" style="font-weight: 600;"
+                                                   th:text="${c.name()}">Vorgang</a>
+                                            </td>
+                                            <td style="font-size: 0.8125rem;" th:text="${c.owner()}">Zuständigkeit</td>
+                                            <td style="font-size: 0.8125rem;"
+                                                th:text="${c.phaseLabel()} + ' · ' + ${c.statusLabel()}">Phase · Status</td>
+                                            <td style="font-size: 0.8125rem; color: var(--color-text-muted); white-space: nowrap;"
+                                                th:text="${c.dateLabel()}">Datum</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <!-- KPI metric cards (real system data) — Mitarbeiterinnen-Sicht -->
+            <div class="dash-metrics" th:if="${!supervisory}">
+                <a th:href="@{/knowledge}" th:if="${!demoMode}" class="dash-metric">
+                    <div class="dash-metric__head">
+                        <span class="dash-metric__label">Wissensbasis</span>
+                        <span class="dash-metric__icon material-symbols-outlined">menu_book</span>
+                    </div>
+                    <div class="dash-metric__value" th:text="${dashboard.readyDocuments()}">0</div>
+                    <div class="dash-metric__foot">
+                        <span th:text="'von ' + ${dashboard.totalDocuments()} + ' Dokumenten gesamt'">0 Dokumente</span>
+                        <strong>Bereit</strong>
+                    </div>
+                </a>
+                <a th:href="@{/cases}" class="dash-metric">
+                    <div class="dash-metric__head">
+                        <span class="dash-metric__label">Fallbearbeitung</span>
+                        <span class="dash-metric__icon dash-metric__icon--indigo material-symbols-outlined">folder_open</span>
+                    </div>
+                    <div class="dash-metric__value" th:text="${dashboard.activeWorkspaces()}">0</div>
+                    <div class="dash-metric__foot">
+                        <span>Ihre aktiven Fälle</span>
+                        <strong>Aktiv</strong>
+                    </div>
+                </a>
+                <a th:href="@{/emails}" class="dash-metric">
+                    <div class="dash-metric__head">
+                        <span class="dash-metric__label">E-Mail-Analyse</span>
+                        <span class="dash-metric__icon dash-metric__icon--amber material-symbols-outlined">mark_email_unread</span>
+                    </div>
+                    <div class="dash-metric__value" th:text="${#lists.size(dashboard.emailWork())}">0</div>
+                    <div class="dash-metric__foot">
+                        <span>gespeicherte Analysen</span>
+                        <strong>KI-Erkennung</strong>
+                    </div>
+                </a>
+                <a th:href="@{/admin}" th:if="${!demoMode}" sec:authorize="hasRole('ADMIN')" class="dash-metric">
+                    <div class="dash-metric__head">
+                        <span class="dash-metric__label">KI-Infrastruktur</span>
+                        <span class="dash-metric__icon dash-metric__icon--emerald material-symbols-outlined">memory</span>
+                    </div>
+                    <div class="dash-metric__value" th:text="${ollamaModel}">qwen2.5:14b</div>
+                    <div class="dash-metric__foot">
+                        <span>Lokal · DSGVO On-Prem</span>
+                        <strong><span class="status-dot status-dot--green"></span> Online</strong>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Main grid: operational feed + cases + quick tools -->
+            <div class="dash-grid">
+                <!-- Left: incoming messages / KI-Erkennung + active cases -->
+                <div class="dash-grid__main">
+                    <!-- Eingegangene Nachrichten & KI-Erkennung -->
+                    <div class="dash-card">
+                        <div class="dash-card__head">
+                            <span class="dash-card__title">
+                                <span class="material-symbols-outlined" style="color: #fbbf24;">mail</span>
+                                Eingegangene Nachrichten &amp; KI-Erkennung
+                            </span>
+                            <a th:href="@{/emails}" class="dash-card__link">
+                                Zur E-Mail Analyse
+                                <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+                            </a>
+                        </div>
+                        <div th:if="${dashboard.emailWork().isEmpty()}" class="empty-state">
+                            <div class="empty-state__title">Keine unerledigten E-Mails</div>
+                            <div class="empty-state__desc">Eingehende E-Mails erscheinen hier als unerledigte Arbeit, bis sie zugewiesen und bearbeitet wurden.</div>
+                        </div>
+                        <div th:unless="${dashboard.emailWork().isEmpty()}" class="dash-feed">
+                            <!-- Each entry links to its exact incoming e-mail. -->
+                            <a th:each="mail : ${dashboard.emailWork()}"
+                               th:href="@{/emails(email=${mail.id()})}"
+                               class="dash-feed__item">
+                                <div class="dash-feed__body">
+                                    <div class="dash-feed__subject" th:text="${mail.subject()}">Betreff</div>
+                                    <div class="dash-feed__meta">
+                                        <!-- Wartezeit-Dringlichkeit: verständliche
+                                             Aussage statt interner Kennzahl. -->
+                                        <span class="badge"
+                                              th:classappend="'badge--' + ${mail.priorityVariant()}"
+                                              th:text="${mail.priorityLabel()}"
+                                              style="font-size: 0.6875rem;">Dringlichkeit</span>
+                                        <span th:text="'An: ' + ${mail.addressedToLabel()}"
+                                              style="font-size: 0.75rem; color: var(--color-text-muted);">An</span>
+                                        <span class="badge"
+                                              th:classappend="'badge--' + ${mail.statusVariant()}"
+                                              th:text="${mail.statusLabel()}"
+                                              style="font-size: 0.6875rem;">Status</span>
+                                        <!-- Prüfbedarf (ungültige Vorgangsnummer) —
+                                             gleiche Vokabel wie die Warteschlange
+                                             (Phase 2D.13). -->
+                                        <span class="badge badge--warning" th:if="${mail.reviewRequired()}"
+                                              style="font-size: 0.6875rem;">Prüfung erforderlich</span>
+                                        <span th:text="${#temporals.format(mail.receivedAt(), 'dd.MM. HH:mm')}">Datum</span>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined dash-feed__arrow">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Laufende Akten & Vorhaben -->
+                    <div class="dash-card">
+                        <div class="dash-card__head">
+                            <span class="dash-card__title">
+                                <span class="material-symbols-outlined" style="color: #60a5fa;">folder_special</span>
+                                <span th:text="${supervisory} ? 'Alle Vorgänge (Team)' : 'Laufende Akten &amp; Vorhaben'">Laufende Akten &amp; Vorhaben</span>
+                            </span>
+                            <a th:href="@{/cases}" class="dash-card__link">
+                                Alle Akten anzeigen
+                                <span class="material-symbols-outlined" style="font-size: 14px;">chevron_right</span>
+                            </a>
+                        </div>
+                        <div th:if="${dashboard.workspaces().isEmpty()}" class="empty-state">
+                            <div class="empty-state__title">Keine Fälle vorhanden</div>
+                            <div class="empty-state__desc">Legen Sie einen Fall an, um die Fallbearbeitung zu starten.</div>
+                        </div>
+                        <div th:unless="${dashboard.workspaces().isEmpty()}" class="table-scroll">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th class="data-table__header">Aktenzeichen &amp; Name</th>
+                                        <th class="data-table__header">Phase</th>
+                                        <th class="data-table__header">Status</th>
+                                        <th class="data-table__header">Aktualisiert</th>
+                                        <th class="data-table__header" style="text-align: right;">Aktion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="w : ${dashboard.workspaces()}">
+                                        <td>
+                                            <a th:href="@{/cases/{id}(id=${w.id()})}" style="font-weight: 600; color: var(--color-text);"
+                                               th:text="${w.name()}">Name</a>
+                                            <div class="mono" style="font-size: 0.6875rem; color: #60a5fa; margin-top: 2px;"
+                                                 th:text="${w.workspaceCode()}">WS-CODE</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge--neutral" th:text="${w.phaseLabel()}">Phase</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge" th:classappend="'badge--' + ${w.statusVariant()}"
+                                                  th:text="${w.statusLabel()}">Status</span>
+                                        </td>
+                                        <td style="font-size: 0.75rem; color: var(--color-text-muted);" th:text="${w.updatedAt()}">Datum</td>
+                                        <td style="text-align: right;">
+                                            <a th:href="@{/cases/{id}(id=${w.id()})}" class="btn btn--sm">Öffnen</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: quick prompts + audit status -->
+                <div class="dash-grid__side">
+                    <!-- Schnellabfragen (KI) -->
+                    <div class="dash-card">
+                        <div class="dash-card__head">
+                            <span class="dash-card__title">
+                                <span class="material-symbols-outlined" style="color: #60a5fa;">smart_toy</span>
+                                Schnellabfragen (KI)
+                            </span>
+                        </div>
+                        <a th:href="@{/assistant(question='Wie hoch ist das Tagegeld für Dienstreisen nach Berlin?')}"
+                           th:if="${!demoMode}" class="dash-prompt">
+                            <span class="dash-prompt__title">
+                                Reisekostenrecht
+                                <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+                            </span>
+                            <span class="dash-prompt__q">"Wie hoch ist das Tagegeld für Dienstreisen nach Berlin?"</span>
+                        </a>
+                        <a th:href="@{/assistant(question='Ab welchem Schwellenwert ist eine EU-Ausschreibung zwingend?')}"
+                           th:if="${!demoMode}" class="dash-prompt">
+                            <span class="dash-prompt__title">
+                                Vergaberecht VgV
+                                <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+                            </span>
+                            <span class="dash-prompt__q">"Ab welchem Schwellenwert ist eine EU-Ausschreibung zwingend?"</span>
+                        </a>
+                        <a th:href="@{/assistant(question='Welche Unterlagen werden für die Ummeldung einer Wohnung benötigt?')}"
+                           th:if="${!demoMode}" class="dash-prompt">
+                            <span class="dash-prompt__title">
+                                Bürgerangelegenheiten
+                                <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+                            </span>
+                            <span class="dash-prompt__q">"Welche Unterlagen werden für die Ummeldung einer Wohnung benötigt?"</span>
+                        </a>
+                    </div>
+
+                    <!-- Systemstatus (Phase 2D.12): echte Erreichbarkeits-Prüfung
+                         der Laufzeit-Abhängigkeiten statt eines statischen
+                         "Audit-Status". Mitarbeiterin sieht ein klares OK/Fehler;
+                         bei Fehlern wird die nicht erreichbare Komponente
+                         verständlich benannt. Technische Details (Adressen) gibt
+                         es nur für die Leitung. -->
+                    <div class="dash-card">
+                        <div class="dash-card__head">
+                            <span class="dash-card__title">
+                                <span class="material-symbols-outlined" style="color: var(--color-text-muted);">monitor_heart</span>
+                                SYSTEMSTATUS
+                            </span>
+                            <a th:href="@{/admin/infrastructure}" th:if="${supervisory and !demoMode}" class="dash-card__link">Details</a>
+                        </div>
+                        <div class="dash-audit-row">
+                            <span>Systemstatus:</span>
+                            <span th:if="${systemStatus != null and systemStatus.ok()}" style="color: var(--color-dot-green); font-weight: 700;">
+                                <span class="status-dot status-dot--green"></span> OK
+                            </span>
+                            <span th:if="${systemStatus != null and !systemStatus.ok()}" style="color: var(--color-error-700, #b91c1c); font-weight: 700;">
+                                <span class="status-dot status-dot--red"></span> Fehler
+                            </span>
+                        </div>
+                        <!-- Klarer Fehlerhinweis: benennt die nicht erreichbaren
+                             Komponenten verständlich (keine technischen IDs). -->
+                        <div th:if="${systemStatus != null and !systemStatus.ok()}" class="message message--error" role="alert"
+                             style="margin: 0.5rem 0 0; font-size: 0.8125rem;">
+                            <span th:each="c, iter : ${systemStatus.components()}"
+                                  th:if="${!c.ok() and c.required()}">
+                                <span th:if="${!iter.first}" th:text="' · '"></span>
+                                <span th:text="${c.label()} + ' nicht erreichbar'">Datenbank nicht erreichbar</span>
+                            </span>
+                            <span style="display:block; margin-top:0.25rem; color: var(--color-text-muted); font-size: 0.75rem;"
+                                  th:text="${supervisory} ? 'Bitte prüfen Sie die betroffenen Dienste — Details in der Administration.' : 'Bitte informieren Sie Ihre Leitung — die Bearbeitung ist derzeit eingeschränkt.'">Hinweis</span>
+                        </div>
+                        <!-- Leitungs-Sicht: technische Details je Komponente. -->
+                        <div th:if="${supervisory and systemStatus != null}" style="margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.75rem;">
+                            <span th:each="c : ${systemStatus.components()}">
+                                <span class="status-dot" th:classappend="${c.ok()} ? 'status-dot--green' : 'status-dot--red'"></span>
+                                <span th:text="${c.label()}">Datenbank</span>
+                                <span style="color: var(--color-text-muted);"
+                                      th:text="${c.ok()} ? 'erreichbar' : ('nicht erreichbar' + (${c.detail() != null} ? ' · ' + ${c.detail()} : ''))">erreichbar</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions (real shortcuts, preserved) -->
+            <div class="quick-actions">
+                <a th:href="@{/cases/new}" class="quick-action" th:if="${!supervisory}"
+                   sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')">
+                    <span class="quick-action__icon material-symbols-outlined">add_circle</span>
+                    <span class="quick-action__label">Neuen Fall erstellen</span>
+                </a>
+                <a th:href="@{/documents/upload}" th:if="${!demoMode}" class="quick-action">
+                    <span class="quick-action__icon material-symbols-outlined">upload_file</span>
+                    <span class="quick-action__label">Dokument hochladen</span>
+                </a>
+                <a th:href="@{/knowledge}" th:if="${!demoMode}" class="quick-action">
+                    <span class="quick-action__icon material-symbols-outlined">search</span>
+                    <span class="quick-action__label">Wissensbasis durchsuchen</span>
+                </a>
+                <a th:href="@{/assistant}" th:if="${!demoMode}" class="quick-action"
+                   sec:authorize="hasAnyRole('USER','ANALYST','ADMIN')">
+                    <span class="quick-action__icon material-symbols-outlined">chat</span>
+                    <span class="quick-action__label">Assistent öffnen</span>
+                </a>
+            </div>
+
+            <!-- Letzte Aktivitäten (Phase 2D.12): technische Audit-Details sind
+                 Sache der Leitung/Superadmin — normale Mitarbeiterinnen sehen
+                 die Tabelle nicht (die Audit-Daten selbst bleiben unverändert
+                 erhalten und über /audit zugänglich). Darstellung verständlich
+                 und deutsch: Ereignis-Label, Objekt-Bereich und ein
+                 menschenlesbarer Bezug (Dokumenttitel/Kontoname); die
+                 technische Kennung bleibt sekundär erhalten. -->
+            <th:block th:if="${supervisory}">
+                <div class="dashboard__section-title">Letzte Aktivitäten</div>
+
+                <th:block th:if="${dashboard.recentActivity().isEmpty()}"
+                          th:replace="~{fragments/components :: emptyState(
+                              'simple', 'Keine Aktivität',
+                              'Aktivität erscheint hier, sobald Dokumente hochgeladen und analysiert werden.',
+                              null, null)}">
+                </th:block>
+
+                <table th:if="${!dashboard.recentActivity().isEmpty()}" class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Zeit</th>
+                            <th>Ereignis</th>
+                            <th>Objekt</th>
+                            <th>Bezug</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="activity : ${dashboard.recentActivity()}">
+                            <td th:text="${#temporals.format(activity.timestamp(), 'dd.MM. HH:mm')}">01.01. 12:00</td>
+                            <td>
+                                <span class="activity-table__type" th:text="${activity.description()}">Ereignis</span>
+                            </td>
+                            <td th:text="${activity.entityLabel()} ?: '—'">—</td>
+                            <td class="activity-table__correlation">
+                                <span th:if="${activity.entityRef() != null}" th:text="${activity.entityRef()}">Bezug</span>
+                                <span class="mono" style="font-size: 0.6875rem; color: var(--color-text-muted);"
+                                      th:if="${activity.entityId() != null}"
+                                      th:text="'(' + ${#strings.abbreviate(activity.entityId(), 10)} + ')'">(id)</span>
+                                <span th:if="${activity.entityId() == null and activity.entityRef() == null}">—</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </th:block>
+
+        </div>
+    </th:block>
+</body>
+</html>

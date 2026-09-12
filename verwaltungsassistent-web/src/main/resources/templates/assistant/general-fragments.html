@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Conversation area of the "Allgemeine Fragen" tab: direct LLM dialog,
+         no sources, no citations, no confidence. -->
+    <th:block th:fragment="conversation">
+        <div th:if="${generalError != null}" class="message message--error" role="alert"
+             th:text="${generalError}" style="margin-bottom: 0.75rem;"></div>
+        <!-- KI-Kapazität wieder frei? Grüner Hinweis statt Automatik-Retry:
+             nur bei Kapazitäts-Ablehnung aktiv, kein Wiedereinreichen. -->
+        <th:block th:if="${aiCapacityRejected}"
+                  th:replace="~{fragments/components :: aiCapacityRecoveryWatch}"></th:block>
+
+        <div th:if="${generalTurns == null or generalTurns.isEmpty()}"
+             style="font-size: 0.8125rem; color: var(--color-text-muted); padding: 0.5rem 0;">
+            Noch keine Fragen gestellt.
+        </div>
+
+        <div th:unless="${generalTurns == null or generalTurns.isEmpty()}"
+             style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%; min-width: 0;">
+            <!-- Gemeinsamer Gesprächscontainer: Nutzer-Blase rechts (blau),
+                 Assistent-Antwort links — beide mit derselben sinnvollen
+                 Maximalbreite, damit der Verlauf zusammenhängend liest und
+                 weder riesige Leerflächen noch horizontales Überlaufen bei
+                 starkem Browser-Zoom entstehen.
+                 Wichtig: die pre-wrap-Eigenschaft liegt NUR auf dem
+                 Inhalts-Span — auf der Blase selbst würde jedes
+                 Zeilenumbruch-Whitespace des Templates als leere Zeile
+                 gerendert und jede Blase um ~100 px künstlich aufblähen. -->
+            <div th:each="t : ${generalTurns}"
+                 th:classappend="${t.role() == 'user'} ? 'general-chat--user' : 'general-chat--assistant'"
+                 style="max-width: min(85%, 52rem); min-width: 0;
+                        padding: 0.55rem 0.9rem; border-radius: var(--radius);
+                        font-size: 0.875rem; box-sizing: border-box;">
+                <span th:if="${t.role() == 'user'}" style="display: block; font-size: 0.6875rem;
+                      color: var(--color-text-muted); margin-bottom: 0.15rem;">Sie</span>
+                <span th:unless="${t.role() == 'user'}" style="display: block; font-size: 0.6875rem;
+                      color: var(--color-text-muted); margin-bottom: 0.15rem;">Assistent</span>
+                <span th:text="${t.content()}" style="display: block; white-space: pre-wrap;
+                      word-wrap: break-word; overflow-wrap: anywhere; line-height: 1.5;"></span>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="tabs">
+    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.75rem; border-bottom: 2px solid var(--color-border, #ddd); padding-bottom: 0.5rem;">
+        <a th:if="${adminTab != null and adminTab != 'overview'}" th:href="@{/admin}"
+           class="btn btn--sm" style="font-size: 0.75rem; margin-right: 0.5rem;">
+            ← Zurück zur Übersicht
+        </a>
+        <a th:href="@{/admin}" class="btn"
+           th:classappend="${adminTab == 'overview'} ? 'btn--primary' : ''"
+           style="font-size: 0.8125rem;">Übersicht</a>
+        <a th:href="@{/admin/users}" class="btn"
+           th:classappend="${adminTab == 'users'} ? 'btn--primary' : ''"
+           style="font-size: 0.8125rem;">Benutzer</a>
+        <a th:href="@{/admin/models}" class="btn"
+           th:classappend="${adminTab == 'models'} ? 'btn--primary' : ''"
+           style="font-size: 0.8125rem;">KI / Modelle</a>
+        <a th:href="@{/admin/infrastructure}" class="btn"
+           th:classappend="${adminTab == 'infrastructure'} ? 'btn--primary' : ''"
+           style="font-size: 0.8125rem;">Infrastruktur</a>
+        <a sec:authorize="hasRole('SUPERADMIN')" th:href="@{/admin/data-restore}" class="btn"
+           th:classappend="${adminTab == 'data-restore'} ? 'btn--primary' : ''"
+           style="font-size: 0.8125rem;">Datenwiederherstellung</a>
+    </div>
+</th:block>
+
+</html>

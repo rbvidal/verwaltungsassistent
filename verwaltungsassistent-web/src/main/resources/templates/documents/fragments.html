@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- documentTableContainer: the auto-refreshing container incl. the table.
+     Used where the whole container is swapped (delete confirmation). The
+     success/error bars are only rendered when the delete endpoint set them. -->
+<th:block th:fragment="documentTableContainer">
+    <div id="document-table-container"
+         hx-get="/documents" hx-trigger="documentUpdated from:body" hx-target="this">
+        <div th:if="${deleteSuccess != null}" class="message message--success" role="status"
+             style="margin-bottom: 0.75rem;">
+            <span th:text="'Dokument ' + ${deletedDocTitle} + ' wurde gelöscht.'">Dokument gelöscht</span>
+        </div>
+        <div th:if="${deleteErrors != null and !deleteErrors.isEmpty()}"
+             class="message message--error" role="alert" style="margin-bottom: 0.75rem;">
+            <p style="font-weight: 600;">Das Dokument konnte nicht vollständig gelöscht werden:</p>
+            <ul style="margin: 0.25rem 0 0; padding-left: 1.1rem;">
+                <li th:each="err : ${deleteErrors}" th:text="${err}">Fehler</li>
+            </ul>
+        </div>
+        <th:block th:replace="~{this :: documentTable}"></th:block>
+    </div>
+</th:block>
+
+<!-- documentTable: Filterable document list rendered via HTMX -->
+<th:block th:fragment="documentTable">
+    <th:block th:if="${documents != null and !documents.isEmpty()}">
+        <div class="data-table-container data-table-container--scroll">
+            <!-- document-table: feste Spaltenaufteilung (CSS) für einen
+                 dichten, professionellen Tabellen-Satz ohne Leerflächen. -->
+            <table class="data-table document-table" role="table">
+                <thead>
+                    <tr>
+                        <th>Titel</th>
+                        <th>Typ</th>
+                        <th>Kategorie</th>
+                        <th>Status</th>
+                        <th>Indexierung</th>
+                        <th>Größe</th>
+                        <th>Hochgeladen</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${documents}">
+                        <td>
+                            <a th:href="@{/documents/{id}(id=${d.id()})}" th:text="${d.title()}"
+                               style="font-weight: 500;">Titel</a>
+                        </td>
+                        <td>
+                            <span class="badge badge--neutral" th:text="${d.type()}">Typ</span>
+                        </td>
+                        <td th:text="${d.category()}" style="font-size: 0.8125rem;">Kategorie</td>
+                        <td>
+                            <span class="badge" th:classappend="'badge--' + ${d.statusVariant()}"
+                                  th:text="${d.statusLabel()}">Status</span>
+                        </td>
+                        <td>
+                            <span class="badge" th:classappend="${d.ingestionStatus() == 'Abgeschlossen' ? 'badge--success' : (d.ingestionStatus() == 'Fehlgeschlagen' ? 'badge--error' : 'badge--neutral')}"
+                                  th:text="${d.ingestionStatus()}">Index</span>
+                        </td>
+                        <td th:text="${d.fileSize()}" style="font-size: 0.8125rem;">Größe</td>
+                        <td th:text="${d.createdAt()}" style="font-size: 0.8125rem; color: var(--color-text-muted);">Datum</td>
+                        <td class="data-table__actions">
+                            <form th:if="${d.statusLabel() == 'Bereit' or d.statusLabel() == 'Fehlgeschlagen'}"
+                                  th:action="@{/documents/{id}/reindex(id=${d.id()})}" method="post"
+                                  style="display: inline;">
+                                <button type="submit" class="btn" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                    Neu indexieren
+                                </button>
+                            </form>
+                            <form th:if="${d.statusLabel() != 'Bereit' and d.statusLabel() != 'Fehlgeschlagen'}"
+                                  th:action="@{/documents/{id}/index(id=${d.id()})}" method="post"
+                                  style="display: inline;">
+                                <button type="submit" class="btn btn--primary"
+                                        style="font-size: 0.75rem; padding: 0.25rem 0.5rem;"
+                                        th:disabled="${d.ingestionStatus() == 'Läuft'}">
+                                    <span th:if="${d.ingestionStatus() == 'Läuft'}">Indexiere...</span>
+                                    <span th:unless="${d.ingestionStatus() == 'Läuft'}">Starten</span>
+                                </button>
+                            </form>
+                            <span sec:authorize="hasRole('ADMIN')" x-data="{ open: false }">
+                                <button type="button" class="btn btn--sm"
+                                        style="padding: 0.25rem 0.625rem; font-size: 0.75rem; background: var(--color-error-100); color: var(--color-error-700); border: 1px solid var(--color-error-700);"
+                                        @click="open = true">
+                                    Löschen
+                                </button>
+                                <th:block th:replace="~{fragments/components :: confirmDelete(
+                                    id=|delete-doc-modal-${d.id()}|,
+                                    itemName=${d.title()},
+                                    deleteUrl=|/documents/${d.id()}/delete|,
+                                    targetId='document-table-container',
+                                    confirmMessage='Sind Sie sicher, dass Sie dieses Dokument löschen möchten? Die indexierten Inhalte (Textabschnitte, Vektoren, Wissensgraph) werden entfernt. Die hochgeladene Datei bleibt im Speicher erhalten.')}">
+                                </th:block>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block th:unless="${documents != null and !documents.isEmpty()}">
+        <th:block th:replace="~{fragments/components :: emptyState(
+            'documents',
+            'Keine Dokumente',
+            'Laden Sie Dokumente hoch, um die Wissensbasis aufzubauen. Dokumente werden indexiert und stehen für die KI-Analyse zur Verfügung.',
+            @{/documents/upload},
+            'Erstes Dokument hochladen')}">
+        </th:block>
+    </th:block>
+</th:block>
+
+<!--
+     documentViewer — body of the reusable document viewer modal.
+     Loaded by htmx into fragments/components :: documentViewerModal from
+     GET /documents/{id}/view. PDFs are shown via the original file; other
+     formats show the complete extracted text. Indexed chunks are only a fallback
+     when full text extraction is unavailable.
+-->
+<th:block th:fragment="documentViewer" th:if="${view != null}">
+    <div class="doc-viewer">
+        <h3 class="doc-viewer__title" th:text="${view.title()}">Titel</h3>
+
+        <div style="display: flex; gap: 0.375rem; flex-wrap: wrap; margin: 0.5rem 0;">
+            <span th:if="${view.typeLabel() != null and view.typeLabel() != '—'}"
+                  class="badge badge--neutral" th:text="${view.typeLabel()}" style="font-size: 0.625rem;">TYP</span>
+            <span th:if="${view.categoryLabel() != null and view.categoryLabel() != '—'}"
+                  class="badge badge--neutral" th:text="${view.categoryLabel()}" style="font-size: 0.625rem;">KATEGORIE</span>
+            <span class="badge" th:classappend="'badge--' + ${view.statusVariant()}"
+                  th:text="${view.statusLabel()}" style="font-size: 0.625rem;">STATUS</span>
+            <span th:if="${view.version() > 0}" class="badge badge--neutral"
+                  th:text="'Version ' + ${view.version()}" style="font-size: 0.625rem;">VERSION</span>
+            <span class="badge badge--neutral" th:text="${view.ingestionStatus()}"
+                  style="font-size: 0.625rem;">INDEXIERUNG</span>
+        </div>
+
+        <dl class="doc-viewer__meta">
+            <div><dt>Dokument-ID</dt><dd class="doc-viewer__id" th:text="${view.documentId()}">ID</dd></div>
+            <div th:if="${view.fileSize() != null and view.fileSize() != '—'}"><dt>Dateigröße</dt><dd th:text="${view.fileSize()}">Größe</dd></div>
+            <div><dt>Erstellt am</dt><dd th:text="${view.createdAt()}">Datum</dd></div>
+            <div><dt>Erstellt von</dt><dd th:text="${view.createdBy()}">Nutzer</dd></div>
+            <div><dt>Aktualisiert am</dt><dd th:text="${view.updatedAt()}">Datum</dd></div>
+            <div><dt>Aktualisiert von</dt><dd th:text="${view.updatedBy()}">Nutzer</dd></div>
+        </dl>
+
+        <!-- Markierte Begriffe sind ein Orientierungs-Textmarker (welche
+             Analyse-Begriffe im Text vorkommen) — kein Relevanz-Beweis. -->
+        <p th:if="${viewHasHighlights}" class="doc-viewer__hint"
+           style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.75rem;">
+            Markierte Begriffe sind zur Orientierung hervorgehoben (Textmarker) –
+            die Relevanz-Einstufung entsteht durch die kombinierte Suche und
+            inhaltliche Prüfung der Wissensbasis, nicht durch eine einfache Stichwortsuche.
+        </p>
+
+        <th:block th:if="${view.pdf()}">
+            <h4 class="doc-viewer__chunks-title">Originaldokument</h4>
+            <div class="doc-viewer__pdf">
+                <embed th:attr="src=|/documents/${view.documentId()}/content|"
+                       type="application/pdf"
+                       width="100%"
+                       height="600px">
+            </div>
+        </th:block>
+
+        <!-- Bilddokument (JPG/PNG/…): echtes Bild, Seitenverhältnis erhalten,
+             Metadaten sichtbar — es wird KEIN OCR-Text erfunden. -->
+        <th:block th:if="${view.image()}">
+            <h4 class="doc-viewer__chunks-title">Bilddokument</h4>
+            <div class="doc-viewer__image">
+                <img th:src="@{/documents/{id}/content(id=${view.documentId()})}"
+                     th:alt="'Bilddokument ' + ${view.title()}"
+                     style="max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--color-border-subtle);"/>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0.5rem 0 0;">
+                Für Bilddokumente wird kein Text extrahiert — der Inhalt ist das Bild selbst.
+            </p>
+        </th:block>
+
+        <th:block th:unless="${view.pdf() or view.image()}">
+            <th:block th:if="${view.fullText() != null}">
+                <h4 class="doc-viewer__chunks-title">Vollständiger Text</h4>
+                <div class="doc-viewer__full-text">
+                    <th:block th:if="${view.fullTextSegments() != null}">
+                        <pre class="doc-viewer__chunk-text"><th:block th:each="seg : ${view.fullTextSegments()}"><mark class="doc-viewer__highlight" th:if="${seg.highlighted()}" th:text="${seg.text()}"></mark><th:block th:unless="${seg.highlighted()}" th:text="${seg.text()}"></th:block></th:block></pre>
+                    </th:block>
+                    <pre th:unless="${view.fullTextSegments() != null}"
+                         class="doc-viewer__chunk-text" th:text="${view.fullText()}">Text</pre>
+                </div>
+            </th:block>
+
+            <div th:if="${view.fullText() == null}" class="doc-viewer__chunks">
+                <h4 class="doc-viewer__chunks-title">Textabschnitte</h4>
+                <th:block th:if="${view.chunks() == null or view.chunks().isEmpty()}">
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                        Für dieses Dokument sind keine indexierten Textabschnitte verfügbar.
+                    </p>
+                </th:block>
+                <div th:each="chunk : ${view.chunks()}" class="doc-viewer__chunk"
+                     th:classappend="${chunk.evidence()} ? 'doc-viewer__chunk--evidence' : ''">
+                    <div class="doc-viewer__chunk-header">
+                        <span th:text="'Abschnitt ' + ${chunk.index()}">Abschnitt</span>
+                        <span th:if="${chunk.pageNumber() != null}"
+                              th:text="' · Seite ' + ${chunk.pageNumber()}">Seite</span>
+                        <span th:if="${chunk.title() != null and !chunk.title().isEmpty()}"
+                              th:text="' · ' + ${chunk.title()}">Titel</span>
+                        <span th:if="${chunk.evidence()}" class="badge badge--success"
+                              th:text="'Beleg für diese Antwort'"
+                              style="font-size: 0.625rem;">BELEG</span>
+                    </div>
+                    <th:block th:if="${chunk.segments() != null}">
+                        <pre class="doc-viewer__chunk-text"><th:block th:each="seg : ${chunk.segments()}"><mark class="doc-viewer__highlight" th:if="${seg.highlighted()}" th:text="${seg.text()}"></mark><th:block th:unless="${seg.highlighted()}" th:text="${seg.text()}"></th:block></th:block></pre>
+                    </th:block>
+                    <pre th:unless="${chunk.segments() != null}" class="doc-viewer__chunk-text" th:text="${chunk.text()}">Text</pre>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</th:block>
+
+</html>

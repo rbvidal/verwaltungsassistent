@@ -1,0 +1,15 @@
+From: Thomas Krüger <thomas.krueger@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Ummeldung nach Umzug nach Oranienburg
+Date: 2026-09-03T15:00:00+02:00
+Message-ID: demo-catalog-02
+
+--- body ab hier ---
+Betreff: Ummeldung
+
+Guten Tag,
+
+ich bin vor einer Woche nach Oranienburg gezogen. Welche Unterlagen muss ich zur Ummeldung mitbringen und wie schnell muss die Ummeldung erfolgen?
+
+Vielen Dank
+Thomas Krüger

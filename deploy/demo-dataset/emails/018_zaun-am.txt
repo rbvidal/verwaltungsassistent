@@ -1,0 +1,15 @@
+From: Ralf Berger <ralf.berger@example.de>
+To: info@verwaltungs-demo.de
+Subject: Zaun am Spielplatz beschädigt
+Date: 2026-09-01T16:00:00+02:00
+Message-ID: demo-catalog-18
+
+--- body ab hier ---
+Betreff: Spielplatz
+
+Guten Tag,
+
+am Spielplatz in der Lindenstraße ist der Zaun umgefallen. Bitte veranlassen Sie eine Reparatur.
+
+Mit freundlichen Grüßen
+Ralf Berger, Königs Wusterhausen

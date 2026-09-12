@@ -1,0 +1,15 @@
+From: Frank Behrendt <frank.behrendt@example.de>
+To: demo02@verwaltungsassistent.local
+Subject: Defekte Straßenlaterne in der Lehnitzer Straße
+Date: 2026-09-03T13:00:00+02:00
+Message-ID: demo-catalog-03
+
+--- body ab hier ---
+Betreff: Straßenbeleuchtung
+
+Sehr geehrte Damen und Herren,
+
+die Straßenlaterne gegenüber der Lehnitzer Straße 12 fällt seit drei Nächten komplett aus. Bitte veranlassen Sie eine Reparatur.
+
+Mit freundlichen Grüßen
+Frank Behrendt, Oranienburg

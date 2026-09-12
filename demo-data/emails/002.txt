@@ -1,0 +1,16 @@
+From: Sabine Wagner <sabine.wagner@example.de>
+To: info@verwaltungs-demo.de
+Subject: Müllablagerung am Havelufer in der Altstadt
+Date: 2026-09-01T08:10:00+02:00
+Message-ID: <demo-email-002@verwaltungs-demo.de>
+
+--- body ab hier ---
+Guten Tag,
+
+am Havelufer in der Altstadt liegen seit über einer Woche mehrere gefüllte
+Abfallsäcke direkt neben der Sammelstelle. Die Stelle ist öffentlich gut
+sichtbar. Bitte veranlassen Sie die Abholung und prüfen Sie, ob dort
+regelmäßig kontrolliert wird.
+
+Mit freundlichen Grüßen
+Sabine Wagner

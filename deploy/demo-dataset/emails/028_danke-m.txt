@@ -1,0 +1,16 @@
+From: Familie Nowak <familie.nowak@example.de>
+To: info@verwaltungs-demo.de
+Subject: Danke – Müllsäcke abgeholt
+Date: 2026-08-31T18:00:00+02:00
+Message-ID: msg-muell-2026-09-01
+In-Reply-To: msg-muell-2026-08-29
+
+--- body ab hier ---
+Betreff: Müllabholung
+
+Sehr geehrte Damen und Herren,
+
+vielen Dank, die Müllsäcke wurden abgeholt. Das war eine schnelle Lösung.
+
+Mit freundlichen Grüßen
+Familie Nowak

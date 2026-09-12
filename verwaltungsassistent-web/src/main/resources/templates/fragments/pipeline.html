@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Gemeinsame Pipeline-Visualisierung (Observability): wird überall dort
+  eingebunden, wo eine LLM-Pipeline läuft und der Job-Fortschritt
+  (JobProgressService stages + stageData) vorliegt — Assistent, Entscheidung,
+  E-Mail-Analyse. Die Knotenliste kommt vom Server (echte Laufzeit-Stufen,
+  nichts Erfundenes); das Info-Panel ist eine reservierte Zeile unterhalb der
+  Knoten (kein Overlay, nichts wird abgeschnitten).
+
+  Verwendung: th:replace="~{fragments/pipeline :: diagram(${progressNodes})}"
+-->
+<th:block th:fragment="diagram(nodes)">
+    <div class="pipeline-diagram" role="group" aria-label="Pipeline-Verarbeitung">
+        <div class="pipeline-nodes">
+            <div th:each="n : ${nodes}" class="pipeline-node"
+                 th:classappend="'pipeline-node--' + ${n.state()}"
+                 th:data-id="${n.id()}" th:data-label="${n.label()}"
+                 th:data-info="${n.info()}" tabindex="0">
+                <span class="pipeline-node__dot" aria-hidden="true"></span>
+                <span class="pipeline-node__label" th:text="${n.label()}">Node</span>
+            </div>
+        </div>
+        <div class="pipeline-info" role="status" aria-live="polite"
+             th:with="activeNodes=${nodes.?[state == 'active']}, doneNodes=${nodes.?[state == 'done']}, defaultNode=${activeNodes.size() > 0} ? ${activeNodes[0]} : (${doneNodes.size() > 0} ? ${doneNodes[doneNodes.size() - 1]} : null)"
+             th:attr="data-default=${defaultNode != null} ? ${defaultNode.label} + ' — ' + ${defaultNode.info} : ''">
+            <span class="pipeline-info__text"
+                  th:text="${defaultNode != null} ? ${defaultNode.label} + ' — ' + ${defaultNode.info} : ''"></span>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Verwaltungsassistent Appliance — external application configuration
+# Loaded via SPRING_CONFIG_ADDITIONAL_LOCATION on top of the JAR's
+# bundled application.yml. Secrets come from /etc/verwaltungsassistent/verwaltungsassistent.env
+# (root:verwaltungsassistent 0640) — never store secrets in this file.
+
+server:
+  port: ${SERVER_PORT:8081}
+
+platform:
+  auth:
+    jwt-secret: ${JWT_SECRET}
+
+logging:
+  file:
+    name: /var/log/verwaltungsassistent/verwaltungsassistent.log
+  level:
+    verwaltungsassistent.web: INFO
+    reasoning.auth: INFO

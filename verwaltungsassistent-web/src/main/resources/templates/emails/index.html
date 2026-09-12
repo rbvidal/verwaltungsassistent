@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">E-Mails verarbeiten</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Bürger-E-Mails verstehen, Unterlagen abgleichen und die nächsten Arbeitsschritte
+                    vorbereiten. Die Analyse verwendet die bestehende Reasoning-Pipeline; es wird nichts
+                    automatisch versendet oder entschieden.
+                </p>
+                <!-- Phase 2C.2: Postfach abrufen — holt neue Nachrichten über den
+                     lokalen GreenMail-IMAP-Transport in die E-Mail-Pipeline
+                     (SourceType.MAILBOX + deterministische Vor-Analyse). -->
+                <form th:if="${!supervisory}" th:action="@{/emails/mailbox/fetch}" method="post"
+                      style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 0.75rem;">
+                    <button type="submit" class="btn btn--sm">
+                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem; vertical-align: middle;">download</span>
+                        Postfach abrufen
+                    </button>
+                    <!-- Automatische Verarbeitung: Abrufen == analysieren (Phase 2C.2-Folge). -->
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxFailed != null and mailboxFailed == 0}"
+                          class="badge badge--success" style="font-size: 0.75rem;"
+                          th:text="${mailboxImported} + ' neue E-Mail(s) abgerufen und automatisch verarbeitet'">Verarbeitet</span>
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxFailed != null and mailboxFailed > 0}"
+                          class="badge badge--warning" style="font-size: 0.75rem;"
+                          th:text="${mailboxImported} + ' neue E-Mail(s) abgerufen. ' + ${mailboxAnalysed} + ' automatisch analysiert, ' + ${mailboxFailed} + ' konnte nicht verarbeitet werden'">Teilweise verarbeitet</span>
+                    <!-- Phase 2C.3a: Anhänge automatisch als Fall-Dokumente übernommen -->
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxAttachments != null and mailboxAttachments == 1}"
+                          class="badge badge--success" style="font-size: 0.75rem;"
+                          th:text="'1 E-Mail-Anhang als Dokument übernommen'">Anhang übernommen</span>
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxAttachments != null and mailboxAttachments > 1}"
+                          class="badge badge--success" style="font-size: 0.75rem;"
+                          th:text="${mailboxAttachments} + ' E-Mail-Anhänge als Dokumente übernommen'">Anhänge übernommen</span>
+                    <!-- Phase 2C.3b: automatisch angelegte Vorgänge -->
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxNewCases != null and mailboxNewCases == 1}"
+                          class="badge badge--success" style="font-size: 0.75rem;"
+                          th:text="'1 neuer Vorgang automatisch erstellt'">Vorgang erstellt</span>
+                    <span th:if="${mailboxImported != null and mailboxImported > 0 and mailboxNewCases != null and mailboxNewCases > 1}"
+                          class="badge badge--success" style="font-size: 0.75rem;"
+                          th:text="${mailboxNewCases} + ' neue Vorgänge automatisch erstellt'">Vorgänge erstellt</span>
+                    <span th:if="${mailboxImported != null and mailboxImported == 0}"
+                          style="font-size: 0.75rem; color: var(--color-text-muted);">Keine neuen Nachrichten — Mailbox ist leer oder bereits importiert.</span>
+                    <span th:if="${mailboxImported != null and mailboxImported < 0}"
+                          style="font-size: 0.75rem; color: var(--color-text-muted);">Mailbox-Abruf ist in dieser Umgebung nicht verfügbar.</span>
+                </form>
+            </div>
+
+            <!-- Three-column work area: inbox | e-mail text | KI-Analyse -->
+            <div class="email-workspace">
+
+                <!-- Left: unprocessed e-mail work queue -->
+                <aside class="email-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; gap: 0.75rem;">
+                        <h2 style="font-size: 0.9375rem; font-weight: 600; margin: 0;"
+                            th:text="${queueTotal != null and queueTotal == 1} ? ${queueTotal} + ' unerledigte E-Mail' : (${queueTotal != null} ? ${queueTotal} + ' unerledigte E-Mails' : 'Unerledigte E-Mails')">Unerledigte E-Mails</h2>
+                        <a th:href="@{/emails/mine}" style="font-size: 0.75rem; color: var(--color-primary); white-space: nowrap;"
+                           th:text="${processedCount != null and processedCount == 1} ? ${processedCount} + ' bearbeitete E-Mail' : ${processedCount} + ' bearbeitete E-Mails'">Meine bearbeiteten E-Mails</a>
+                    </div>
+                    <!-- Fokussierte Suche über Betreff/Absender/Text: NATIVES GET-Formular
+                         (kein htmx) — die Suche ist eine normale Seiten-Navigation; ein
+                         htmx-get/boost auf dem Formular hätte die komplette Seite in das
+                         Formular-Element getauscht (verschachtelte Seite). -->
+                    <form method="get" action="/emails"
+                          style="margin-bottom: 0.5rem; display: flex; gap: 0.35rem;">
+                        <input type="search" id="email-queue-search" name="q"
+                               th:value="${queueQuery}"
+                               placeholder="E-Mails suchen (Betreff, Absender, Empfänger, Bearbeiter, Text) …"
+                               style="flex: 1; padding: 0.4rem 0.6rem; font-size: 0.8125rem; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); box-sizing: border-box;">
+                        <button type="submit" class="btn btn--sm">Suchen</button>
+                    </form>
+                    <!-- "Unerledigt" (Phase 2D.12): Status NEW = noch nicht zur
+                         Bearbeitung übernommen/abgeschlossen. Voranalysierte und
+                         Vorgängen zugeordnete E-Mails sind deshalb weiterhin
+                         unerledigt — die Badges zeigen nur, was das System
+                         bereits automatisch getan hat. -->
+                    <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                        Unerledigt bedeutet: noch nicht von einer Mitarbeiterin zur Bearbeitung
+                        übernommen bzw. abgeschlossen — auch voranalysierte und Vorgängen
+                        zugeordnete E-Mails warten hier auf Ihre Bearbeitung.
+                    </p>
+                    <div th:if="${emailQueue == null or emailQueue.isEmpty()}"
+                         style="font-size: 0.8125rem; color: var(--color-text-muted); padding: 0.5rem 0;">
+                        Keine unerledigten E-Mails in Ihrer Warteschlange.
+                    </div>
+                    <div th:unless="${emailQueue == null or emailQueue.isEmpty()}"
+                         style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 32rem; overflow-y: auto; padding-right: 0.25rem;">
+                        <!-- Karten-Zeile als DIV mit ZWEI echten Links: Der
+                             Karten-Link öffnet die E-Mail im mittleren Panel; die
+                             Vorgang-Zeile ist ein SEPARATER Link auf den
+                             bestehenden Fall (/cases/<id> — gleiche Route wie
+                             "Fall öffnen", inkl. CaseAccessGuard). Ein Link
+                             innerhalb eines Links ist ungültiges HTML und würde
+                             sonst die E-Mail-Seite neu laden (der gemeldete
+                             Fehler: Klick auf "Vorgang: …" landete bei
+                             /emails?email=…). -->
+                        <div th:each="e : ${emailQueue}"
+                             class="email-list-item"
+                             th:classappend="${currentEmail != null and currentEmail.getId() == e.getId()} ? 'email-list-item--selected' : ''">
+                            <a th:href="@{/emails(email=${e.getId()})}"
+                               style="display: block; text-decoration: none; color: inherit;">
+                            <!-- Kompaktes Prioritäts-Badge (Phase 1 Arbeitsplanung):
+                                 deterministische Wartezeit-Dringlichkeit; die
+                                 Sortierung bleibt die Eingangszeit. -->
+                            <span style="display: flex; align-items: center; gap: 0.375rem; margin-bottom: 0.2rem;">
+                                <span class="badge" th:if="${emailPriorityBadges != null and emailPriorityBadges[e.getId()] != null}"
+                                      th:classappend="'badge--' + ${emailPriorityBadges[e.getId()].variant()}"
+                                      style="font-size: 0.625rem;"
+                                      th:text="${emailPriorityBadges[e.getId()].label()}">Priorität</span>
+                                <!-- Analyse-Stufe (Phase 2D.12): "Voranalysiert"
+                                     NUR bei deterministischer Vor-Analyse;
+                                     "KI-Analyse abgeschlossen" nur, wenn die
+                                     gespeicherte Analyse wirklich eine KI-
+                                     Antwort enthält (emailAnalysisKind). -->
+                                <span class="badge" th:if="${e.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).NEW and emailAnalysisKind != null and emailAnalysisKind[e.getId()] != null}"
+                                      th:classappend="${emailAnalysisKind[e.getId()] == 'FULL'} ? 'badge--success' : 'badge--info'"
+                                      th:text="${emailAnalysisKind[e.getId()] == 'FULL'} ? 'KI-Analyse abgeschlossen' : 'Voranalysiert'"
+                                      style="font-size: 0.625rem;">Voranalysiert</span>
+                                <!-- Phase 2C.3b: automatischer Vorgangs-Intake. -->
+                                <span class="badge badge--success" th:if="${e.getWorkspaceId() != null}"
+                                      style="font-size: 0.625rem;">Vorgang zugeordnet</span>
+                                <span class="badge badge--warning" th:if="${e.isReviewRequired()}"
+                                      style="font-size: 0.625rem;">Prüfung erforderlich</span>
+                                <strong th:text="${e.getSubject()}">Betreff</strong>
+                            </span>
+                            <span th:text="'Von: ' + ${e.getSenderName()} + (${e.getSenderEmail() != null and !#strings.isEmpty(e.getSenderEmail())} ? ' <' + ${e.getSenderEmail()} + '>' : '')"
+                                  style="display: block; color: var(--color-text-muted); font-size: 0.75rem;">Absender</span>
+                            <span th:text="${e.getAddressedTo() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.AddressedTo).EMPLOYEE
+                                ? 'An: ' + (e.getAddressedToEmail() != null ? e.getAddressedToEmail() : 'Mitarbeiter/in')
+                                : 'An: ' + (e.getAddressedToEmail() != null
+                                    ? (mailboxLabels != null and mailboxLabels[e.getAddressedToEmail()] != null
+                                        ? mailboxLabels[e.getAddressedToEmail()] : e.getAddressedToEmail())
+                                    : 'Bürgeramt – Allgemeine Anfragen')}"
+                                  style="display: block; color: var(--color-text-muted); font-size: 0.75rem; margin-top: 0.2rem;">An</span>
+                            <!-- Ankunftszeit auf jeder Karte: Eingegangen ist für
+                                 die Priorisierung der Warteschlange zentral. -->
+                            <span th:if="${e.getReceivedAt() != null}"
+                                  th:text="'Eingegangen: ' + ${#temporals.format(e.getReceivedAt(), 'dd.MM.yyyy HH:mm')}"
+                                  style="display: block; color: var(--color-text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Eingegangen</span>
+                            <span th:if="${e.effectiveAssignee() != null}"
+                                  th:text="'Zugewiesen an: ' + ${e.effectiveAssignee()} + (${e.isAssignedByRecipient()} ? ' (Empfänger)' : '')"
+                                  style="display: block; color: var(--color-text-muted); font-size: 0.75rem; margin-top: 0.2rem;">Zugewiesen</span>
+                            </a>
+                            <!-- Zugeordneter Vorgang NAMENTLICH (Phase 2D.12) als
+                                 ECHTER Link auf den Fall: "Vorgang: Gewerbeanmeldung
+                                 (WS-73A0DC4F)" öffnet /cases/<workspaceId> und
+                                 nicht die E-Mail-Seite. -->
+                            <a th:if="${e.getWorkspaceId() != null and emailCaseLabels != null and emailCaseLabels[e.getWorkspaceId()] != null}"
+                               th:href="'/cases/' + ${e.getWorkspaceId()}"
+                               th:text="'Vorgang: ' + ${emailCaseLabels[e.getWorkspaceId()]}"
+                               style="display: block; color: var(--color-primary); font-size: 0.75rem; margin-top: 0.2rem; text-decoration: underline;">Vorgang</a>
+                        </div>
+                    </div>
+                    <!-- Server-side pagination: page size, current page, total, prev/next -->
+                    <div th:if="${queueTotal != null and queueTotal > 0}"
+                         style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.6rem; font-size: 0.75rem; color: var(--color-text-muted);">
+                        <span th:text="'Seite ' + ${queuePage} + ' von ' + ${queueTotalPages} + ' · ' + ${queueTotal} + ' E-Mails gesamt'">Seite</span>
+                        <span style="display: flex; gap: 0.5rem;">
+                            <a th:if="${queuePage != null and queuePage > 1}" th:href="@{/emails(page=${queuePage - 1})}"
+                               style="color: var(--color-primary);">← Zurück</a>
+                            <a th:if="${queuePage != null and queueTotalPages != null and queuePage < queueTotalPages}"
+                               th:href="@{/emails(page=${queuePage + 1})}"
+                               style="color: var(--color-primary);">Weiter →</a>
+                        </span>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                        Alle E-Mails sind frei erfunden und enthalten keine echten Bürgerdaten.
+                    </p>
+                </aside>
+
+                <!-- Middle: e-mail text + analyze -->
+                <section class="email-panel">
+                    <!-- E-mail context: An:, status, assignment, actions -->
+                    <div th:if="${currentEmail != null}"
+                         style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.6rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                            <strong th:text="${currentEmail.getSubject()}">Betreff</strong>
+                            <!-- id for the htmx OOB status update after the analysis.
+                                 Analyse-Stufe (Phase 2D.12): "Voranalysiert" nur
+                                 bei deterministischer Vor-Analyse, "KI-Analyse
+                                 abgeschlossen" bei vollständiger KI-Analyse
+                                 (currentEmailAnalysisFull, aus dem gespeicherten
+                                 Ergebnis abgeleitet). -->
+                            <span id="email-status-badge" class="badge"
+                                  th:classappend="'badge--' + ${T(verwaltungsassistent.web.controller.EmailController).statusVariantFor(currentEmail, currentEmailAnalysisFull)}"
+                                  th:text="${T(verwaltungsassistent.web.controller.EmailController).statusLabelFor(currentEmail, currentEmailAnalysisFull)}"
+                                  style="font-size: 0.6875rem;">Status</span>
+                        </div>
+                        <div style="color: var(--color-text-muted);">
+                            <!-- Absender-Adresse als Identitäts-Signal: die echte
+                                 Adresse aus den E-Mail-Metadaten, nie ein abgeleiteter Wert. -->
+                            <span th:if="${currentEmail.getSenderEmail() != null and !#strings.isEmpty(currentEmail.getSenderEmail())}"
+                                  th:text="'Absender: ' + ${currentEmail.getSenderEmail()}">Absender</span>
+                            <span th:if="${currentEmail.getSenderEmail() != null and !#strings.isEmpty(currentEmail.getSenderEmail())}"
+                                  th:text="' · '"></span>
+                            <span th:text="'An: ' + (${currentEmail.getAddressedTo() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.AddressedTo).EMPLOYEE
+                                ? (currentEmail.getAddressedToEmail() != null ? currentEmail.getAddressedToEmail() : 'Mitarbeiter/in')
+                                : (currentEmail.getAddressedToEmail() != null
+                                    ? (mailboxLabels != null and mailboxLabels[currentEmail.getAddressedToEmail()] != null
+                                        ? mailboxLabels[currentEmail.getAddressedToEmail()] : currentEmail.getAddressedToEmail())
+                                    : 'Bürgeramt – Allgemeine Anfragen')})">An</span>
+                            <span th:if="${currentEmail.getReceivedAt() != null}"
+                                  th:text="' · Eingegangen: ' + ${#temporals.format(currentEmail.getReceivedAt(), 'dd.MM.yyyy HH:mm')}">Eingegangen</span>
+                            <!-- Effektive Zuordnung: übernommen oder direkt adressiert (Empfänger). -->
+                            <span th:if="${currentEmail.effectiveAssignee() != null}"
+                                  th:text="' · Zugewiesen an: ' + ${currentEmail.effectiveAssignee()} + (${currentEmail.isAssignedByRecipient()} ? ' (Empfänger)' : '')">Zugewiesen</span>
+                        </div>
+                        <!-- Aktionsleiste (Übernehmen / In Bearbeitung durch Sie /
+                             Als erledigt markieren / Detail öffnen) als gemeinsames
+                             Fragment — die Analyse-Antwort ersetzt diese Leiste
+                             per htmx-OOB durch den aktuellen Server-Zustand. -->
+                        <th:block th:replace="~{emails/fragments :: emailActionArea(emailEntity=${currentEmail}, currentUserEmail=${currentUserEmail}, oob=false)}"></th:block>
+                    </div>
+
+                    <form th:action="@{/emails/analyze}" method="post"
+                          hx-post="/emails/analyze" hx-target="#email-result" hx-indicator="#email-spinner"
+                          hx-disabled-elt="this" hx-history="false">
+                        <input type="hidden" name="currentEmailId" th:if="${currentEmail != null}"
+                               th:value="${currentEmail.getId()}">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <label for="email-text" style="font-size: 0.9375rem; font-weight: 600;">E-Mail</label>
+                            <span style="font-size: 0.75rem; color: var(--color-text-muted);">
+                                E-Mail aus der Warteschlange im linken Panel öffnen oder eigenen Text einfügen.
+                            </span>
+                        </div>
+                        <textarea id="email-text" name="emailText" rows="14" required
+                                  class="form-field__input"
+                                  th:attr="readonly=${supervisory} ? 'readonly' : null"
+                                  th:text="${preloadedEmailText != null ? preloadedEmailText : ''}"
+                                  style="width: 100%; resize: vertical; font-family: inherit; line-height: 1.55;"
+                                  placeholder="Fügen Sie hier den Text einer eingehenden Bürger-E-Mail ein …"></textarea>
+                        <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+                            <!-- Zustandsabhängiger Primärbutton (Phase 2D.13,
+                                 ehrliche Stufen): KEINE Analyse → "E-Mail
+                                 analysieren"; nur deterministische Vor-Analyse
+                                 → "Vollständige KI-Analyse starten" (nie
+                                 "Reanalyse", es gab noch keine KI-Analyse);
+                                 vollständige KI-Analyse vorhanden → sekundäres
+                                 "E-Mail erneut analysieren"; laufende Analyse →
+                                 deaktiviert "Analyse läuft …". -->
+                            <button id="email-analyze-btn" type="submit" th:if="${!supervisory}"
+                                    class="btn"
+                                    th:classappend="${emailAnalysisRunning} ? '' : 'btn--primary'"
+                                    th:disabled="${emailAnalysisRunning}"
+                                    th:text="${emailAnalysisRunning} ? 'Analyse läuft …' : (${currentEmailAnalysisFull} ? 'E-Mail erneut analysieren' : (${preloadedAnalysis} ? 'Vollständige KI-Analyse starten' : 'E-Mail analysieren'))">
+                                E-Mail analysieren
+                            </button>
+                            <span th:if="${supervisory}" class="badge badge--neutral"
+                                  style="font-size: 0.75rem; padding: 0.35rem 0.7rem;">
+                                Leitungs-Konto: E-Mails werden nur lesend eingesehen.
+                            </span>
+                            <button type="button" class="btn" onclick="clearEmail()">Leeren</button>
+                        </div>
+                    </form>
+
+                    <div id="email-spinner" class="htmx-indicator"
+                         style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.75rem;">
+                        E-Mail wird übermittelt …
+                    </div>
+                </section>
+
+                <!-- Right: KI-Analyse & nächste Schritte -->
+                <section class="email-panel">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <h2 style="font-size: 0.9375rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="status-dot status-dot--green"></span>
+                            KI-Analyse &amp; nächste Schritte
+                        </h2>
+                        <span class="badge badge--neutral" style="font-size: 0.6875rem;">Reasoning-Pipeline</span>
+                    </div>
+                    <div id="email-result">
+                        <!-- ?open=<analysisId> (case detail "Zur E-Mail-Analyse")
+                             renders the stored analysis directly. The th:if must
+                             live on a wrapper block: th:replace is evaluated
+                             BEFORE th:if/th:unless (attribute precedence), so a
+                             guarded replace would always render the fragment. -->
+                        <th:block th:if="${preloadedAnalysis}">
+                            <th:block th:replace="~{emails/fragments :: emailAnalysis}"></th:block>
+                        </th:block>
+                        <th:block th:unless="${preloadedAnalysis}">
+                            <th:block th:replace="~{emails/fragments :: emailResult}"></th:block>
+                        </th:block>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Hidden bodies of the demo e-mails (text/plain scripts are not executed) -->
+        <th:block th:each="e : ${demoEmails}">
+            <script type="text/plain" th:attr="id='email-body-' + ${e.id()}" th:inline="text">[[${e.body()}]]</script>
+        </th:block>
+
+        <script>
+            // Während eine E-Mail-Analyse läuft (Fortschritts-Panel im
+            // Ergebnisbereich), ist der "E-Mail analysieren"-Button deaktiviert —
+            // Doppelklicks starten keinen zweiten Job (der Server schützt
+            // zusätzlich über den aktiven Job je E-Mail). Der Zustand wird bei
+            // jedem htmx-Swap aus dem LEBENDEN DOM abgeleitet: das ersetzte
+            // .progress-block ist im afterSwap-Ereignis bereits abgehängt, daher
+            // darf nicht vom Ereignis-Ziel ausgegangen werden.
+            document.body.addEventListener('htmx:afterSwap', function () {
+                var result = document.getElementById('email-result');
+                var btn = document.getElementById('email-analyze-btn');
+                if (!result || !btn) return;
+                var running = result.querySelector('.progress-panel') !== null;
+                btn.dataset.analysisRunning = running ? '1' : '0';
+                btn.disabled = running;
+                btn.style.opacity = running ? '0.6' : '';
+                // Nach einem Swap (Start ODER Abschluss) den Eingabe-Guard neu
+                // auswerten: Der Button ist nur deaktiviert, wenn wirklich
+                // nichts zu analysieren ist (leeres Textfeld) — eine laufende
+                // Analyse sperrt zusätzlich serverseitig. Nach Abschluss wird
+                // der Button wieder blau/aktiv, sobald eine E-Mail gewählt ist.
+                if (!running && typeof updateEmailAnalyzeAvailability === 'function') {
+                    updateEmailAnalyzeAvailability();
+                }
+                // Nach Abschluss zeigt der Button den erneuten Analyse-Weg —
+                // eine bereits analysierte E-Mail sieht nie wieder wie neu aus.
+                if (!running && result.querySelector('.decision-package') !== null) {
+                    btn.classList.remove('btn--primary');
+                    btn.textContent = 'E-Mail erneut analysieren';
+                }
+                // Ohne laufenden Job gilt wieder der Eingabe-Guard.
+                if (!running) {
+                    updateEmailAnalyzeAvailability();
+                }
+                // Sobald die Analyse LÄUFT, ist die E-Mail serverseitig dem
+                // aktuellen Mitarbeiter zugeordnet — der Übernehmen-Button der
+                // Kontextleiste verschwindet und "In Bearbeitung durch Sie"
+                // erscheint (der Server ersetzt die Leiste bei Abschluss per
+                // OOB-Swap durch den vollständigen, persistierten Zustand).
+                var area = document.getElementById('email-action-area');
+                if (running && area && !area.dataset.claimed) {
+                    var takeover = area.querySelector('.email-takeover-form');
+                    if (takeover) {
+                        area.dataset.claimed = '1';
+                        takeover.style.display = 'none';
+                        var badge = document.createElement('span');
+                        badge.className = 'badge badge--info';
+                        badge.textContent = 'In Bearbeitung durch Sie';
+                        badge.style.cssText = 'font-size: 0.75rem; padding: 0.3rem 0.6rem;';
+                        area.insertBefore(badge, takeover);
+                    }
+                }
+            });
+
+            // UX-Guard (Phase 2D.13-Folge): „E-Mail analysieren" ist nur
+            // aktiv, wenn tatsächlich Eingabe vorliegt — eine ausgewählte
+            // E-Mail aus der Warteschlange füllt das Textfeld automatisch,
+            // manueller Text zählt erst ab Nicht-Whitespace. Reine Client-
+            // Seite; Server-Validierung, Button-Text und Analyse-Pipeline
+            // bleiben unverändert. Eine laufende Analyse (data-analysis-
+            // running="1", vom htmx-Handler gepflegt) sperrt weiterhin.
+            function updateEmailAnalyzeAvailability() {
+                var btn = document.getElementById('email-analyze-btn');
+                var ta = document.getElementById('email-text');
+                if (!btn || !ta) return;
+                if (btn.dataset.analysisRunning === '1') return;
+                btn.disabled = !(ta.value.trim().length > 0);
+            }
+
+            (function initEmailAnalyzeAvailability() {
+                var btn = document.getElementById('email-analyze-btn');
+                var ta = document.getElementById('email-text');
+                if (!btn || !ta) return;
+                // Serverseitig bereits gesperrt (laufender Job) → Sperre
+                // übernehmen, sonst Eingabe-Guard anwenden.
+                if (btn.dataset.analysisRunning === undefined) {
+                    btn.dataset.analysisRunning = btn.disabled ? '1' : '0';
+                }
+                updateEmailAnalyzeAvailability();
+                ta.addEventListener('input', updateEmailAnalyzeAvailability);
+            })();
+
+            function loadEmail(btn) {
+                var body = document.getElementById('email-body-' + btn.dataset.emailId);
+                if (!body) return;
+                document.getElementById('email-text').value = body.textContent.trim();
+                document.querySelectorAll('.email-list-item').forEach(function (item) {
+                    item.classList.remove('email-list-item--selected');
+                });
+                btn.classList.add('email-list-item--selected');
+                updateEmailAnalyzeAvailability();
+                // Auswahl NICHT durch einen Seiten-Sprung bestätigen: ein
+                // scrollIntoView auf #email-result (weiter unten auf der Seite)
+                // riss den Lese-Kontext beim Durchscrollen der Liste an den
+                // Anfang zurück. Stattdessen wird nur der angeklickte Eintrag
+                // bei Bedarf minimal in den Viewport geholt (block:'nearest'
+                // bewegt nichts, wenn er bereits sichtbar ist); die Markierung
+                // email-list-item--selected zeigt die Auswahl an.
+                btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            function clearEmail() {
+                document.getElementById('email-text').value = '';
+                document.querySelectorAll('.email-list-item').forEach(function (item) {
+                    item.classList.remove('email-list-item--selected');
+                });
+                updateEmailAnalyzeAvailability();
+                document.getElementById('email-text').focus();
+            }
+        </script>
+    </th:block>
+</body>
+</html>

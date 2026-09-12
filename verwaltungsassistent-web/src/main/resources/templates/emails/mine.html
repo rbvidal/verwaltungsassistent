@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'emails', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title"
+                        th:text="${processedCount != null and processedCount == 1} ? ${processedCount} + ' bearbeitete E-Mail' : ${processedCount} + ' bearbeitete E-Mails'">Meine bearbeiteten E-Mails</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <span th:text="${isAdmin} ? 'Alle bearbeiteten E-Mails (Administrator-Sicht).' : 'Von Ihnen übernommene und bearbeitete E-Mails.'"></span>
+                    Klicken Sie einen Eintrag, um Details, Analyse und Antwortentwurf zu öffnen.
+                </p>
+                <div style="margin-top: 0.75rem;">
+                    <a th:href="@{/emails}" class="btn btn--sm">← Zurück zu den E-Mails</a>
+                </div>
+            </div>
+
+            <div th:if="${processedEmails == null or processedEmails.isEmpty()}" class="empty-state" role="status">
+                <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">mail</div>
+                <h3 class="empty-state__title"
+                    th:text="${processedQuery != null and !processedQuery.isEmpty()} ? 'Keine Treffer für die Suche' : 'Noch keine bearbeiteten E-Mails'">Keine bearbeiteten E-Mails</h3>
+                <p class="empty-state__desc"
+                    th:text="${processedQuery != null and !processedQuery.isEmpty()} ? 'Keine bearbeitete E-Mail entspricht dem Suchbegriff.' : 'Übernommene E-Mails erscheinen hier, sobald sie bearbeitet wurden.'">Beschreibung</p>
+            </div>
+
+            <!-- Suche über die bearbeiteten E-Mails (Betreff, Absender, Text):
+                 NATIVES GET-Formular — normale Seiten-Navigation, kein htmx
+                 (ein htmx-Swap würde die komplette Seite verschachteln). -->
+            <form method="get" action="/emails/mine"
+                  style="margin-top: 1rem; display: flex; gap: 0.35rem; max-width: 34rem;">
+                <input type="search" name="q" th:value="${processedQuery}"
+                       placeholder="Bearbeitete E-Mails suchen (Betreff, Absender, Empfänger, Bearbeiter, Text) …"
+                       style="flex: 1; padding: 0.4rem 0.6rem; font-size: 0.8125rem; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); box-sizing: border-box;">
+                <button type="submit" class="btn btn--sm">Suchen</button>
+            </form>
+
+            <div th:unless="${processedEmails == null or processedEmails.isEmpty()}"
+                 class="data-table-container data-table-container--scroll" style="margin-top: 1rem;">
+                <table class="data-table" role="table">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Betreff</th>
+                            <th>Absender</th>
+                            <th>Status</th>
+                            <th>Zugewiesen an</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="e : ${processedEmails}">
+                            <td style="white-space: nowrap; font-size: 0.8125rem;"
+                                th:text="${e.getReceivedAt() != null ? #temporals.format(e.getReceivedAt(), 'dd.MM.yyyy') : '—'}">Datum</td>
+                            <td>
+                                <a th:href="@{/emails/{id}(id=${e.getId()})}" th:text="${e.getSubject()}"
+                                   style="font-weight: 500;">Betreff</a>
+                                <!-- Phase 2D.13: dieselbe Badge-Sprache wie die
+                                     Warteschlange (Priorität + Analyse-Stufe) —
+                                     serverseitig aus denselben Helfern. -->
+                                <div style="margin-top: 2px; display: flex; gap: 0.3rem; flex-wrap: wrap;">
+                                    <span class="badge"
+                                          th:if="${emailPriorityBadges != null and emailPriorityBadges[e.getId()] != null}"
+                                          th:classappend="'badge--' + ${emailPriorityBadges[e.getId()].variant()}"
+                                          style="font-size: 0.625rem;"
+                                          th:text="${emailPriorityBadges[e.getId()].label()}">Priorität</span>
+                                    <span class="badge"
+                                          th:if="${emailAnalysisKind != null and emailAnalysisKind[e.getId()] != null}"
+                                          th:classappend="${emailAnalysisKind[e.getId()] == 'FULL'} ? 'badge--success' : 'badge--info'"
+                                          th:text="${emailAnalysisKind[e.getId()] == 'FULL'} ? 'KI-Analyse abgeschlossen' : 'Voranalysiert'"
+                                          style="font-size: 0.625rem;">Analyse</span>
+                                </div>
+                            </td>
+                            <td style="font-size: 0.8125rem;"
+                                th:text="${e.getSenderName()} + (${e.getSenderEmail() != null and !#strings.isEmpty(e.getSenderEmail())} ? ' <' + ${e.getSenderEmail()} + '>' : '')">Absender</td>
+                            <td>
+                                <span class="badge"
+                                      th:classappend="${e.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).COMPLETED ? 'badge--success' : 'badge--info'}"
+                                      th:text="${e.getStatus() == T(verwaltungsassistent.web.analysis.persistence.IncomingEmailEntity.Status).COMPLETED ? 'Erledigt' : 'In Bearbeitung'}"
+                                      style="font-size: 0.6875rem;">Status</span>
+                            </td>
+                            <td style="font-size: 0.8125rem;"
+                                th:text="${e.getAssignedTo() != null ? e.getAssignedTo() : 'Nicht zugewiesen'}">Zugewiesen</td>
+                            <td class="data-table__actions">
+                                <a th:href="@{/emails/{id}(id=${e.getId()})}" class="btn btn--sm"
+                                   style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Öffnen</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

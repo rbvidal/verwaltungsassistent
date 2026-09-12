@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="searchResults">
+    <!-- Error -->
+    <div th:if="${searchError != null}" class="message message--error" role="alert"
+         th:text="${searchError}"></div>
+
+    <!-- Results count -->
+    <div th:if="${hasSearched}" style="margin-bottom: 1rem; font-size: 0.875rem; color: var(--color-text-muted);">
+        <span th:if="${results != null and !results.isEmpty()}"
+              th:text="${#lists.size(results)} + ' relevante Ergebnisse gefunden'">0 Ergebnisse</span>
+    </div>
+
+    <!-- Results list -->
+    <th:block th:if="${results != null and !results.isEmpty()}">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div th:each="r : ${results}" class="case-detail__header"
+                 style="border-left: 3px solid var(--color-primary);">
+
+                <!-- Title & score -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <div>
+                        <a th:href="@{/documents/{id}(id=${r.documentId()})}"
+                           style="font-weight: 600; font-size: 0.9375rem;"
+                           th:text="${r.title()}">Titel</a>
+                        <span th:if="${r.pageRef() != null}" th:text="', ' + ${r.pageRef()}"
+                              style="font-size: 0.75rem; color: var(--color-text-muted);"></span>
+                    </div>
+                    <span class="badge" th:classappend="${r.score() > 0.7 ? 'badge--success' : (r.score() > 0.3 ? 'badge--info' : 'badge--neutral')}"
+                          th:text="${r.providerLabel() + ' · ' + #numbers.formatDecimal(r.score(), 1, 'COMMA', 2, 'POINT')}"
+                          th:title="'Relevanz-Score der Suche (keine Antwort-Konfidenz)'"
+                          style="font-size: 0.75rem; white-space: nowrap; cursor: help;">0.85</span>
+                </div>
+
+                <!-- Evidence preview -->
+                <p th:text="${r.excerpt()}"
+                   style="font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 0.5rem;">
+                    Excerpt text
+                </p>
+
+                <!-- Metadata row -->
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.75rem; color: var(--color-text-muted);">
+                    <span th:if="${r.category() != null and r.category() != '—'}">
+                        Bereich: <span class="badge badge--neutral" th:text="${r.category()}" style="font-size: 0.6875rem;"></span>
+                    </span>
+                    <span th:if="${r.documentType() != null and r.documentType() != '—'}">
+                        Typ: <span class="badge badge--neutral" th:text="${r.documentType()}" style="font-size: 0.6875rem;"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <th:block th:if="${totalPages > 1}">
+            <nav class="pagination" aria-label="Seitennavigation" style="margin-top: 1.5rem;">
+                <span th:if="${page > 0}">
+                    <a th:href="@{/knowledge(q=${query}, documentType=${documentType}, category=${category}, page=${page - 1})}"
+                       class="pagination__prev" hx-get hx-target="#search-results-container">← Zurück</a>
+                </span>
+                <span th:unless="${page > 0}">
+                    <span class="pagination__prev pagination--disabled" aria-disabled="true">← Zurück</span>
+                </span>
+                <span class="pagination__indicator" th:text="${page + 1} + ' von ' + ${totalPages}">1 von 1</span>
+                <span th:if="${page < totalPages - 1}">
+                    <a th:href="@{/knowledge(q=${query}, documentType=${documentType}, category=${category}, page=${page + 1})}"
+                       class="pagination__next" hx-get hx-target="#search-results-container">Weiter →</a>
+                </span>
+                <span th:unless="${page < totalPages - 1}">
+                    <span class="pagination__next pagination--disabled" aria-disabled="true">Weiter →</span>
+                </span>
+            </nav>
+        </th:block>
+    </th:block>
+
+    <!-- Empty results -->
+    <th:block th:if="${hasSearched and (results == null or results.isEmpty())}">
+        <th:block th:if="${noRelevantResults}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'search',
+                'Keine ausreichend relevanten Dokumente gefunden',
+                'Die Suche hat keine Treffer ergeben, die für Ihre Anfrage ausreichend belegt sind. '
+                + 'Versuchen Sie andere Suchbegriffe oder wählen Sie oben die semantische Suche, '
+                + 'um auch Treffer ohne wörtliche Übereinstimmung anzuzeigen.',
+                null, null)}">
+            </th:block>
+        </th:block>
+        <th:block th:unless="${noRelevantResults}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'search',
+                'Keine Ergebnisse',
+                'Für Ihre Suchanfrage wurden keine passenden Dokumente gefunden. Versuchen Sie andere Suchbegriffe oder Filter.',
+                null, null)}">
+            </th:block>
+        </th:block>
+    </th:block>
+
+    <!-- Initial state: no search yet -->
+    <th:block th:unless="${hasSearched}">
+        <th:block th:replace="~{fragments/components :: emptyState(
+            'search',
+            'Wissensbasis durchsuchen',
+            'Geben Sie eine Frage oder einen Suchbegriff ein. Die Wissensbasis durchsucht alle indexierten Dokumente nach den relevantesten Informationen.',
+            null, null)}">
+        </th:block>
+    </th:block>
+</th:block>
+
+</html>

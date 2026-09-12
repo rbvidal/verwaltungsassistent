@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, '423 — Vorgang in Bearbeitung', 'none', null)}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="error-page">
+            <h1>Vorgang in Bearbeitung</h1>
+            <p th:if="${errorMessage != null}" th:text="${errorMessage}">Dieser Vorgang wird gerade von einer anderen Mitarbeiterin bearbeitet.</p>
+            <p th:if="${errorMessage == null}">Dieser Vorgang wird gerade von einer anderen Mitarbeiterin bearbeitet.</p>
+            <a th:href="@{/dashboard}" class="btn btn--primary">Zurück zum Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>

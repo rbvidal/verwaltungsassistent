@@ -1,0 +1,249 @@
+spring:
+  application:
+    name: verwaltungsassistent
+  jackson:
+    # Machine representation is ISO-8601 (LocalDate → yyyy-MM-dd, Instant → ISO
+    # timestamp). This pins the Spring Boot default; German presentation
+    # formatting happens only at the UI boundary (see DateTimeFormats).
+    serialization:
+      write-dates-as-timestamps: false
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+  messages:
+    basename: messages
+    encoding: UTF-8
+  datasource:
+    url: jdbc:postgresql://localhost:5432/verwaltungsassistent
+    username: verwaltungsassistent
+    password: ${POSTGRES_PASSWORD:verwaltungsassistent}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Demo/manual path: Hibernate owns the schema (no Flyway migrations exist).
+      # The dev and test profiles override this with H2 create-drop.
+      ddl-auto: update
+  servlet:
+    multipart:
+      # Uploads are processed one file per request (batch uploads are split
+      # client-side), so the request limit only needs headroom over one file.
+      # The defaults (1 MB file / 10 MB request) silently reject the
+      # documents the UI advertises (50 MB) with MaxUploadSizeExceededException.
+      # The limit also must fit the Qdrant-Snapshots of the Datenwiederherstellung
+      # (vollständiger Vektorindex, aktuell ~75 MB und wachsend mit dem Korpus).
+      max-file-size: ${UPLOAD_MAX_FILE_SIZE:250MB}
+      max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:260MB}
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: true
+      # Statische Assets (CSS/JS/Fonts) kurzzeitig im Browser halten (2D.16):
+      # Jede Seitennavigation ist ein voller Seitenaufbau — ohne Cache werden
+      # CSS und Icon-/Text-Fonts bei jedem Navigationsschritt neu geladen und
+      # die Sidebar „flackert" (Fallback-Glyphen/rohe Ligaturtexte, Reflow).
+      # 10 Minuten Cache + Last-Modified-Revalidierung beheben das, ohne die
+      # Demo-Entwicklung zu blockieren (nach Ablauf revalidiert der Browser).
+      cache:
+        period: 600
+
+server:
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        name: VA_SESSION
+        http-only: true
+        same-site: lax
+        # Secure follows the deployment: false for the local HTTP demo,
+        # true in production behind the HTTPS reverse proxy.
+        secure: ${COOKIE_SECURE:false}
+
+platform:
+  security:
+    cookie-secure: ${COOKIE_SECURE:false}
+  auth:
+    # Brute-force protection for logins (in-memory, per instance)
+    login:
+      max-failures: ${LOGIN_MAX_FAILURES:5}
+      failure-window: ${LOGIN_FAILURE_WINDOW:PT10M}
+      lockout-duration: ${LOGIN_LOCKOUT_DURATION:PT10M}
+    jwt-secret: ${JWT_SECRET:default-dev-jwt-secret-change-in-production}
+    issuer: municipal-decision-assistant
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat-model: ${OLLAMA_CHAT_MODEL:qwen2.5:14b}
+      # Prompt 13 experiment: independent evidence verification runs on the
+      # 14B model. Rollback to the validated 7B verifier:
+      #   set OLLAMA_VERIFIER_MODEL=qwen2.5:7b
+      verifier-model: ${OLLAMA_VERIFIER_MODEL:qwen2.5:14b}
+      # claim_batch: one verifier call per question (all claims x all evidence
+      # in a single prompt, with the user question and relevance rules).
+      # pairwise: historical one call per claim/evidence pair (rollback via env).
+      verification-strategy: ${VERIFICATION_STRATEGY:claim_batch}
+      semantic-intent:
+        enabled: ${SEMANTIC_INTENT_ENABLED:true}
+      embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+      embedding-dimension: ${OLLAMA_EMBEDDING_DIMENSION:768}
+      request-timeout: ${OLLAMA_REQUEST_TIMEOUT:300s}
+    # German generic vocabulary: function words, generic administrative terms
+    # ("unterlagen", "antrag", "prüfen") and cross-service words ("termin",
+    # "online", months). Used by the grounding tokenizer and by the
+    # evidence-anchor rule in retrieval: a document whose only overlap with
+    # the question is such vocabulary is not supporting evidence.
+    grounding:
+      stop-words: >-
+        bitte, haben, habe, meine, mein, meinen, meiner, meinem, mich, mir, ihre, ihren,
+        ihnen, ihrer, vielen, danke, freundlichen, grüßen, grusse, guten, geehrte,
+        sehr, tag, dass, nicht, ich, bin, ist, sind, sein, war, wäre, wäre, wird,
+        wurden, werden, wurde, und, oder, aber, als, wie, auch, noch, zu, zum,
+        zur, bei, nach, vor, über, ueber, unter, aus, auf, an, in, im, um, so,
+        nur, dann, wenn, weil, also, hier, dort, sie, wir, ihr, er, es, was, wer,
+        wen, wem, wann, wo, kein, keine, keinen, keiner, mit, von, für, fuer,
+        mehr, ohne, bis, seit, zwischen, durch, gegen, ohne, etwa, sowie, kann,
+        der, die, das, den, dem, des, am, ein, eine, einen, einem, eines, einer,
+        diesem, dieser, diesen, dieses, diesem, man, alle, allein, alles, allen,
+        ihrem, ihren, ihrer, deine, dein, deiner, dich, dir, du, ihm, ihn, ihnen,
+        ihm, ihnen, jenem, jener, jenes, jede, jeder, jedem, jeden, einem,
+        zuständig, zustaendig, zuständige, zuständigen, zuständiger, zuständigkeit,
+        mehrere, liegen, liegt, liege, liegend, liegengeblieben, entgegen,
+        betreff, betreffs, betrifft,
+        noch, auch, nach, über, ueber, sich, wir, uns, kann, können, koennen,
+        muss, müssen, muessen, welche, welcher, welches, wann, warum, bereits,
+        schon, leider, erhalten, gemacht, geht, gebe, gibt, dieser, diese,
+        dieses, diesem, dafür, dazu, einer, einem, eines, einen, sowie, person,
+        personen, antrag,
+        unterlagen, unterlage, prüfen, prüfung, geprüft, fehlen, fehlende, offen,
+        benötigt, benötigte, benötigen, benötige, brauche, brauchen, braucht, brauchst,
+        möchte, möchten, soll, sollen, wollen, will, gelten, geltend, geltende, geltenden,
+        auskunft, anfrage, bearbeitungsstand,
+        sachstand, rückmeldung, unvollständig, vorhanden, fristen, klären,
+        anliegen, einreichen, eingereicht, einreichung, beantragung, beantragen,
+        mitbringen, erledigt, aktuell, anschreiben, vorgang, aktenzeichen, status,
+        dokument, dokumente, dokumenten, termine, termin, online, analysiere,
+        erstelle, faktenzusammenfassung, anwendbare, vorschriften,
+        handlungsschritte, risiken, empfehlung, zusammenfassung, beschreibung,
+        einrichtung, ingestion, analyse, überprüfung, abschluss, fall, fälle,
+        faelle, phase, wurde, werden, wird, sind, sein, januar, februar, märz,
+        maerz, april, mai, juni, juli, august, september, oktober, november,
+        dezember
+    pipeline:
+      max-evidence-sources: ${AI_MAX_EVIDENCE_SOURCES:4}
+      max-paragraphs-per-source: ${AI_MAX_PARAGRAPHS:3}
+      max-prompt-length: ${AI_MAX_PROMPT_LENGTH:3800}
+      max-excerpt-length: ${AI_MAX_EXCERPT_LENGTH:1200}
+      retry-enabled: ${AI_RETRY_ENABLED:false}
+      coverage-threshold: ${AI_COVERAGE_THRESHOLD:0.6}
+      domain-boost-factor: ${AI_DOMAIN_BOOST:0.35}
+      max-mismatched-documents: ${AI_MAX_MISMATCHED_DOCS:0}
+
+  search:
+    qdrant:
+      enabled: ${QDRANT_ENABLED:true}
+      host: ${QDRANT_HOST:localhost}
+      rest-port: ${QDRANT_REST_PORT:6333}
+      collection: ${QDRANT_COLLECTION:mda_chunks}
+      vector-dimension: ${QDRANT_VECTOR_DIMENSION:768}
+    embedding:
+      ollama:
+        base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+        model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+        dimension: ${OLLAMA_EMBEDDING_DIMENSION:768}
+  neo4j:
+    uri: ${NEO4J_URI:bolt://localhost:7687}
+    username: ${NEO4J_USERNAME:neo4j}
+    password: ${NEO4J_PASSWORD:password}
+
+app:
+  # Maven-filtered from the pom (spring-boot-starter-parent enables filtering
+  # for application*.yml): the single version source is <version> in the pom.
+  version: @project.version@
+  # Extern konfigurierbares Laufzeit-Upload-/Storage-Verzeichnis (Phase 2D.15):
+  # bewusst getrennt vom App-Verzeichnis und vom Source-Dataset. Auf RunPod
+  # z. B. VA_UPLOAD_DIR=/home/<user>/uploads, lokal beliebiger Pfad.
+  upload-dir: ${VA_UPLOAD_DIR:uploads}
+  security:
+    # Automatic logout after this many minutes without REAL user activity
+    # (mouse/keyboard/touch). Only the /session/activity beacon updates the
+    # activity timestamp — background polling keeps nobody alive.
+    inactivity-timeout-minutes: ${INACTIVITY_TIMEOUT_MINUTES:6}
+    inactivity-check-delay-ms: ${INACTIVITY_CHECK_DELAY_MS:30000}
+    # Application-level IP-address logging for authenticated users (login and
+    # logout audit events, client metadata on sessions). ENABLED is the normal
+    # production behavior. The public demo (application-demo.yml) explicitly
+    # disables this for Datenschutz, because external users test the system
+    # there instead of authorized employees.
+    client-address-logging:
+      enabled: ${CLIENT_ADDRESS_LOGGING_ENABLED:true}
+  live-demo:
+    # Shared event-demo indicator below the navigation ("LIVE-DEMO" banner).
+    # Active participants = authenticated users with real page activity
+    # within the inactivity window (the banner's own status poll is excluded).
+    enabled: ${LIVE_DEMO_ENABLED:false}
+    inactivity-window: ${LIVE_DEMO_INACTIVITY_WINDOW:PT5M}
+    # Green up to moderate-threshold, yellow above, red above high-threshold.
+    moderate-threshold: ${LIVE_DEMO_MODERATE_THRESHOLD:5}
+    high-threshold: ${LIVE_DEMO_HIGH_THRESHOLD:10}
+  data-restore:
+    # Docker containers used by the backup/restore/delete operations (admin
+    # page "Datenwiederherstellung"). Container names differ between the
+    # dev/demo stack (va-postgres / mda-neo4j) and the appliance
+    # (va-postgres / va-neo4j), so they are configurable.
+    postgres-container: ${POSTGRES_CONTAINER:va-postgres}
+    neo4j-container: ${NEO4J_CONTAINER:mda-neo4j}
+    neo4j-image: ${NEO4J_IMAGE:neo4j:5-community}
+    postgres-user: ${POSTGRES_USER:verwaltungsassistent}
+    postgres-db: ${POSTGRES_DB:verwaltungsassistent}
+    qdrant-container: ${QDRANT_CONTAINER:mda-qdrant}
+    qdrant-base-url: ${QDRANT_BASE_URL:http://localhost:6333}
+    # Directory for created backups. Relative to the application working
+    # directory; the demo/dev stack writes to the repository backup directory.
+    # In containerized deployments this path must be a mounted volume that
+    # survives container recreation.
+    backup-dir: ${DATA_BACKUP_DIR:../backups}
+
+demo:
+  mode: false
+  # Phase 2D.15 — reproduzierbare Dateisystem-Dataset-Aufbereitung (RunPod).
+  # Aktivierung über Env/args; Standard AUS (normales Demo-Seeding).
+  prepare:
+    enabled: ${DEMO_PREPARE_ENABLED:false}
+    exit: ${DEMO_PREPARE_EXIT:false}
+    fail-on-review: ${DEMO_PREPARE_FAIL_ON_REVIEW:false}
+    # true erzwingt eine erneute (destruktive) Dataset-Aufbereitung trotz
+    # bereits aufbereitetem Zustand (z. B. nach Datenbank-Verlust).
+    force: ${DEMO_PREPARE_FORCE:false}
+  dataset:
+    root: ${DEMO_DATASET_ROOT:/data/demo}
+  startup:
+    # true = Demo-Start mit deterministischem Reset/Seed (bisheriges Verhalten).
+    # false = vorbereiteten Zustand beim Boot erhalten (kein Reset/Seed).
+    reset: ${DEMO_STARTUP_RESET:true}
+
+logging:
+  # Explicit UTF-8 for the console appender — without it, the JVM on Windows
+  # writes log output in the native console charset and German umlauts appear
+  # as mojibake (Ã¼, Ã¶, Ã¤) in the terminal window.
+  charset:
+    console: UTF-8
+    file: UTF-8
+  level:
+    verwaltungsassistent.web: DEBUG
+    reasoning.auth: DEBUG
+
+# Semantischer E-Mail→Vorgang-Vorschlag (Phase 2C.12-Kalibrierung):
+# Cosine-Ähnlichkeits-Schwellen, KEINE Wahrscheinlichkeiten.
+#   suggestion-floor 0.75 = Vorschlags-Schwelle (darunter: kein Vorschlag)
+#   high-floor       0.82 = Grenze fuer die Einstufung "hoch"
+email:
+  semantic-matching:
+    suggestion-floor: 0.75
+    high-floor: 0.82

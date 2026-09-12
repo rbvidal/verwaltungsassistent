@@ -1,0 +1,15 @@
+From: Katrin Vogel <katrin.vogel@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Termin im Bürgeramt – online nicht buchbar
+Date: 2026-09-02T16:00:00+02:00
+Message-ID: demo-catalog-12
+
+--- body ab hier ---
+Betreff: Termin Bürgeramt
+
+Guten Tag,
+
+für die Verlängerung meines Personalausweises finde ich online keinen Termin. Gibt es eine Warteliste?
+
+Mit freundlichen Grüßen
+Katrin Vogel

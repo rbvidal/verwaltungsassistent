@@ -1,0 +1,28 @@
+#cloud-config
+# Verwaltungsassistent Appliance — first-boot provisioning (build time only).
+# The provisioning script is fetched from the build host HTTP server;
+# the seed itself contains no secrets and no application artifacts.
+
+hostname: verwaltungsassistent-appliance
+manage_etc_hosts: true
+
+users:
+  - name: ubuntu
+    lock_passwd: true
+    groups: [ubuntu, adm, sudo]
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - BUILDKEY_PLACEHOLDER
+
+ssh_pwauth: false
+disable_root: true
+package_update: false
+
+write_files:
+  - path: /var/log/verwaltungsassistent-provision.started
+    content: |
+      provisioning started
+    permissions: '0644'
+
+runcmd:
+  - [ bash, -c, 'curl -fsSL http://10.0.2.2:8000/artifacts/provision.sh -o /root/provision.sh && bash /root/provision.sh 2>&1 | tee /var/log/verwaltungsassistent-provision.log' ]

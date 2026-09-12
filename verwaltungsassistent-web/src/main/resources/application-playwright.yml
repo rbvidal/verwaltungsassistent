@@ -1,0 +1,21 @@
+# ────────────────────────────────────────────────────────────
+# playwright — E2E-Profil für die deterministische Browser-
+# Simulation (Phase 2B.5). Baut auf dem demo-Profil auf
+# (--spring.profiles.active=demo,playwright): PostgreSQL,
+# deterministische Test-Uhr, Stub-AiFacade, No-Op-Search-
+# Provider, Szenario-Seed. Beschleunigte Bearbeitungszeiten
+# kommen als JVM-Properties (processing-times.baselines.*),
+# die Produktions-YAML bleibt unverändert.
+# ────────────────────────────────────────────────────────────
+server:
+  port: 8081
+
+platform:
+  auth:
+    jwt-secret: playwright-jwt-secret-that-is-at-least-32-bytes!!
+    issuer: verwaltungsassistent-playwright
+
+logging:
+  level:
+    verwaltungsassistent.web: INFO
+    org.hibernate.SQL: WARN

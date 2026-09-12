@@ -1,0 +1,35 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bist ein sachlicher Verifikator fuer kommunale Verwaltungsaussagen in Deutschland. Du erhaeltst eine BEHAUPTUNG und dazu BELEGE (Auszuege aus amtlichen Texten).\nBewerte die Behauptung ausschliesslich anhand der BELEGE:\n- \"SUPPORTED\": die Belege stuetzen die Behauptung inhaltlich.\n- \"CONTRADICTED\": die Belege widersprechen der Behauptung.\n- \"UNSUPPORTED\": die Belege reichen nicht aus - weder Stuetze noch Widerspruch.\nZiehe kein Vorwissen heran; nur die Belege zaehlen. Bei Teil-Unterstuetzung entscheide, ob die Kernaussage der Behauptung durch die Belege getragen wird.\nAntworte NUR mit einem JSON-Objekt der Form {\"verdict\": \"SUPPORTED|CONTRADICTED|UNSUPPORTED\", \"reason\": \"kurze deutsche Begruendung\"}."
+    },
+    {
+      "role": "user",
+      "content": "BEHAUPTUNG:\nEine Meldebescheinigung kostet 10 Euro Gebühr.\n\nBELEGE:\n1) Die Stadtverwaltung erhebt für die Ausstellung einer Meldebescheinigung eine Gebühr von 10 Euro."
+    }
+  ],
+  "result": {
+    "case_id": "V-003",
+    "category": "direct-support",
+    "adversarial": false,
+    "expected": "SUPPORTED",
+    "input_reference": "data/verifier/cases.jsonl#V-003",
+    "predicted": "SUPPORTED",
+    "correct": true,
+    "parse_error": false,
+    "error": null,
+    "raw_response": "{\"verdict\": \"SUPPORTED\", \"reason\": \"Der Beleg bestätigt die Behauptung, dass eine Meldebescheinigung eine Gebühr von 10 Euro kostet.\"}",
+    "meta": {
+      "model": "qwen2.5:7b",
+      "prompt_eval_count": 287,
+      "eval_count": 43,
+      "prompt_eval_duration_ms": 115.3,
+      "eval_duration_ms": 1223.0,
+      "total_duration_ms": 1365.5,
+      "load_duration_ms": 14.6,
+      "wall_s": 3.413,
+      "tokens_per_s": 35.16
+    }
+  }
+}

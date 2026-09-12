@@ -1,0 +1,13 @@
+From: Thomas Schmidt <thomas.schmidt@example.de>
+To: info@verwaltungs-demo.de
+Subject: Ummeldung nach Umzug
+Date: 2026-08-05T09:00:00+02:00
+Message-ID: demo-seed:ummeldungnachumzug@verwaltungsassistent.local
+
+--- body ab hier ---
+Sehr geehrte Damen und Herren,
+
+Ummeldung nach Umzug – benötigte Unterlagen und Fristen klären.
+
+Mit freundlichen Grüßen
+Thomas Schmidt

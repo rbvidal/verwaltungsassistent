@@ -1,0 +1,15 @@
+From: Uwe Sommer <uwe.sommer@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Ummeldung – Wohnungsgeberbestätigung
+Date: 2026-09-02T22:00:00+02:00
+Message-ID: demo-catalog-26
+
+--- body ab hier ---
+Betreff: Ummeldung Unterlagen
+
+Guten Tag,
+
+meine Wohnungsgeberbestätigung ist gerade eingetroffen – ich hänge sie an. Bitte um Prüfung meiner Ummeldung.
+
+Mit freundlichen Grüßen
+Uwe Sommer

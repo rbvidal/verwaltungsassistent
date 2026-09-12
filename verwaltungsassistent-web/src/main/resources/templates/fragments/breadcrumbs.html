@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="breadcrumbs(items)">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"
+         th:if="${items != null and !items.isEmpty()}">
+        <ol>
+            <th:block th:each="item, iter : ${items}">
+                <li th:if="${!iter.last}">
+                    <a th:href="${item.url}" th:text="${item.label}"></a>
+                </li>
+                <li th:if="${iter.last}" th:text="${item.label}"
+                    aria-current="page"></li>
+            </th:block>
+        </ol>
+    </nav>
+</th:block>
+</html>

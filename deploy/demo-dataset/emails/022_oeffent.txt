@@ -1,0 +1,15 @@
+From: Markus Klein <markus.klein@example.de>
+To: info@verwaltungs-demo.de
+Subject: Öffentliche Toilette am Strandbad defekt
+Date: 2026-09-01T00:00:00+02:00
+Message-ID: demo-catalog-22
+
+--- body ab hier ---
+Betreff: Öffentliche Toilette
+
+Guten Tag,
+
+die öffentliche Toilette am Strandbad ist seit Tagen verschlossen und verschmutzt. Bitte um Reinigung.
+
+Mit freundlichen Grüßen
+Markus Klein

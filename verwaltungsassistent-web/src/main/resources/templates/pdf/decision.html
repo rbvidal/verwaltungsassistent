@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Entscheidungsvorlage</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 14mm 12mm 16mm 12mm;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 1.3;
+            color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        td {
+            vertical-align: top;
+            padding: 0;
+        }
+
+        .text-sm { font-size: 8pt; }
+        .text-xs { font-size: 7pt; }
+        .font-bold { font-weight: 700; }
+        .text-blue { color: #1565c0; }
+        .text-red { color: #b71c1c; }
+        .text-orange { color: #e65100; }
+        .text-muted { color: #555; }
+        .uppercase { text-transform: uppercase; }
+
+        /* ---- Banner ---- */
+        .banner {
+            background: #b71c1c;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .banner td {
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+        .banner-icon {
+            width: 26px;
+        }
+        .banner-title {
+            font-size: 10pt;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .banner-sub {
+            font-size: 7.5pt;
+            opacity: 0.95;
+        }
+
+        /* ---- Header ---- */
+        .header {
+            margin-bottom: 10px;
+        }
+        .header-left {
+            width: 58%;
+            padding-right: 10px;
+        }
+        .header-right {
+            width: 42%;
+        }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: #1565c0;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+        }
+        .logo-text {
+            padding-left: 8px;
+        }
+        .logo-line1, .logo-line2 {
+            font-size: 11pt;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+        .logo-line3 {
+            font-size: 8pt;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+        .logo-addr {
+            font-size: 7.5pt;
+            color: #333;
+            line-height: 1.35;
+            margin-top: 3px;
+        }
+        .logo-addr-line {
+            vertical-align: middle;
+        }
+        .case-card {
+            border: 1px solid #d6d6d6;
+            border-radius: 5px;
+            padding: 8px 10px;
+            background: #fff;
+        }
+        .case-card td {
+            vertical-align: top;
+        }
+        .processor-icon {
+            width: 18px;
+            color: #1565c0;
+        }
+        .processor-icon svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+        .card-label {
+            font-size: 7.5pt;
+            font-weight: 700;
+        }
+        .card-value {
+            font-size: 9pt;
+        }
+        .card-value.name {
+            font-weight: 700;
+        }
+        .card-divider {
+            border-top: 1px solid #d6d6d6;
+            margin: 5px 0;
+        }
+        .card-meta {
+            font-size: 7.5pt;
+        }
+        .card-meta td:first-child {
+            font-weight: 700;
+            width: 42%;
+        }
+
+        /* ---- Title ---- */
+        .doc-title {
+            margin-bottom: 8px;
+        }
+        .doc-title h1 {
+            font-size: 17pt;
+            font-weight: 700;
+            margin: 0 0 1px 0;
+            color: #1a1a1a;
+        }
+        .doc-title .subtitle {
+            font-size: 9.5pt;
+            color: #333;
+        }
+
+        /* ---- Status cards ---- */
+        .status-table {
+            margin-bottom: 8px;
+        }
+        .status-table td {
+            background: #f5f5f5;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            padding: 6px 8px;
+            vertical-align: middle;
+            width: 33.33%;
+        }
+        .status-table td + td {
+            border-left: 1px solid #d9d9d9;
+        }
+        .status-icon {
+            width: 22px;
+            padding-right: 6px;
+        }
+        .status-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+        .status-label {
+            font-size: 7pt;
+            color: #444;
+        }
+        .status-value {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* ---- Date line ---- */
+        .date-line {
+            font-size: 8pt;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .date-sep {
+            color: #999;
+            margin: 0 8px;
+        }
+
+        /* ---- Recommendation ---- */
+        .recommendation {
+            background: #fff3e0;
+            border: 1px solid #ef6c00;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+        }
+        .recommendation td {
+            vertical-align: top;
+        }
+        .rec-icon {
+            width: 30px;
+            padding-right: 8px;
+        }
+        .rec-icon svg {
+            width: 26px;
+            height: 26px;
+            display: block;
+        }
+        .rec-title {
+            font-size: 10.5pt;
+            font-weight: 700;
+            margin: 0 0 3px 0;
+        }
+        .rec-answer {
+            margin-bottom: 3px;
+        }
+        .rec-hint {
+            font-size: 8pt;
+            font-style: italic;
+            color: #e65100;
+        }
+
+        /* ---- Two column body ---- */
+        .two-col {
+            margin-bottom: 8px;
+        }
+        .two-col td {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        .col-left {
+            width: 49%;
+            padding-right: 10px;
+            border-right: 1px dashed #ccc;
+        }
+        .col-right {
+            width: 49%;
+            padding-left: 10px;
+        }
+        .section {
+            margin-bottom: 8px;
+        }
+        .section-header {
+            margin-bottom: 5px;
+        }
+        .section-icon {
+            width: 18px;
+            padding-right: 5px;
+            vertical-align: middle;
+        }
+        .section-icon svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+        }
+        .section-title {
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .subheading {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #1565c0;
+            margin: 4px 0 2px 0;
+        }
+        ul {
+            margin: 0 0 5px 0;
+            padding-left: 13px;
+        }
+        li {
+            margin-bottom: 2px;
+            font-size: 8.5pt;
+        }
+        ol.steps {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        ol.steps li {
+            margin-bottom: 3px;
+            font-size: 8.5pt;
+        }
+        .step-num {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            background: #1565c0;
+            color: #fff;
+            border-radius: 2px;
+            font-size: 7pt;
+            font-weight: 700;
+            text-align: center;
+            line-height: 13px;
+            margin-right: 4px;
+        }
+
+        /* ---- Optional sections ---- */
+        .single-section {
+            margin-bottom: 8px;
+        }
+        .single-section h3 {
+            font-size: 9.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        /* ---- Release status ---- */
+        .release {
+            border: 1px solid #d6d6d6;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            background: #fff;
+        }
+        .release td {
+            vertical-align: top;
+        }
+        .release-icon {
+            width: 34px;
+            padding-right: 8px;
+        }
+        .release-icon svg {
+            width: 30px;
+            height: 30px;
+            display: block;
+        }
+        .release-title {
+            font-size: 10pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0 0 6px 0;
+        }
+        .sig-table td {
+            padding-bottom: 4px;
+        }
+        .sig-label {
+            font-size: 7.5pt;
+            font-weight: 700;
+            white-space: nowrap;
+            padding-right: 4px;
+        }
+        .sig-line {
+            border-bottom: 1px solid #999;
+            width: 130px;
+            height: 10px;
+        }
+        .release-disclaimer {
+            font-size: 7.5pt;
+            color: #444;
+            line-height: 1.3;
+            padding-left: 8px;
+        }
+        .watermark {
+            width: 38px;
+            text-align: right;
+            vertical-align: bottom;
+        }
+        .watermark svg {
+            width: 34px;
+            height: 34px;
+            display: block;
+            margin-left: auto;
+        }
+
+        /* ---- Footer ---- */
+        .footer {
+            border-top: 1px solid #aaa;
+            padding-top: 4px;
+            font-size: 7.5pt;
+            color: #444;
+            margin-top: 4px;
+        }
+        .footer td {
+            vertical-align: top;
+        }
+        .footer-left {
+            width: 33%;
+        }
+        .footer-left svg {
+            width: 14px;
+            height: 14px;
+            display: block;
+            float: left;
+            margin-right: 4px;
+        }
+        .footer-version {
+            font-weight: 700;
+        }
+        .footer-center {
+            width: 34%;
+            text-align: center;
+        }
+        .footer-right {
+            width: 33%;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <!-- Confidentiality banner -->
+    <table class="banner">
+        <tr>
+            <td class="banner-icon">
+                <svg viewBox="0 0 24 28" width="22" height="26" fill="currentColor">
+                    <path d="M12 2C12 2 3 6 3 13c0 4 3 8 9 12 6-4 9-8 9-12 0-7-9-11-9-11z"/>
+                    <path d="M12 8v4h-2v3h2v5h3v-5h2v-3h-2v-4h-3z" fill="#b71c1c"/>
+                </svg>
+            </td>
+            <td>
+                <div class="banner-title">INTERNES DOKUMENT – NUR FÜR DIE VERWALTUNG</div>
+                <div class="banner-sub">Vertrauliche Informationen – keine Weitergabe an Dritte</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Header -->
+    <table class="header">
+        <tr>
+            <td class="header-left">
+                <table>
+                    <tr>
+                        <td class="logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="17" width="18" height="4"/>
+                                <rect x="5" y="10" width="3" height="7"/>
+                                <rect x="10.5" y="10" width="3" height="7"/>
+                                <rect x="16" y="10" width="3" height="7"/>
+                                <path d="M2 10 L12 3 L22 10"/>
+                                <circle cx="12" cy="6.5" r="1.5" fill="white"/>
+                            </svg>
+                        </td>
+                        <td class="logo-text">
+                            <div class="logo-line1">BEZIRKSAMT</div>
+                            <div class="logo-line2">NORDSTADT</div>
+                            <div class="logo-line3">VON POTSDAM</div>
+                            <div class="logo-addr">
+                                <div>Abt. Stadtentwicklung und Bürgerdienste</div>
+                                <div>Amt für Bürgerdienste · Bürgeramt Nordstadt</div>
+                                <div class="logo-addr-line">
+                                    <svg width="9" height="9" viewBox="0 0 24 24" fill="#1565c0" style="vertical-align:middle;margin-right:2px;">
+                                        <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/>
+                                    </svg>
+                                    Fiktive Straße 24a-26 · 14467 Potsdam
+                                </div>
+                                <div>0331 / 90295-XXXX  |  info@ba-nordstadt.potsdam.de</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td class="header-right">
+                <div class="case-card">
+                    <table>
+                        <tr>
+                            <td class="processor-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="8" r="4"/>
+                                    <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8v2H4v-2z"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <div class="card-label">Bearbeitet von</div>
+                                <div class="card-value name" th:text="${caseOwnerDisplay} ?: 'Max Mustermann'">Max Mustermann</div>
+                                <div class="text-xs text-muted" th:text="${caseOwnerRole} ?: 'Sachbearbeitung Bürgerdienste'">Sachbearbeitung Bürgerdienste</div>
+                                <div class="text-xs text-muted" th:text="${caseOwnerRoom} ?: 'Zimmer: 2.15'">Zimmer: 2.15</div>
+                                <div class="text-xs text-muted" th:text="${caseOwnerPhone} ?: '0331 / 90295-1234'">0331 / 90295-1234</div>
+                                <div class="text-xs text-muted" th:text="${caseOwnerEmail} ?: 'max.mustermann@ba-nordstadt.potsdam.de'">max.mustermann@ba-nordstadt.potsdam.de</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="card-divider"></div>
+                    <table class="card-meta">
+                        <tr>
+                            <td>Vorgangsnummer:</td>
+                            <td th:text="${workspaceCode}">WS-...</td>
+                        </tr>
+                        <tr>
+                            <td>Aktenzeichen:</td>
+                            <td th:text="${aktenzeichen} ?: '—'">—</td>
+                        </tr>
+                        <tr>
+                            <td>Fallart:</td>
+                            <td th:text="${caseName}">—</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Title -->
+    <div class="doc-title">
+        <h1 th:text="${caseName}">Fallname</h1>
+        <div class="subtitle">Entscheidungsvorlage (maschinell erstellt)</div>
+    </div>
+
+    <!-- Status cards -->
+    <table class="status-table">
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td class="status-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </td>
+                        <td>
+                            <div class="status-label">Bearbeitungsstand</div>
+                            <div class="status-value" th:text="${casePhase}">—</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td class="status-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="8" y1="13" x2="16" y2="13"/>
+                                <line x1="8" y1="17" x2="16" y2="17"/>
+                            </svg>
+                        </td>
+                        <td>
+                            <div class="status-label">Dokumente im Vorgang</div>
+                            <div class="status-value" th:text="${documentCount}">0</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td class="status-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <polyline points="9 12 11 14 15 10" stroke="#2e7d32" fill="none"/>
+                            </svg>
+                        </td>
+                        <td>
+                            <div class="status-label">Gesamtkonfidenz</div>
+                            <div class="status-value" th:text="${confidenceScore}">—</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Date line -->
+    <div class="date-line">
+        <span>Analyse erstellt am: <span th:text="${requestedAt} ?: '—'">—</span></span>
+        <span class="date-sep">|</span>
+        <span>Export erstellt am: <span th:text="${generatedAt}">—</span></span>
+    </div>
+
+    <!-- Recommendation -->
+    <table class="recommendation">
+        <tr>
+            <td class="rec-icon">
+                <svg viewBox="0 0 24 24" fill="#ef6c00">
+                    <path d="M12 2L2 20h20L12 2z"/>
+                    <text x="12" y="17" text-anchor="middle" fill="white" font-size="14" font-weight="bold">!</text>
+                </svg>
+            </td>
+            <td>
+                <h2 class="rec-title">1. EMPFEHLUNG</h2>
+                <div class="rec-answer" th:text="${decisionAnswer}">Empfehlungstext</div>
+                <div class="rec-hint" th:if="${grounded}">Durch Quellen belegt – die Empfehlung ist durch die herangezogenen Unterlagen gedeckt.</div>
+                <div class="rec-hint" th:unless="${grounded}">Hinweis: Eingeschränkte Quellenlage – die Empfehlung ist vor der Umsetzung besonders sorgfältig zu prüfen.</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Two-column body -->
+    <table class="two-col">
+        <tr>
+            <td class="col-left">
+                <div class="section" th:if="${not #lists.isEmpty(primaryFindings)} or ${not #lists.isEmpty(secondaryFindings)} or ${not #lists.isEmpty(proceduralFindings)}">
+                    <table class="section-header">
+                        <tr>
+                            <td class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="8" y1="13" x2="16" y2="13"/>
+                                    <line x1="8" y1="17" x2="16" y2="17"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <h3 class="section-title">2. FESTSTELLUNGEN ZUM SACHVERHALT</h3>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div th:if="${not #lists.isEmpty(primaryFindings)}">
+                        <div class="subheading">Kernfeststellungen</div>
+                        <ul>
+                            <li th:each="f : ${primaryFindings}" th:text="${f.description} ?: ${f.label}">Feststellung</li>
+                        </ul>
+                    </div>
+
+                    <div th:if="${not #lists.isEmpty(secondaryFindings)}">
+                        <div class="subheading">Weitere Erkenntnisse</div>
+                        <ul>
+                            <li th:each="f : ${secondaryFindings}" th:text="${f.description} ?: ${f.label}">Erkenntnis</li>
+                        </ul>
+                    </div>
+
+                    <div th:if="${not #lists.isEmpty(proceduralFindings)}">
+                        <div class="subheading">Verfahrensschritte</div>
+                        <ul>
+                            <li th:each="f : ${proceduralFindings}" th:text="${f.description} ?: ${f.label}">Schritt</li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td class="col-right">
+                <div class="section">
+                    <table class="section-header">
+                        <tr>
+                            <td class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <h3 class="section-title">3. OFFENE PUNKTE UND FEHLENDE INFORMATIONEN</h3>
+                            </td>
+                        </tr>
+                    </table>
+                    <ul>
+                        <li th:each="m : ${missingDocs}" th:text="${m}">Fehlendes Dokument</li>
+                        <li th:each="i : ${coverageIssues}" th:text="${i}">Abdeckungsproblem</li>
+                        <li th:if="${#lists.isEmpty(missingDocs)} and ${#lists.isEmpty(coverageIssues)}">Alle erforderlichen Informationen liegen vor. Keine offenen Punkte identifiziert.</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <table class="section-header">
+                        <tr>
+                            <td class="section-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                    <line x1="8" y1="9" x2="16" y2="9"/>
+                                    <line x1="8" y1="13" x2="16" y2="13"/>
+                                    <line x1="8" y1="17" x2="12" y2="17"/>
+                                </svg>
+                            </td>
+                            <td>
+                                <h3 class="section-title">4. EMPFOHLENE NÄCHSTE SCHRITTE</h3>
+                            </td>
+                        </tr>
+                    </table>
+                    <ol class="steps">
+                        <li><span class="step-num">1</span>Entscheidungsvorlage prüfen – Beschlussempfehlung auf Vollständigkeit und Richtigkeit prüfen.</li>
+                        <li><span class="step-num">2</span>Ggf. weitere Dokumente anfordern – falls Informationen fehlen, fordern Sie diese bei den zuständigen Stellen an.</li>
+                        <li><span class="step-num">3</span>Entscheidung dokumentieren – dokumentieren Sie die getroffene Entscheidung mit Verweis auf diese Vorlage.</li>
+                        <li><span class="step-num">4</span>Beteiligte informieren – informieren Sie Antragsteller und beteiligte Fachbereiche über die Entscheidung.</li>
+                    </ol>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Optional authorities -->
+    <div class="single-section" th:if="${not #lists.isEmpty(authorities)}">
+        <h3 th:text="'5. RECHTSGRUNDLAGEN'">5. RECHTSGRUNDLAGEN</h3>
+        <ul>
+            <li th:each="a : ${authorities}">
+                <strong th:text="${a.title}">Titel</strong>
+                <span th:if="${a.reference} and ${a.reference} != '—'" th:text="' (' + ${a.reference} + ')'"></span>
+                <div th:if="${a.excerpt} and ${a.excerpt} != '—'" th:text="${a.excerpt}">Auszug</div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Optional evidence -->
+    <div class="single-section" th:if="${not #lists.isEmpty(evidenceItems)}">
+        <h3 th:text="${#lists.isEmpty(authorities)} ? '5. BELEGE / QUELLEN' : '6. BELEGE / QUELLEN'">5. BELEGE / QUELLEN</h3>
+        <ul>
+            <li th:each="e : ${evidenceItems}"
+                th:text="${e.pageNumber} ? ${e.title} + ' (S. ' + ${e.pageNumber} + ')' : ${e.title}">Beleg</li>
+        </ul>
+    </div>
+
+    <!-- Release status -->
+    <table class="release">
+        <tr>
+            <td class="release-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="7" y="3" width="10" height="6" rx="1"/>
+                    <rect x="4" y="9" width="16" height="12" rx="2"/>
+                    <rect x="8" y="12" width="8" height="6" fill="none" stroke="white" stroke-width="1"/>
+                </svg>
+            </td>
+            <td>
+                <h3 class="release-title">PRÜF- UND FREIGABESTATUS</h3>
+                <table class="sig-table">
+                    <tr>
+                        <td class="sig-label">Geprüft von:</td>
+                        <td><div class="sig-line"></div></td>
+                    </tr>
+                    <tr>
+                        <td class="sig-label">Datum:</td>
+                        <td><div class="sig-line"></div></td>
+                    </tr>
+                    <tr>
+                        <td class="sig-label">Freigegeben von:</td>
+                        <td><div class="sig-line"></div></td>
+                    </tr>
+                    <tr>
+                        <td class="sig-label">Datum:</td>
+                        <td><div class="sig-line"></div></td>
+                    </tr>
+                </table>
+            </td>
+            <td class="release-disclaimer">
+                Dieses Dokument wurde maschinell als Entwurf einer Entscheidungsvorlage erstellt.
+                Es ist vor der Umsetzung durch eine zuständige Person zu prüfen und freizugeben
+                (vgl. § 35 VwVfG) und ersetzt keine behördliche Entscheidung.
+            </td>
+            <td class="watermark">
+                <svg viewBox="0 0 24 24" fill="#ddd">
+                    <rect x="3" y="17" width="18" height="4"/>
+                    <rect x="5" y="10" width="3" height="7"/>
+                    <rect x="10.5" y="10" width="3" height="7"/>
+                    <rect x="16" y="10" width="3" height="7"/>
+                    <path d="M2 10 L12 3 L22 10"/>
+                    <circle cx="12" cy="6.5" r="1.5" fill="white"/>
+                </svg>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Footer -->
+    <table class="footer">
+        <tr>
+            <td class="footer-left">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="3" y="17" width="18" height="4"/>
+                    <rect x="5" y="10" width="3" height="7"/>
+                    <rect x="10.5" y="10" width="3" height="7"/>
+                    <rect x="16" y="10" width="3" height="7"/>
+                    <path d="M2 10 L12 3 L22 10"/>
+                    <circle cx="12" cy="6.5" r="1.5" fill="white"/>
+                </svg>
+                <div>
+                    <div class="footer-version" th:text="'Verwaltungsassistent v' + ${appVersion}">Verwaltungsassistent v1.0.0-RC2</div>
+                    <div>Entscheidungsvorlage</div>
+                </div>
+            </td>
+            <td class="footer-center">
+                <div>Bezirksamt Nordstadt von Potsdam</div>
+                <div>Amt für Bürgerdienste · Bürgeramt Nordstadt</div>
+            </td>
+            <td class="footer-right">
+                <div>Seite 1 von 1</div>
+                <div th:text="'Export: ' + ${generatedAt}">Export: ...</div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

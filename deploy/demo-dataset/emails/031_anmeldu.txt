@@ -1,0 +1,15 @@
+From: Deniz Yılmaz <deniz.yilmaz@example.de>
+To: info@verwaltungs-demo.de
+Subject: Anmeldung Gewerbe – Imbiss
+Date: 2026-09-03T13:00:00+02:00
+Message-ID: msg-mailbox-gewerbe-01
+
+--- body ab hier ---
+Betreff: Anmeldung Gewerbe
+
+Guten Tag,
+
+ich möchte zum 1. Oktober einen Imbiss anmelden. Welche Unterlagen benötige ich für die Gewerbeanmeldung?
+
+Mit freundlichen Grüßen
+Deniz Yılmaz

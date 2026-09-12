@@ -1,0 +1,65 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+bin/
+QA/
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.log
+*.tmp
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+.vite/
+
+# Generated
+*.class
+*.jar
+*.war
+uploads/
+test-results/
+screenshots/
+k6-results/
+
+# Runtime backups created by the admin "Datensicherung" feature
+# (PostgreSQL/Neo4j/Qdrant dumps). Runtime directory — never committed.
+backups/
+
+# Local-only Docker Compose override used for isolated verification runs.
+docker-compose.verify.yml
+build-out.log
+build-err.log
+
+# Benchmark suite archive (the source directory is committed instead)
+municipal-llm-benchmark-suite.zip
+
+# curl cookie jars from local API sessions (development artifact)
+ac.txt
+
+# VM image build key material — never commit private keys
+build-key
+build-key.pub

@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+     Case Detail — HTMX Fragments
+     Returned by CaseDetailController for tab content and phase updates.
+-->
+
+<!-- phaseState: Re-rendered phase progress + header after advance/previous -->
+<th:block th:fragment="phaseState" th:object="${case}">
+    <div id="phase-state" class="case-detail__header">
+        <div class="case-detail__title-row">
+            <h1 class="case-detail__title" th:text="*{name()}">Fall Name</h1>
+            <th:block th:replace="~{fragments/components :: badge(
+                text=*{statusLabel()}, variant=*{statusVariant()})}">
+            </th:block>
+        </div>
+        <div class="case-detail__meta">
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">Typ</span>
+                <span class="case-detail__meta-value" th:text="*{workspaceTypeLabel()}">Allgemein</span>
+            </div>
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">Vorgangsnummer</span>
+                <span class="case-detail__meta-value case-detail__meta-value--mono" th:text="*{workspaceCode()}">WS-XXXX</span>
+            </div>
+            <div class="case-detail__meta-item" th:if="*{caseOrigin() != null}">
+                <span class="case-detail__meta-label">Auslöser</span>
+                <span class="case-detail__meta-value" th:text="*{caseOrigin()}">E-Mail vom …</span>
+            </div>
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">Erstellt</span>
+                <span class="case-detail__meta-value" th:text="*{createdAt()}">Datum</span>
+            </div>
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">Aktualisiert</span>
+                <span class="case-detail__meta-value" th:text="*{updatedAt()}">Datum</span>
+            </div>
+            <!-- Phase 2D.13: echte Zuordnungs-Zähler in der Kopf-Metadaten
+                 (dieselbe Vokabel wie im Entscheidungs-Kontext) — Werte aus
+                 den tatsächlichen Vorgangs-Verknüpfungen. -->
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">Dokumente im Vorgang</span>
+                <span class="case-detail__meta-value" th:text="*{documentCount()}">0</span>
+            </div>
+            <div class="case-detail__meta-item">
+                <span class="case-detail__meta-label">E-Mails im Vorgang</span>
+                <span class="case-detail__meta-value" th:text="*{emailCount()}">0</span>
+            </div>
+        </div>
+        <div class="case-detail__description" th:if="*{description() != null and !description().isEmpty()}">
+            <p th:text="*{description()}">Beschreibung</p>
+        </div>
+
+        <th:block th:replace="~{fragments/components :: phaseProgress(
+            stages=*{phases()}, currentIndex=*{currentPhaseIndex()}, label='Phase')}">
+        </th:block>
+
+        <div th:if="*{phaseError() != null}" class="message message--error" role="alert"
+             th:text="*{phaseError()}" style="margin-top: 0.75rem;"></div>
+
+        <div class="case-detail__phase-actions" th:if="${!supervisory}">
+            <!-- htmx request attributes live on the button: a type="button" never
+                 submits the surrounding form, so a form-level hx-post would leave
+                 the button inert. -->
+            <form th:if="*{canGoBack()}" style="display:inline;">
+                <button class="btn" type="button"
+                        th:attr="hx-post=|/cases/*{id()}/phase?direction=previous|,hx-indicator=|#phase-spinner|,hx-disabled-elt=|this|"
+                        hx-target="#phase-state" hx-swap="outerHTML"
+                        th:text="|← *{prevPhaseLabel()}|">← Zurück</button>
+            </form>
+            <form th:if="*{nextPhaseLabel() != null}" style="display:inline;">
+                <!-- Sonderfall: bei offenem Ingestion-Gate IST der nächste
+                     Phase-Button der "Analyse starten"-Button — er ruft den
+                     Analyse-Start (advance=true) auf, der die Phase
+                     INGESTION → ANALYSIS mitnimmt. Kein Zwischenschritt
+                     "Analyse →" vor einem zweiten "Analyse starten". -->
+                <button class="btn btn--primary" type="button"
+                        th:disabled="!*{canAdvance()}"
+                        th:attr="hx-post=*{nextPhaseHxPost()},hx-indicator=|#phase-spinner|,hx-disabled-elt=|this|"
+                        hx-target="#phase-state" hx-swap="outerHTML"
+                        th:text="*{nextPhaseStartAction()} ? 'Analyse starten' : (|*{nextPhaseLabel()} →|)">Phase voranschreiten →</button>
+            </form>
+            <span id="phase-spinner" class="htmx-indicator"
+                  style="font-size: 0.8125rem; color: var(--color-text-muted); margin-left: 0.5rem;">
+                Verarbeitung läuft …
+            </span>
+        </div>
+
+        <div th:if="*{showAdvanceBlockReason()}" class="message message--warning" role="status"
+             style="margin-top: 0.75rem;"
+             th:text="*{advanceBlockReason()}">Grund für blockierte Phase</div>
+
+        <!-- Phase content: what was done, the result, open points, next step, actions -->
+        <div class="case-detail__phase-section"
+             th:if="*{phaseSection() != null}">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <h2 style="font-size: 1rem; font-weight: 600; margin: 0;" th:text="*{phaseSection().headline()}">Phase</h2>
+                <th:block th:replace="~{fragments/components :: badge(
+                    text=*{phaseSection().statusLabel()}, variant=*{phaseSection().statusVariant()})}">
+                </th:block>
+            </div>
+
+            <dl th:if="!*{phaseSection().info().isEmpty()}"
+                style="display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1rem; font-size: 0.8125rem; margin: 0 0 0.75rem;">
+                <th:block th:each="row : *{phaseSection().info()}">
+                    <dt style="color: var(--color-text-muted); font-weight: 500;" th:text="${row.label()}">Label</dt>
+                    <dd style="margin: 0;" th:text="${row.value()}">Wert</dd>
+                </th:block>
+            </dl>
+
+            <h3 th:if="!*{phaseSection().done().isEmpty()}"
+                style="font-size: 0.8125rem; font-weight: 600; margin: 0.5rem 0 0.3rem;">Erledigt</h3>
+            <ul th:if="!*{phaseSection().done().isEmpty()}"
+                style="margin: 0 0 0.5rem; padding-left: 1.1rem; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                <li th:each="d : *{phaseSection().done()}" th:text="${d}">erledigt</li>
+            </ul>
+
+            <h3 th:if="!*{phaseSection().open().isEmpty()}"
+                style="font-size: 0.8125rem; font-weight: 600; margin: 0.5rem 0 0.3rem;">Offene Punkte</h3>
+            <ul th:if="!*{phaseSection().open().isEmpty()}"
+                style="margin: 0 0 0.5rem; padding-left: 1.1rem; font-size: 0.8125rem; display: flex; flex-direction: column; gap: 0.2rem; color: var(--color-text-muted);">
+                <li th:each="o : *{phaseSection().open()}" th:text="${o}">offen</li>
+            </ul>
+
+            <p th:if="*{phaseSection().nextStep() != null and !phaseSection().nextStep().isEmpty()}"
+               style="font-size: 0.8125rem; font-weight: 600; margin: 0.5rem 0 0.75rem; color: var(--color-primary);"
+               th:text="'Nächster Schritt: ' + *{phaseSection().nextStep()}">Nächster Schritt</p>
+
+            <!-- Leitungs-Konto: Vorgangsinformationen bleiben sichtbar, nur die
+                 operativen Aktions-Buttons entfallen (Phase 2C.5). -->
+            <div th:if="${!supervisory and !case.phaseSection().actions().isEmpty()}" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <th:block th:each="action : *{phaseSection().actions()}">
+                    <!-- form-post: VOLLER Formular-POST (Seiten-Reload) — für
+                         Aktionen, deren Wirkung die GANZE Seite betrifft
+                         (z. B. Vorgang wiederaufnehmen: Status, Aktionsleiste
+                         und Arbeitszustand müssen gemeinsam aktualisiert
+                         werden, nicht nur der Phasen-Block). -->
+                    <form th:if="${action.url().startsWith('form-post:')}"
+                          th:action="${action.url().substring(10)}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn--sm"
+                                th:classappend="${action.style() == 'primary'} ? 'btn--primary' : ''"
+                                th:text="${action.label()}">Aktion</button>
+                    </form>
+                    <button th:if="${action.url().startsWith('post:')}" type="button"
+                       class="btn btn--sm"
+                       th:classappend="${action.style() == 'primary'} ? 'btn--primary' : ''"
+                       th:attr="hx-post=${action.url().substring(5)},hx-indicator=|#phase-spinner|"
+                       hx-target="#phase-state" hx-swap="outerHTML"
+                       th:text="${action.label()}">Aktion</button>
+                    <button th:if="${action.url().startsWith('tab:')}" type="button"
+                       class="btn btn--sm"
+                       th:classappend="${action.style() == 'primary'} ? 'btn--primary' : ''"
+                       th:attr="data-tab-target=${action.url().substring(4)}"
+                       onclick="document.getElementById('tab-' + this.dataset.tabTarget).click();"
+                       th:text="${action.label()}">Aktion</button>
+                    <!-- PDF-Aktionen ("PDF öffnen"/"PDF herunterladen") öffnen in
+                         einem NEUEN Tab — der aktuelle Tab bleibt unverändert;
+                         data-pdf-action aktiviert die Lade-Anzeige (app.js). -->
+                    <a th:unless="${action.url().startsWith('tab:') or action.url().startsWith('post:')}"
+                       th:href="${action.url()}"
+                       class="btn btn--sm"
+                       th:classappend="${action.style() == 'primary'} ? 'btn--primary' : ''"
+                       th:attr="target=${action.url().contains('export-pdf') ? '_blank' : null},
+                                rel=${action.url().contains('export-pdf') ? 'noopener' : null},
+                                data-pdf-action=${action.url().contains('export-pdf') ? '1' : null}"
+                       th:text="${action.label()}">Aktion</a>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- overview: Summary tab content -->
+<th:block th:fragment="overview" th:object="${case}">
+    <div class="case-detail__overview">
+        <div class="dashboard__stats" style="margin-bottom: 1.5rem;">
+            <div class="stat-card stat-card--cases">
+                <span class="stat-card__count" th:text="*{documentCount()}">0</span>
+                <span class="stat-card__label">Dokumente</span>
+            </div>
+            <div class="stat-card stat-card--processing">
+                <span class="stat-card__count" th:text="*{timelineEventCount()}">0</span>
+                <span class="stat-card__label">Ereignisse</span>
+            </div>
+            <div class="stat-card stat-card--ready">
+                <span class="stat-card__count" th:text="*{completedStepsCount()}">0</span>
+                <span class="stat-card__label">Schritte erledigt</span>
+            </div>
+        </div>
+
+        <!-- Kommunikation / Provenienz (Phase 2C.10): welche E-Mails gehören
+             zum Vorgang, was war der Auslöser, welche Folgenachrichten kamen —
+             Ursprung bleibt die IncomingEmailEntity, hier nur die verknüpfte Sicht. -->
+        <div th:if="${caseCommunications != null and !caseCommunications.isEmpty()}"
+             class="dash-card" style="margin-bottom: 1.5rem;">
+            <div class="dash-card__head">
+                <span class="dash-card__title">
+                    <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: middle;">mail</span>
+                    KOMMUNIKATION
+                </span>
+                <button type="button" class="dash-card__link" style="background: none; border: none; cursor: pointer;"
+                        data-tab-target="emails"
+                        onclick="document.getElementById('tab-emails').click();">
+                    Alle E-Mails ansehen
+                </button>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="data-table__header">Eingegangen</th>
+                            <th class="data-table__header">Absender</th>
+                            <th class="data-table__header">Betreff</th>
+                            <th class="data-table__header">Herkunft</th>
+                            <th class="data-table__header">Anhänge</th>
+                            <th class="data-table__header"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m : ${caseCommunications}">
+                            <td style="white-space: nowrap; font-size: 0.8125rem;" th:text="${m.receivedAt()}">Datum</td>
+                            <td style="font-size: 0.8125rem;" th:text="${m.sender()}">Absender</td>
+                            <td style="font-size: 0.8125rem;">
+                                <a th:href="'/emails/' + ${m.emailId()}"
+                                   class="doc-title-link" style="font-weight: 500;"
+                                   th:text="${m.subject()}">Betreff</a>
+                            </td>
+                            <td>
+                                <span th:if="${m.origin()}" class="badge badge--success" style="font-size: 0.625rem;">Auslöser · Eingang</span>
+                                <span th:unless="${m.origin()}" class="badge badge--neutral" style="font-size: 0.625rem;">Folgekommunikation</span>
+                            </td>
+                            <td>
+                                <span th:if="${m.attachmentCount() > 0}" class="badge badge--info"
+                                      style="font-size: 0.625rem;"
+                                      th:text="${m.attachmentCount()} + ' Dokument(e)'">0</span>
+                                <span th:unless="${m.attachmentCount() > 0}" style="color: var(--color-text-muted); font-size: 0.75rem;">—</span>
+                            </td>
+                            <td class="data-table__actions">
+                                <a th:href="'/emails/' + ${m.emailId()}" class="btn btn--sm"
+                                   style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">E-Mail öffnen</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3 class="dashboard__section-title">Letzte Ereignisse</h3>
+        <th:block th:if="${case.recentTimeline().isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine Ereignisse', 'Timeline-Ereignisse erscheinen hier, nachdem Dokumente analysiert wurden.', null, null)}">
+            </th:block>
+        </th:block>
+        <table th:unless="${case.recentTimeline().isEmpty()}" class="activity-table">
+            <!-- Spalte "Erfassung": ehrliche Herkunfts-Aussage statt einer
+                 "KI-Verarbeitung"-Überschrift, unter der auch manuell erfasste
+                 Ereignisse stehen. Automatisch (KI) = Ergebnis der KI-Verarbeitung
+                 (Analyse-Läufe bzw. als KI markierte Ereignisse); Manuell erfasst =
+                 von Mitarbeiterinnen bzw. bei der Vorgangsanlage erfasst. -->
+            <thead><tr><th>Datum</th><th>Ereignis</th><th>Ereignisart</th><th>Erfassung</th></tr></thead>
+            <tbody>
+                <tr th:each="e : ${case.recentTimeline()}">
+                    <td th:text="${e.date()}">Datum</td>
+                    <td th:text="${e.title()}">Ereignis</td>
+                    <td><span class="activity-table__type"
+                              th:text="${T(verwaltungsassistent.web.controller.CaseDetailController).timelineTypeLabel(e.type())}">TYPE</span></td>
+                    <td>
+                        <th:block th:replace="~{fragments/components :: badge(
+                            text=${e.aiGenerated() ? 'Automatisch (KI)' : 'Manuell erfasst'}, variant=${e.aiGenerated() ? 'info' : 'neutral'})}">
+                        </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="dashboard__section-title" style="margin-top: 1.5rem;">Dokumente</h3>
+        <th:block th:if="${case.recentDocuments().isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine Dokumente', 'Dokumente können über die Dokumentenliste angehängt werden.', null, null)}">
+            </th:block>
+        </th:block>
+        <table th:unless="${case.recentDocuments().isEmpty()}" class="activity-table">
+            <thead><tr><th>Dokument</th><th>Typ</th></tr></thead>
+            <tbody>
+                <tr th:each="d : ${case.recentDocuments()}">
+                    <td>
+                        <a th:href="@{/documents/{id}(id=${d.id()})}" target="_blank" rel="noopener noreferrer"
+                           style="font-weight: 500;"
+                           th:text="${d.name()}">Dokument</a>
+                    </td>
+                    <td><span class="activity-table__type" th:text="${d.type()}">TYPE</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- attachDocuments: Modal content for searching and selecting documents to attach -->
+<th:block th:fragment="attachDocuments">
+    <div>
+        <!-- Search -->
+        <div class="cases-toolbar" style="margin-bottom: 1rem;">
+            <th:block th:replace="~{fragments/components :: searchBox(
+                name='q', placeholder='Dokumente suchen...',
+                baseUrl=${attachBaseUrl}, targetId='attach-modal-content',
+                showIcon=true, showClear=true)}">
+            </th:block>
+        </div>
+
+        <th:block th:if="${candidateDocs.isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'search', 'Keine Dokumente gefunden',
+                'Es sind keine Dokumente zum Anhängen verfügbar. Laden Sie zuerst Dokumente hoch.',
+                ${attachBaseUrl}, 'Filter zurücksetzen')}">
+            </th:block>
+        </th:block>
+
+        <th:block th:unless="${candidateDocs.isEmpty()}">
+            <form th:attr="hx-post=|/cases/${caseId}/attach|"
+                  hx-target="#panel-documents" hx-swap="innerHTML"
+                  hx-encoding="multipart/form-data">
+                <div class="data-table-container">
+                    <div class="data-table__responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="data-table__header" style="width: 2rem;">
+                                        <input type="checkbox" id="select-all" style="width: 1rem; height: 1rem;"
+                                               onchange="document.querySelectorAll('.attach-checkbox').forEach(cb => cb.checked = this.checked)" />
+                                    </th>
+                                    <th class="data-table__header" scope="col">Titel</th>
+                                    <th class="data-table__header" scope="col">Typ</th>
+                                    <th class="data-table__header" scope="col">Status</th>
+                                    <th class="data-table__header" scope="col">Version</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="d : ${candidateDocs}">
+                                    <td data-label="">
+                                        <input type="checkbox" name="docIds" class="attach-checkbox"
+                                               th:value="${d.documentId()}" style="width: 1rem; height: 1rem;" />
+                                    </td>
+                                    <td data-label="Titel" th:text="${d.title()}">Titel</td>
+                                    <td data-label="Typ">
+                                        <span class="activity-table__type" th:text="${d.type()}">TYPE</span>
+                                    </td>
+                                    <td data-label="Status">
+                                        <th:block th:replace="~{fragments/components :: badge(
+                                            text=${d.statusLabel()}, variant=${d.statusVariant()})}">
+                                        </th:block>
+                                    </td>
+                                    <td data-label="Version" th:text="${'v' + d.version()}">v1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <th:block th:replace="~{fragments/components :: pagination(
+                        page=${attachPage}, totalPages=${attachTotalPages},
+                        baseUrl=${attachBaseUrl}, queryParams=${attachQuery != null and !attachQuery.isEmpty() ? 'q=' + attachQuery : ''},
+                        targetId='attach-modal-content')}">
+                    </th:block>
+                </div>
+
+                <div class="modal__actions" style="padding: 0.75rem 0 0; border-top: none;">
+                    <button type="button" class="btn modal__btn-cancel"
+                            @click="attachOpen = false">Abbrechen</button>
+                    <button type="submit" class="btn btn--primary" @click="attachOpen = false">
+                        Ausgewählte anhängen
+                    </button>
+                </div>
+            </form>
+        </th:block>
+    </div>
+</th:block>
+
+<!-- documentsTab: Attached documents with full metadata, search, filter, detach -->
+<th:block th:fragment="documentsTab">
+    <div class="tab-panel-content" id="documents-tab-content">
+        <th:block th:if="${documents.isEmpty() and (docCurrentQ == null or docCurrentQ.isEmpty()) and (docCurrentStatus == null or docCurrentStatus.isEmpty())}">
+            <div class="empty-state" x-data="{ attachOpen: false }">
+                <h3 class="empty-state__title">Keine Dokumente</h3>
+                <p class="empty-state__desc">Diesem Fall wurden noch keine Dokumente hinzugefügt.</p>
+                <button th:if="${!supervisory}" class="btn btn--primary empty-state__action"
+                        @click="attachOpen = true"
+                        th:attr="hx-get=|/cases/${caseId}/attach|"
+                        hx-target="#attach-empty-modal-body" hx-swap="innerHTML"
+                        hx-trigger="click once">
+                    + Dokument anhängen
+                </button>
+                <!-- Attach modal for empty state -->
+                <div class="modal-overlay" x-show="attachOpen" x-trap.noscroll="attachOpen"
+                     @keydown.escape.window="attachOpen = false" @click.self="attachOpen = false"
+                     role="dialog" aria-modal="true" aria-labelledby="attach-empty-title"
+                     x-cloak>
+                    <div class="modal-dialog" style="max-width: 700px;">
+                        <div class="modal__header">
+                            <h2 class="modal__title" id="attach-empty-title">Dokumente anhängen</h2>
+                            <button class="modal__close" @click="attachOpen = false"
+                                    aria-label="Schließen">&times;</button>
+                        </div>
+                        <div class="modal__body" id="attach-empty-modal-body">
+                            <th:block th:replace="~{fragments/components :: spinner('Dokumente werden geladen...')}"></th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+        <th:block th:unless="${documents.isEmpty() and (docCurrentQ == null or docCurrentQ.isEmpty()) and (docCurrentStatus == null or docCurrentStatus.isEmpty())}">
+            <!-- Attach + Search + filter toolbar -->
+            <div class="cases-toolbar" style="margin-bottom: 1rem;" x-data="{ attachOpen: false }">
+                <button th:if="${!supervisory}" class="btn btn--primary"
+                        @click="attachOpen = true"
+                        th:attr="hx-get=|/cases/${caseId}/attach|"
+                        hx-target="#attach-modal-body" hx-swap="innerHTML"
+                        hx-trigger="click once">
+                    + Dokument anhängen
+                </button>
+                <!-- Attach modal -->
+                <div class="modal-overlay" x-show="attachOpen" x-trap.noscroll="attachOpen"
+                     @keydown.escape.window="attachOpen = false" @click.self="attachOpen = false"
+                     role="dialog" aria-modal="true" aria-labelledby="attach-modal-title"
+                     x-cloak>
+                    <div class="modal-dialog" style="max-width: 700px;">
+                        <div class="modal__header">
+                            <h2 class="modal__title" id="attach-modal-title">Dokumente anhängen</h2>
+                            <button class="modal__close" @click="attachOpen = false"
+                                    aria-label="Schließen">&times;</button>
+                        </div>
+                        <div class="modal__body" id="attach-modal-body">
+                            <th:block th:replace="~{fragments/components :: spinner('Dokumente werden geladen...')}"></th:block>
+                        </div>
+                    </div>
+                </div>
+                <th:block th:replace="~{fragments/components :: searchBox(
+                    name='q', placeholder='Dokumente durchsuchen...',
+                    baseUrl=${docBaseUrl}, targetId='documents-tab-content',
+                    showIcon=true, showClear=true)}">
+                </th:block>
+                <select class="filter-bar__input filter-bar__select" style="max-width: 200px;"
+                        th:attr="hx-get=${docBaseUrl},hx-target=${'#documents-tab-content'},hx-swap=outerHTML"
+                        name="status">
+                    <option value="" th:selected="${docCurrentStatus == null or docCurrentStatus.isEmpty()}">Alle Status</option>
+                    <option th:each="opt : ${docStatusOptions}"
+                            th:value="${opt.value()}" th:text="${opt.label()}"
+                            th:selected="${docCurrentStatus != null and docCurrentStatus == opt.value()}">Status</option>
+                </select>
+                <th:block th:if="${docCurrentQ != null and !docCurrentQ.isEmpty()}">
+                    <span class="case-detail__filter-active" style="font-size: 0.75rem; color: var(--color-primary);">
+                        Suche: "<span th:text="${docCurrentQ}"></span>"
+                        <a th:attr="hx-get=${docBaseUrl + (docCurrentStatus != null and !docCurrentStatus.isEmpty() ? '?status=' + docCurrentStatus : '')},hx-target=${'#documents-tab-content'},hx-swap=outerHTML"
+                           style="cursor: pointer; color: var(--color-text-muted);">✕</a>
+                    </span>
+                </th:block>
+            </div>
+
+            <!-- No results after filter -->
+            <th:block th:if="${documents.isEmpty()}">
+                <th:block th:replace="~{fragments/components :: emptyState(
+                    'search', 'Keine Dokumente gefunden',
+                    'Keine Dokumente entsprechen den aktuellen Filtern.', docBaseUrl, 'Filter zurücksetzen')}">
+                </th:block>
+            </th:block>
+
+            <!-- Document table -->
+            <th:block th:unless="${documents.isEmpty()}">
+                <div class="data-table-container" id="doc-table-container">
+                    <div class="data-table__responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="data-table__header data-table__header--sortable" scope="col"
+                                        th:attr="hx-get=${docBaseUrl + '?sort=title&page=0' + (docCurrentStatus != null and !docCurrentStatus.isEmpty() ? '&status=' + docCurrentStatus : '') + (docCurrentQ != null and !docCurrentQ.isEmpty() ? '&q=' + docCurrentQ : '')},hx-target=${'#documents-tab-content'},hx-swap=outerHTML">
+                                        Titel
+                                    </th>
+                                    <th class="data-table__header" scope="col">Typ</th>
+                                    <th class="data-table__header data-table__header--sortable" scope="col"
+                                        th:attr="hx-get=${docBaseUrl + '?sort=status&page=0' + (docCurrentStatus != null and !docCurrentStatus.isEmpty() ? '&status=' + docCurrentStatus : '') + (docCurrentQ != null and !docCurrentQ.isEmpty() ? '&q=' + docCurrentQ : '')},hx-target=${'#documents-tab-content'},hx-swap=outerHTML">
+                                        Status
+                                    </th>
+                                    <th class="data-table__header" scope="col">Version</th>
+                                    <th class="data-table__header data-table__header--sortable" scope="col"
+                                        th:attr="hx-get=${docBaseUrl + '?sort=uploadedAt&page=0' + (docCurrentStatus != null and !docCurrentStatus.isEmpty() ? '&status=' + docCurrentStatus : '') + (docCurrentQ != null and !docCurrentQ.isEmpty() ? '&q=' + docCurrentQ : '')},hx-target=${'#documents-tab-content'},hx-swap=outerHTML">
+                                        Hinzugefügt
+                                    </th>
+                                    <th class="data-table__header" scope="col">Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="d : ${documents}">
+                                    <td data-label="Titel">
+                                        <span x-data="{ viewerOpen: false }">
+                                            <button type="button" class="doc-title-link"
+                                                    @click="viewerOpen = true"
+                                                    th:attr="hx-get=|/documents/${d.documentId()}/view|,hx-target=|#docviewer-${d.documentId()}-body|,hx-swap=innerHTML"
+                                                    hx-trigger="click once">
+                                                <span th:text="${d.title()}">Titel</span>
+                                            </button>
+                                            <th:block th:replace="~{fragments/components :: documentViewerModal(
+                                                id=|docviewer-${d.documentId()}|, docUrl=|/documents/${d.documentId()}/view|)}">
+                                            </th:block>
+                                        </span>
+                                    </td>
+                                    <td data-label="Typ">
+                                        <span class="activity-table__type" th:text="${d.type()}">TYPE</span>
+                                    </td>
+                                    <td data-label="Status">
+                                        <th:block th:replace="~{fragments/components :: badge(
+                                            text=${d.statusLabel()}, variant=${d.statusVariant()})}">
+                                        </th:block>
+                                    </td>
+                                    <td data-label="Version" th:text="${'v' + d.version()}">v1</td>
+                                    <td data-label="Hinzugefügt" th:text="${d.uploadedAt()}">Datum</td>
+                                    <td data-label="Aktionen" class="data-table__actions">
+                                        <a th:href="@{/documents/{id}(id=${d.documentId()})}"
+                                           class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">
+                                            Öffnen
+                                        </a>
+                                        <!-- Geovorgänge: Foto-Dokumente können nicht
+                                             gelöst werden (serverseitig gesperrt). -->
+                                        <span th:if="${!supervisory and (caseIsGeo == null or !caseIsGeo)}" x-data="{ open: false }">
+                                            <button type="button" class="btn btn--sm"
+                                                    style="padding: 0.25rem 0.625rem; font-size: 0.75rem; background: var(--color-error-100); color: var(--color-error-700); border: 1px solid var(--color-error-700);"
+                                                    @click="open = true">
+                                                Lösen
+                                            </button>
+                                            <th:block th:replace="~{fragments/components :: confirmDelete(
+                                                id=|detach-doc-${d.linkId()}|,
+                                                itemName=${d.title()},
+                                                deleteUrl=|/cases/${caseId}/documents/${d.linkId()}|,
+                                                targetId='documents-tab-content',
+                                                confirmMessage='Möchten Sie dieses Dokument vom Fall lösen? Das Dokument selbst bleibt erhalten.')}">
+                                            </th:block>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <th:block th:replace="~{fragments/components :: pagination(
+                        page=${docPage}, totalPages=${docTotalPages},
+                        baseUrl=${docBaseUrl}, queryParams=${docQueryParams},
+                        targetId='documents-tab-content')}">
+                    </th:block>
+                </div>
+            </th:block>
+        </th:block>
+    </div>
+</th:block>
+
+<!-- emailsTab: Kommunikationsverlauf des Falls (Phase 2C.1) — chronologisch
+     (älteste zuerst), mit Auslöser-Markierung (die E-Mail, die den Vorgang
+     angestoßen hat) und Neueste-Markierung. Jede Zeile öffnet die
+     BESTEHENDE E-Mail-Detailseite; die Zuordnung kann aufgehoben werden. -->
+<th:block th:fragment="emailsTab">
+    <div class="tab-panel-content">
+        <th:block th:if="${caseEmails == null or caseEmails.isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine E-Mails zugeordnet',
+                'Diesem Fall sind noch keine E-Mails zugeordnet. Ordnen Sie eine E-Mail über die Aktion „Diesem Fall zuordnen“ in der E-Mail-Ansicht zu.', null, null)}">
+            </th:block>
+        </th:block>
+        <th:block th:unless="${caseEmails == null or caseEmails.isEmpty()}">
+            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.6rem;">
+                Kommunikationsverlauf — chronologisch, vom auslösenden Schreiben bis zur letzten Nachricht.
+            </p>
+            <div class="data-table-container">
+                <div class="data-table__responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="data-table__header" scope="col">Datum</th>
+                                <th class="data-table__header" scope="col">Betreff</th>
+                                <th class="data-table__header" scope="col">Absender</th>
+                                <th class="data-table__header" scope="col">Status</th>
+                                <th class="data-table__header" scope="col">Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="e, iter : ${caseEmails}">
+                                <td data-label="Datum"
+                                    th:text="${e.getReceivedAt() != null ? #temporals.format(e.getReceivedAt(), 'dd.MM.yyyy HH:mm') : '—'}">Datum</td>
+                                <td data-label="Betreff">
+                                    <a th:href="@{/emails/{id}(id=${e.getId()})}" class="doc-title-link"
+                                       style="font-weight: 500;" th:text="${e.getSubject()}">Betreff</a>
+                                    <!-- Auslöser: die E-Mail, die den Vorgang angestoßen hat. -->
+                                    <span th:if="${caseTriggerAnalysisId != null and e.getAnalysisId() != null and caseTriggerAnalysisId == e.getAnalysisId().toString()}"
+                                          class="badge badge--info" style="font-size: 0.625rem; margin-left: 0.4rem;">Auslöser</span>
+                                    <!-- Neueste Nachricht des Verlaufs. -->
+                                    <span th:if="${iter.last}" class="badge badge--neutral"
+                                          style="font-size: 0.625rem; margin-left: 0.4rem;">Neueste</span>
+                                </td>
+                                <td data-label="Absender" th:text="${e.getSenderName()}">Absender</td>
+                                <td data-label="Status"
+                                    th:with="stFull=${caseEmailFullAi != null ? caseEmailFullAi[e.getId()] : null},
+                                             stLabel=${T(verwaltungsassistent.web.controller.EmailController).statusLabelFor(e, stFull)},
+                                             stVariant=${T(verwaltungsassistent.web.controller.EmailController).statusVariantFor(e, stFull)}">
+                                    <th:block th:replace="~{fragments/components :: badge(text=${stLabel}, variant=${stVariant})}">
+                                    </th:block>
+                                </td>
+                                <td data-label="Aktionen" class="data-table__actions"
+                                    th:with="mailFull=${caseEmailFullAi != null ? caseEmailFullAi[e.getId()] : null}">
+                                    <!-- Ehrliche Vorprüfungs-Ansicht: bei reiner
+                                         Vor-Analyse (PRE) öffnet der Link die
+                                         E-Mail-Detailseite mit dem Vorprüfungs-
+                                         Befund ("Vorprüfung / Triage"), ohne eine
+                                         vollständige KI-Analyse vorzutäuschen.
+                                         Bei vollständiger KI-Analyse heißt die
+                                         Aktion entsprechend. -->
+                                    <a th:if="${e.getAnalysisId() != null}"
+                                       th:href="'/emails/' + ${e.getId()}"
+                                       class="btn btn--sm" style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">
+                                        <span th:text="${mailFull} ? 'KI-Analyse anzeigen' : 'Vorprüfung anzeigen'">Vorprüfung anzeigen</span>
+                                    </a>
+                                    <!-- POST-Formular (kein DELETE): die Aktion entfernt die
+                                         Zuordnung und kehrt zum Fall zurück. -->
+                                    <form th:if="${!supervisory}"
+                                          th:action="@{/emails/{analysisId}/unassign-case(analysisId=${e.getAnalysisId()}, redirect='case', caseId=${caseId})}"
+                                          method="post">
+                                        <button type="submit" class="btn btn--sm"
+                                                style="padding: 0.25rem 0.625rem; font-size: 0.75rem;">
+                                            Zuordnung aufheben
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</th:block>
+
+<!-- timelineTab: Chronological event list -->
+<th:block th:fragment="timelineTab">
+    <div class="tab-panel-content">
+        <th:block th:if="${timeline.isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine Ereignisse',
+                'Für diesen Fall wurden noch keine Aktivitäten erfasst. Sobald Dokumente hinzugefügt, Analysen durchgeführt oder Phasen gewechselt werden, erscheinen die Ereignisse hier.', null, null)}">
+            </th:block>
+        </th:block>
+        <!-- Gleiche Herkunfts-Vokabel wie die Ereignis-Spalte der Übersicht
+             ("Erfassung"): Automatisch (KI) / Manuell erfasst. -->
+        <table th:unless="${timeline.isEmpty()}" class="activity-table">
+            <thead><tr><th>Datum</th><th>Ereignis</th><th>Typ</th><th>Erfassung</th><th>Konfidenz</th></tr></thead>
+            <tbody>
+                <tr th:each="e : ${timeline}">
+                    <td th:text="${e.date()}">Datum</td>
+                    <td>
+                        <span th:text="${e.title()}">Ereignis</span>
+                        <span th:if="${e.detail() != null and !e.detail().isEmpty()}"
+                              th:text="${e.detail()}"
+                              style="display: block; font-size: 0.75rem; color: var(--color-text-muted);">Detail</span>
+                    </td>
+                    <td><span class="activity-table__type" th:text="${e.type()}">TYPE</span></td>
+                    <td>
+                        <th:block th:replace="~{fragments/components :: badge(
+                            text=${e.aiGenerated() ? 'Automatisch (KI)' : 'Manuell erfasst'}, variant=${e.aiGenerated() ? 'info' : 'neutral'})}">
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:if="${e.confidence() > 0}">
+                            <span th:text="${#numbers.formatDecimal(e.confidence(), 0, 'POINT', 0, 'COMMA')}">0</span>%
+                        </th:block>
+                        <th:block th:unless="${e.confidence() > 0}">—</th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- notesTab: Case notes with add form -->
+<th:block th:fragment="notesTab">
+    <div class="tab-panel-content">
+        <form th:if="${!supervisory}" class="case-detail__note-form"
+              th:attr="hx-post=|/cases/${caseId}/notes|"
+              hx-target="#panel-notes" hx-swap="innerHTML"
+              hx-trigger="submit">
+            <textarea name="text" class="form-field__input" rows="3"
+                      placeholder="Neue Notiz hinzufügen..." required></textarea>
+            <button type="submit" class="btn btn--primary" style="margin-top: 0.5rem;">
+                Hinzufügen
+            </button>
+        </form>
+
+        <th:block th:if="${notes.isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine Notizen', 'Fügen Sie Notizen hinzu, um Gedanken und Beobachtungen zum Fall festzuhalten.', null, null)}">
+            </th:block>
+        </th:block>
+        <div th:unless="${notes.isEmpty()}" class="case-detail__notes-list" style="margin-top: 1rem;">
+            <div th:each="n : ${notes}" class="case-detail__note-item">
+                <div class="case-detail__note-meta">
+                    <span th:text="${n.createdBy()}">Benutzer</span>
+                    <span class="case-detail__note-time" th:text="${n.createdAt()}">Zeit</span>
+                </div>
+                <p th:text="${n.text()}">Notiztext</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- checklistTab: Phase-specific checklist with toggle -->
+<th:block th:fragment="checklistTab">
+    <div class="tab-panel-content">
+        <th:block th:if="${checklist.isEmpty()}">
+            <th:block th:replace="~{fragments/components :: emptyState(
+                'simple', 'Keine Checklistenpunkte', 'Für diese Phase sind keine Checklistenpunkte definiert.', null, null)}">
+            </th:block>
+        </th:block>
+        <ul th:unless="${checklist.isEmpty()}" class="case-detail__checklist">
+            <li th:each="item : ${checklist}" class="case-detail__checklist-item">
+                <label class="case-detail__checklist-label"
+                       th:classappend="${item.completed() or item.notRequired()} ? 'case-detail__checklist-label--done'">
+                    <input type="checkbox"
+                           th:checked="${item.completed()}"
+                           th:attr="hx-put=|/cases/${caseId}/checklist/${item.id()}|"
+                           hx-target="#panel-checklist" hx-swap="innerHTML" hx-trigger="change" />
+                    <span th:text="${item.label()}">Aufgabe</span>
+                    <span class="case-detail__checklist-phase" th:text="${'(' + item.phase() + ')'}"></span>
+                    <!-- Zustand sichtbar machen — getrennt von der Aktion, die
+                         ihn ändert ("Als nicht erforderlich einstufen"). -->
+                    <span th:if="${item.notRequired()}" class="badge badge--neutral"
+                          style="font-size: 0.625rem; margin-left: 0.35rem;">Nicht erforderlich</span>
+                </label>
+                <!-- Aktionsbeschriftung statt Zustands-Behauptung: "Nicht
+                     erforderlich" als Button-Label sah wie ein Status aus —
+                     gemeint ist die Aktion "als nicht erforderlich einstufen". -->
+                <button th:if="${!supervisory}" type="button" class="case-detail__checklist-skip"
+                        th:attr="hx-put=|/cases/${caseId}/checklist/${item.id()}?mode=not-required|"
+                        hx-target="#panel-checklist" hx-swap="innerHTML"
+                        th:text="${item.notRequired() ? 'Als erforderlich einstufen' : 'Als nicht erforderlich einstufen'}">Als nicht erforderlich einstufen</button>
+            </li>
+        </ul>
+    </div>
+</th:block>
+
+<!-- briefingTab: Fallbriefing — leere Zustand, Live-Erzeugung oder gespeichertes Briefing -->
+<th:block th:fragment="briefingTab">
+    <div class="tab-panel-content">
+        <!-- Live-Erzeugung über die kommunale Analyse-Pipeline (selbst-pollend).
+             Das Polling tauscht gezielt den PANEL-Inhalt (innerHTML auf
+             #panel-briefing) — niemals outerHTML auf dem Fortschrittsblock:
+             ein outerHTML-Tausch hätte das komplette Fragment (inkl. der
+             tab-panel-content-Hülle) bei jedem Poll in sich selbst
+             verschachtelt und den Block nach unten gedrückt. -->
+        <div th:if="${briefingJob != null}" class="briefing-progress"
+             th:attr="hx-get=|/cases/${caseId}/briefing?job=${briefingJob.jobId}|"
+             hx-trigger="every 2s" hx-target="#panel-briefing" hx-swap="innerHTML">
+            <div class="progress-panel" role="status" aria-live="polite">
+                <div class="progress-panel__title">
+                    Fallbriefing wird erstellt …
+                </div>
+                <!-- Gemeinsame Pipeline-Visualisierung (echte Stufen aus dem
+                     Job-Fortschritt) — gleiche Mechanik wie die Fall-Analyse.
+                     Guard auf EIGENEM Element (th:replace hat Vorrang vor
+                     th:if auf demselben Element). -->
+                <th:block th:if="${nodes != null}">
+                    <th:block th:replace="~{fragments/pipeline :: diagram(${nodes})}"></th:block>
+                </th:block>
+                <div class="progress-terminal">
+                    <div th:each="m, iter : ${briefingJob.messages}"
+                         class="progress-terminal__line"
+                         th:classappend="${iter.last} ? 'progress-terminal__line--active' : ''">
+                        <span class="progress-terminal__prompt material-symbols-outlined" aria-hidden="true"
+                              th:text="${iter.last} ? 'radio_button_checked' : 'check_circle'">check_circle</span>
+                        <span th:text="${m}">Fortschritt</span>
+                    </div>
+                </div>
+                <p class="briefing-progress__hint">
+                    Die Unterlagen des Vorgangs werden über die kommunale Analyse-Pipeline geprüft
+                    (Retrieval, Belege, Absicherung). Das Briefing wird im Vorgang gespeichert.
+                </p>
+            </div>
+        </div>
+
+        <!-- Leerer Zustand: noch kein Briefing -->
+        <div th:if="${briefing == null and briefingJob == null}">
+            <div class="message message--error" role="alert" th:if="${briefingError != null}"
+                 th:text="${briefingError}" style="margin-bottom: 1rem;">Fehler</div>
+            <div class="empty-state" role="status">
+                <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">summarize</div>
+                <h3 class="empty-state__title">Noch kein Fallbriefing erstellt</h3>
+                <p class="empty-state__desc">
+                    Das Fallbriefing fasst den Vorgang zusammen: Sachverhalt, gesicherte Erkenntnisse,
+                    relevante Unterlagen, offene Punkte und nächste Schritte — belegt durch die
+                    kommunale Analyse-Pipeline.
+                </p>
+                <button type="button" class="btn btn--primary empty-state__action"
+                        th:attr="hx-post=|/cases/${caseId}/briefing/generate|"
+                        hx-target="#panel-briefing" hx-swap="innerHTML" th:if="${!supervisory}">Fallbriefing erstellen</button>
+            </div>
+        </div>
+
+        <!-- Gespeichertes Briefing: wird beim erneuten Öffnen direkt angezeigt
+             (kein neuer Lauf, kein automatischer PDF-Tab). Nur der Übergang
+             "Lauf fertig → Anzeige" öffnet die PDF automatisch (autoOpenPdf). -->
+        <div th:if="${briefing != null and briefingJob == null}" class="briefing">
+            <div class="briefing__head">
+                <div>
+                    <h3 class="briefing__title">Fallbriefing</h3>
+                    <p class="briefing__meta">
+                        <span th:text="${briefing.vorgangsnummer()}">Vorgang</span> ·
+                        <span th:text="${'Erstellt am ' + briefing.erstelltAm()}">Datum</span> ·
+                        <span class="badge badge--success" style="font-size: 0.6875rem;">Status: Gespeichert</span>
+                        <span th:if="${briefing.grundlage() != null and !#strings.isEmpty(briefing.grundlage())}"
+                              class="badge badge--neutral" style="font-size: 0.6875rem;"
+                              th:text="'Grundlage: ' + ${briefing.grundlage()}">Grundlage</span>
+                        <span th:if="${briefing.bearbeitungsstand() != null}"
+                              th:text="' · ' + ${briefing.bearbeitungsstand()}">Stand</span>
+                    </p>
+                </div>
+                <div class="briefing__actions">
+                    <span class="badge badge--info">KI-generiert</span>
+                    <!-- Veraltetes Briefing: der Fall hat sich seit der Erstellung
+                         geändert (neue E-Mails/Dokumente/Ereignisse oder neuer
+                         Analyse-Stand). Das alte Briefing wird NICHT als aktueller
+                         Stand präsentiert — Neu erstellung ist der klare Weg. -->
+                    <button type="button" th:if="${!supervisory and briefingStale}"
+                            class="btn btn--primary"
+                            th:attr="hx-post=|/cases/${caseId}/briefing/generate|"
+                            hx-target="#panel-briefing" hx-swap="innerHTML">Fallbriefing neu erstellen</button>
+                    <button type="button" th:if="${!supervisory and !briefingStale}" class="btn"
+                            th:attr="hx-post=|/cases/${caseId}/briefing/generate|"
+                            hx-target="#panel-briefing" hx-swap="innerHTML">Neu erstellen</button>
+                    <a data-pdf-action
+                       th:href="@{/cases/{id}/briefing/pdf(id=${caseId}, inline=true)}"
+                       target="_blank" rel="noopener" class="btn btn--primary">
+                        PDF öffnen</a>
+                    <a data-pdf-action
+                       th:href="@{/cases/{id}/briefing/pdf(id=${caseId})}"
+                       target="_blank" rel="noopener" class="btn">
+                        Als PDF exportieren</a>
+                </div>
+            </div>
+
+            <!-- Hinweis bei veraltetem Briefing: nicht als aktueller Stand
+                 präsentieren, sondern sichtbar zur Neuerstellung führen. -->
+            <div th:if="${briefingStale}" class="message message--warning" role="status"
+                 style="margin-top: 0.75rem;">
+                <strong>Der Fall hat sich seit der Erstellung des Briefings geändert</strong> —
+                z. B. neue E-Mails, Dokumente, Ereignisse oder ein neuer Analyse-Stand.
+                Bitte erstellen Sie das Fallbriefing neu, damit es den aktuellen Stand abbildet.
+            </div>
+
+            <!-- Automatisches Öffnen der fertigen PDF NUR beim Übergang
+                 "Lauf fertig → Anzeige" (autoOpenPdf wird ausschließlich vom
+                 Abschluss-Poll gesetzt). Beim erneuten Öffnen des Tabs wird
+                 kein Tab geöffnet. Kein reservierter Tab während des Laufs. -->
+            <script th:if="${autoOpenPdf}" th:inline="javascript">
+                (function () {
+                    var caseId = /*[[${caseId}]]*/ '';
+                    if (!caseId) { return; }
+                    try {
+                        window.open('/cases/' + encodeURIComponent(caseId)
+                            + '/briefing/pdf?inline=true', '_blank');
+                    } catch (e) { /* Fallback: PDF öffnen-Button */ }
+                })();
+            </script>
+
+            <div class="briefing__sections">
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Kurzfassung</h4>
+                    <p th:text="${briefing.kurzfassung()}">Kurzfassung</p>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Sachverhalt</h4>
+                    <p th:text="${briefing.sachverhalt()}">Sachverhalt</p>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Bisherige Erkenntnisse</h4>
+                    <ul class="briefing__list">
+                        <li th:each="e : ${briefing.erkenntnisse()}">
+                            <span class="badge badge--success">belegt</span>
+                            <span th:text="${e}">Erkenntnis</span>
+                        </li>
+                        <li th:if="${briefing.erkenntnisse().isEmpty()}">Keine gesicherten Erkenntnisse verfügbar.</li>
+                    </ul>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Relevante Unterlagen / Belege</h4>
+                    <ul class="briefing__list">
+                        <li th:each="b : ${briefing.belege()}" th:text="${b}">Beleg</li>
+                        <li th:if="${briefing.belege().isEmpty()}">Keine Belege herangezogen.</li>
+                    </ul>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Zuständigkeit</h4>
+                    <p th:text="${briefing.zustaendigkeit()}">Zuständigkeit</p>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Offene Punkte</h4>
+                    <ul class="briefing__list">
+                        <li th:each="o : ${briefing.offenePunkte()}">
+                            <span class="badge badge--warning">nicht belegt</span>
+                            <span th:text="${o}">Offener Punkt</span>
+                        </li>
+                        <li th:if="${briefing.offenePunkte().isEmpty()}">Keine offenen Punkte identifiziert.</li>
+                    </ul>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Mögliche nächste Schritte</h4>
+                    <ul class="briefing__list">
+                        <li th:each="s : ${briefing.naechsteSchritte()}" th:text="${s}">Schritt</li>
+                    </ul>
+                </section>
+
+                <section class="briefing__section">
+                    <h4 class="briefing__section-title">Quellenlage / Einschränkungen</h4>
+                    <p th:text="${briefing.quellenlage()}">Quellenlage</p>
+                    <p class="briefing__note">
+                        Nicht belegte Punkte sind ausdrücklich als solche gekennzeichnet —
+                        nichts wird als gesichert dargestellt, was die Evidenz nicht trägt.
+                    </p>
+                </section>
+            </div>
+
+            <p class="briefing__disclaimer">
+                Dieses Fallbriefing wurde automatisch vom kommunalen Verwaltungsassistenten erstellt
+                (KI-generiert) und ist vor der Verwendung durch eine zuständige Person zu prüfen.
+            </p>
+        </div>
+    </div>
+</th:block>
+
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="de">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Assistentenantwort</title>
+    <style>
+        /* Assistentenantwort — visuelle Basis: Fallbriefing (briefing.html).
+           Gleiche Designsprache wie die übrigen Kommunal-PDFs: DIN-A4, gleiche
+           Ränder, Helvetica, Slate-/Blau-Palette, Sicherheitsband statt Banner,
+           Behördenkopf + Cockpit, nummerierte Abschnitte, feste Fußzeile.
+           Layout über Tabellen (OpenHTMLToPDF unterstützt kein flex/grid). */
+        @page {
+            size: A4 portrait;
+            margin: 12mm 11mm 14mm 11mm;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 9pt;
+            line-height: 1.4;
+            color: #0f172a;
+            /* Platz für die fest am Seitenende positionierte Fußzeile */
+            padding-bottom: 44px;
+        }
+
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        /* ── Sicherheitsband (blau, zweizeilig — Familien-Look) ── */
+        .security-ribbon {
+            width: 100%;
+            background: #1d4ed8;
+            border-radius: 5px;
+            padding: 7px 12px;
+            margin-bottom: 9px;
+        }
+        .security-title {
+            font-size: 9.5pt;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+        }
+        .security-sub {
+            font-size: 7.5pt;
+            color: #dbeafe;
+            margin-top: 1px;
+        }
+        .security-tag {
+            display: inline-block;
+            font-size: 6.5pt;
+            font-weight: 700;
+            color: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 3px;
+            padding: 2px 7px;
+            white-space: nowrap;
+        }
+
+        /* ── Kopf: Behörde + Cockpit ── */
+        .authority-icon {
+            width: 34px;
+            height: 34px;
+            background: #0f172a;
+            color: #60a5fa;
+            font-size: 14pt;
+            font-weight: 700;
+            text-align: center;
+            vertical-align: middle;
+            border-radius: 4px;
+        }
+        .city-name {
+            font-size: 9.5pt;
+            font-weight: 700;
+            color: #020617;
+        }
+        .division-name {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+        .address-text {
+            font-size: 7pt;
+            color: #64748b;
+        }
+
+        .cockpit-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            padding: 7px 10px;
+            background: #f8fafc;
+        }
+        .cockpit-label {
+            font-size: 6.5pt;
+            font-weight: 700;
+            color: #64748b;
+        }
+        .cockpit-value {
+            font-size: 8.5pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .cockpit-meta {
+            font-size: 7.5pt;
+            color: #334155;
+        }
+        .cockpit-meta td {
+            padding-top: 2px;
+        }
+        .cockpit-meta span {
+            color: #64748b;
+        }
+
+        /* Quellenlage-Status (Familie: Badge statt Warnbox) */
+        .status-badge {
+            font-size: 6.5pt;
+            font-weight: 700;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            padding: 1px 7px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .status-badge--amber {
+            background: #fffbeb;
+            color: #b45309;
+            border-color: #fde68a;
+        }
+
+        /* ── Titelzeile ── */
+        .title-bar {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+        .title-bar h1 {
+            font-size: 16pt;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+        .title-tag {
+            display: inline-block;
+            font-size: 6.5pt;
+            font-weight: 700;
+            color: #1d4ed8;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 3px;
+            padding: 2px 7px;
+            white-space: nowrap;
+        }
+        .subtitle {
+            font-size: 8pt;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        /* ── Abschnitte ── */
+        .section-block {
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            padding: 8px 10px;
+            margin-bottom: 9px;
+            background: #ffffff;
+        }
+        .section-head {
+            border-bottom: 1px solid #bfdbfe;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+        .section-title {
+            font-size: 8.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #1d4ed8;
+        }
+        .section-body {
+            font-size: 8.5pt;
+            line-height: 1.55;
+            color: #0f172a;
+            white-space: pre-line;
+        }
+
+        /* Antwort-Panel: neutral; bei eingeschränkter Quellenlage gedämpfter
+           Bernstein-Hinweis (Familie: Badge-/Border-Sprache, kein Alert-Look). */
+        .antwort-panel {
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            padding: 7px 10px;
+            background: #f8fafc;
+        }
+        .antwort-panel--eingeschraenkt {
+            border-color: #fde68a;
+            border-left: 3px solid #f59e0b;
+            background: #fffbeb;
+        }
+        .panel-hinweis {
+            display: block;
+            font-size: 6.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #b45309;
+            margin-bottom: 4px;
+        }
+
+        /* Belege / Rechtsgrundlagen (Familie: Quellen-Zeilen) */
+        .beleg-item {
+            border-left: 3px solid #bfdbfe;
+            padding-left: 8px;
+            margin-bottom: 5px;
+        }
+        .beleg-title {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .beleg-seite {
+            font-size: 7.5pt;
+            color: #64748b;
+        }
+        .beleg-auszug {
+            font-size: 7.5pt;
+            color: #475569;
+            margin-top: 1px;
+        }
+
+        ul {
+            margin: 0 0 4px 0;
+            padding-left: 14px;
+        }
+        li {
+            margin-bottom: 2.5px;
+            font-size: 8.5pt;
+        }
+
+        /* ── Fußzeile (fix am Seitenende, Familien-Layout) ── */
+        .pdf-fixed-footer {
+            position: fixed;
+            bottom: 9mm;
+            left: 11mm;
+            right: 11mm;
+            width: auto;
+            background: #ffffff;
+        }
+        .pdf-fixed-footer table {
+            border-top: 1px solid #cbd5e1;
+            padding-top: 4px;
+        }
+        .footer-left {
+            font-size: 7pt;
+            color: #475569;
+        }
+        .footer-version {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .footer-center {
+            font-size: 7pt;
+            color: #475569;
+            text-align: center;
+        }
+        .footer-right {
+            font-size: 7pt;
+            color: #475569;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sicherheitsband (Familien-Look statt großem Banner): kennzeichnet das
+         Dokument als interne, maschinell erstellte Auskunft — kein Bescheid. -->
+    <table class="security-ribbon">
+        <tr>
+            <td style="width: 14px; text-align: center; color: #bfdbfe; font-size: 9pt; font-weight: 700;">&#9642;</td>
+            <td>
+                <div class="security-title">Assistentenantwort — Internes Informationsdokument</div>
+                <div class="security-sub">Maschinell erstellte Auskunft aus der Wissensbasis der Verwaltung — keine formale Entscheidung</div>
+            </td>
+            <td style="width: 150px; text-align: right; vertical-align: middle;">
+                <span class="security-tag">Kein formaler Bescheid</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Kopf: Behörde + Cockpit (Verfahren/Konfidenz/Export/Quellenlage) -->
+    <table style="margin-bottom: 8px;">
+        <tr>
+            <td style="width: 55%; padding-right: 12px;">
+                <table>
+                    <tr>
+                        <td class="authority-icon" style="width: 34px;">B</td>
+                        <td style="padding-left: 8px;">
+                            <div class="city-name">Bezirksamt Nordstadt von Potsdam</div>
+                            <div class="division-name">Abt. Stadtentwicklung und Bürgerdienste</div>
+                            <div class="address-text">Amt für Bürgerdienste · Bürgeramt Nordstadt · Fiktive Str. 24a–26</div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 45%;">
+                <div class="cockpit-box">
+                    <table style="margin-bottom: 4px;">
+                        <tr>
+                            <td style="width: 50%;">
+                                <span class="cockpit-label">Quellenlage</span>
+                            </td>
+                            <td style="text-align: right;">
+                                <span class="status-badge"
+                                      th:classappend="${grounded} ? '' : ' status-badge--amber'"
+                                      th:text="${quellenlage}">Eingeschränkt</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="cockpit-meta">
+                        <tr>
+                            <td style="width: 40%;"><span>Verfahren:</span></td>
+                            <td th:text="${strategie}">—</td>
+                        </tr>
+                        <tr>
+                            <td><span>Konfidenz:</span></td>
+                            <td th:text="${konfidenz}">—</td>
+                        </tr>
+                        <tr>
+                            <td><span>Exportiert am:</span></td>
+                            <td th:text="${exportDatum}">—</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Titelzeile -->
+    <table class="title-bar">
+        <tr>
+            <td>
+                <h1>Antwort des Assistenten</h1>
+                <div class="subtitle">
+                    Verwaltungsassistent v<span th:text="${appVersion}">1.0.0-RC2</span> · KI-gestützte Auskunft aus der Wissensbasis
+                </div>
+            </td>
+            <td style="width: 170px; text-align: right; vertical-align: bottom; padding-bottom: 6px;">
+                <span class="title-tag">Informationsdokument</span>
+            </td>
+        </tr>
+    </table>
+
+    <!-- 1. Frage -->
+    <div class="section-block" th:if="${frage != null and !frage.isBlank()}">
+        <table class="section-head">
+            <tr>
+                <td><span class="section-title">1. Frage</span></td>
+            </tr>
+        </table>
+        <div class="section-body" th:text="${frage}">—</div>
+    </div>
+
+    <!-- 2. Antwort: bei eingeschränkter Quellenlage als gedämpfter
+         Bernstein-Hinweis auf die bewusste Verweigerung (keine ausreichenden
+         Belege) — bewusst KEIN Fehler-/Alert-Look. -->
+    <div class="section-block" th:if="${antwort != null and !antwort.isBlank()}">
+        <table class="section-head">
+            <tr>
+                <td><span class="section-title">2. Antwort</span></td>
+            </tr>
+        </table>
+        <div class="section-body antwort-panel"
+             th:classappend="${grounded} ? '' : ' antwort-panel--eingeschraenkt'">
+            <span class="panel-hinweis" th:if="${!grounded}">Eingeschränkte Quellenlage — für diese Antwort liegen nicht ausreichend belegte Informationen vor</span>
+            <span style="white-space: pre-line;" th:text="${antwort}">—</span>
+        </div>
+    </div>
+
+    <!-- 3. Belege -->
+    <div class="section-block" th:if="${belege != null and !belege.isEmpty()}">
+        <table class="section-head">
+            <tr>
+                <td><span class="section-title">3. Belege</span></td>
+            </tr>
+        </table>
+        <div th:each="b : ${belege}" class="beleg-item">
+            <span class="beleg-title" th:text="${b.titel}">Beleg</span>
+            <span class="beleg-seite" th:if="${b.seite != null and !b.seite.isBlank()}" th:text="' (' + ${b.seite} + ')'">(S. 1)</span>
+            <div class="beleg-auszug" th:if="${b.auszug != null and !b.auszug.isBlank()}" th:text="${b.auszug}">Auszug</div>
+        </div>
+    </div>
+
+    <!-- 4. Rechtsgrundlagen -->
+    <div class="section-block" th:if="${grundlagen != null and !grundlagen.isEmpty()}">
+        <table class="section-head">
+            <tr>
+                <td><span class="section-title">4. Rechtsgrundlagen</span></td>
+            </tr>
+        </table>
+        <div th:each="g : ${grundlagen}" class="beleg-item">
+            <span class="beleg-title" th:text="${g.titel}">Grundlage</span>
+            <div class="beleg-auszug" th:if="${g.auszug != null and !g.auszug.isBlank()}" th:text="${g.auszug}">Auszug</div>
+        </div>
+    </div>
+
+    <!-- Fußzeile (fix, Familien-Layout) -->
+    <div class="pdf-fixed-footer">
+        <table>
+            <tr>
+                <td class="footer-left">
+                    <span class="footer-version" th:text="'Verwaltungsassistent v' + ${appVersion}">Verwaltungsassistent v1.0.0-RC2</span>
+                    &#160;·&#160; Assistentenantwort
+                </td>
+                <td class="footer-center">
+                    Bezirksamt Nordstadt von Potsdam · Amt für Bürgerdienste · Bürgeramt Nordstadt
+                </td>
+                <td class="footer-right" th:text="'Erstellt: ' + ${exportDatum}">Erstellt: …</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

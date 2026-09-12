@@ -1,0 +1,15 @@
+From: Jörg Hoffmann <joerg.hoffmann@example.de>
+To: demo04@verwaltungsassistent.local
+Subject: Behindertenparkplatz zugeparkt
+Date: 2026-09-03T06:00:00+02:00
+Message-ID: demo-catalog-07
+
+--- body ab hier ---
+Betreff: Parken auf dem Gehweg
+
+Sehr geehrte Damen und Herren,
+
+vor dem Rathaus wird der Behindertenparkplatz regelmäßig von einem weißen Transporter zugeparkt. Bitte veranlassen Sie eine Kontrolle.
+
+Mit freundlichen Grüßen
+Jörg Hoffmann

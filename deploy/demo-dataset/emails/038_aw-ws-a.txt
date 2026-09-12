@@ -1,0 +1,15 @@
+From: Claudia Keller <claudia.keller@example.de>
+To: info@verwaltungs-demo.de
+Subject: AW: [WS-AB12CD34] Nachfrage zur Gewerbeanmeldung
+Date: 2026-09-03T16:30:00+02:00
+Message-ID: msg-mailbox-invalid-id-01
+
+--- body ab hier ---
+Betreff: Gewerbeanmeldung
+
+Guten Tag,
+
+ich habe vor einiger Zeit eine Gewerbeanmeldung eingereicht und frage nach dem Bearbeitungsstand.
+
+Mit freundlichen Grüßen
+Claudia Keller

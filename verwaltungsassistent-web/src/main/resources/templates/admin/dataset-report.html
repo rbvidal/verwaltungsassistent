@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Ergebnisbericht der Admin-Operation „Datensatz neu aufbauen". -->
+    <th:block th:fragment="reportFragment">
+        <div th:if="${error != null}" class="message message--error" role="alert"
+             th:text="${error}" style="margin: 0.75rem 0;"></div>
+        <div th:if="${report != null}"
+             style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.75rem 1rem; margin-top: 0.75rem; font-size: 0.8125rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 600; margin: 0 0 0.5rem;">Bericht — Datensatz neu aufgebaut</h3>
+            <ul style="margin: 0 0 0.5rem; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                <li>Neue Dokumente aus <code>uploads/docs/</code> registriert und indexiert: <strong th:text="${report.docsRegistered()}">0</strong></li>
+                <li>Dokumente in <code>uploads/docs/</code> neu indexiert: <strong th:text="${report.docsReindexed()}">0</strong></li>
+                <li>Fotos aus <code>uploads/photos/</code> importiert (EXIF + bereinigte Kopie): <strong th:text="${report.photosImported()}">0</strong></li>
+                <li>Videodateien erkannt, <strong>nicht</strong> indexiert: <strong th:text="${report.videosSkipped()}">0</strong></li>
+                <li>Audiodateien erkannt, <strong>nicht</strong> indexiert: <strong th:text="${report.audioSkipped()}">0</strong></li>
+                <li>Registrierter Dokumenten-Korpus neu indexiert: <strong th:text="${report.corpusReindexed()}">0</strong></li>
+                <li>Übersprungene/nicht unterstützte Dateien: <strong th:text="${report.unsupportedSkipped()}">0</strong></li>
+            </ul>
+            <div th:if="${report.unsupportedNames() != null and !report.unsupportedNames().isEmpty()}"
+                 style="margin-bottom: 0.5rem;">
+                <strong>Nicht verarbeitet (kein Text-/Bildinhalt für die bestehende Pipeline):</strong>
+                <ul style="margin: 0.25rem 0 0; padding-left: 1.1rem;">
+                    <li th:each="n : ${report.unsupportedNames()}" th:text="${n}">—</li>
+                </ul>
+            </div>
+            <div th:if="${report.notes() != null and !report.notes().isEmpty()}"
+                 style="margin-bottom: 0.5rem;">
+                <strong>Hinweise:</strong>
+                <ul style="margin: 0.25rem 0 0; padding-left: 1.1rem;">
+                    <li th:each="n : ${report.notes()}" th:text="${n}">—</li>
+                </ul>
+            </div>
+            <p style="margin: 0.5rem 0 0; color: var(--color-text-muted);">
+                Es wurden keine Dateien gelöscht und keine Benutzerdaten verändert.
+            </p>
+        </div>
+    </th:block>
+</body>
+</html>

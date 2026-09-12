@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="caseEvaluation">
+    <th:block th:if="${evalError != null}">
+        <div class="message message--error" role="alert"
+             th:text="${evalError}" style="margin-bottom: 1rem;"></div>
+        <form th:if="${evalCaseId != null and evalCaseId != ''}"
+              th:attr="hx-post=|/corpus/${corpusName}/${evalCaseId}/evaluate|,hx-target=|#case-evaluation|,hx-indicator=|#eval-spinner|,hx-disabled-elt=|this|"
+              style="margin-bottom: 1rem;">
+            <button type="submit" class="btn btn--primary" style="font-size: 0.75rem; padding: 0.3rem 0.75rem;">
+                Erneut versuchen
+            </button>
+        </form>
+    </th:block>
+
+    <div th:if="${evalQuestion != null}">
+        <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+            <strong>Frage:</strong> <span th:text="${evalQuestion}"></span>
+        </p>
+        <div class="decision-package__recommendation" th:text="${evalAnswer}"
+             style="white-space: pre-line; font-size: 0.875rem; line-height: 1.6; margin-top: 0.5rem;">Antwort</div>
+        <!-- Two dimensions, explicitly separated:
+             A) Ausführungspfad = the strategy the router chose (Regelbasiert…)
+             B) Grundlage / Beleg  = how the concrete answer is grounded
+                (strukturiertes Wissen / Dokument-Quellen / unzureichend). -->
+        <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Ausführungspfad</span>
+                <span class="badge badge--neutral" th:text="${evalStrategy}">—</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Grundlage / Beleg</span>
+                <span th:if="${evalGrounded and evalCitations != null and !evalCitations.isEmpty()}"
+                      x-data="{ sourcesOpen: false }">
+                    <button type="button" class="badge badge--success badge--clickable"
+                            @click="sourcesOpen = true">
+                        <span class="material-symbols-outlined" aria-hidden="true">check</span> Durch Quellen belegt · Quellen anzeigen
+                    </button>
+                    <th:block th:replace="~{fragments/components :: sourcesDialog(${evalCitations}, ${evalQuestion})}"></th:block>
+                </span>
+                <!-- Deterministic rule path: the structured knowledge base
+                     (SalaryTable/KnowledgeRegistry) is authoritative and the answer
+                     deliberately carries no document citations — that is not an
+                     inadequate source basis. -->
+                <span th:if="${evalGrounded and (evalCitations == null or evalCitations.isEmpty()) and evalStrategy == 'Regelbasiert'}"
+                      class="badge badge--success"><span class="material-symbols-outlined" aria-hidden="true">check</span> Aus strukturiertem Wissen belegt</span>
+                <span th:if="${!evalGrounded}"
+                      class="badge badge--warning"><span class="material-symbols-outlined" aria-hidden="true">warning</span> Eingeschränkte Quellenlage</span>
+            </div>
+        </div>
+        <!-- Strukturierte-Wissen-Quellen (z. B. TV-L-Tabelle): klickbar mit dem
+             zugrundeliegenden Dokument — Traceability von der Antwort zur Quelle.
+             Ohne passendes Dokument im Bestand bleibt die Quelle unverlinkt. -->
+        <div th:if="${evalKnowledgeSources != null and !evalKnowledgeSources.isEmpty()}"
+             style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8125rem;">
+            <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Strukturiertes Wissen (Dokument)</span>
+            <span th:each="ks, ksStat : ${evalKnowledgeSources}" x-data="{ viewerOpen: false }">
+                <button type="button" @click="viewerOpen = true"
+                        th:attr="hx-get=@{/documents/{id}/view(id=${ks.documentId()}, q=${evalQuestion}, chunks=${ks.chunkId() != null ? ks.chunkId() : null})},
+                                 hx-target=|#ksv-${ksStat.index}-body|, hx-swap=innerHTML"
+                        hx-trigger="click once"
+                        style="font-weight: 600; background: none; border: none; padding: 0; color: var(--color-primary, #1a56db); cursor: pointer; font: inherit; text-align: left;">
+                    <span th:text="${ks.title()}">Titel</span>
+                </button>
+                <span style="color: var(--color-text-muted);"> – Quelle öffnen (Dokument im Viewer)</span>
+                <th:block th:replace="~{fragments/components :: documentViewerModal(
+                    id=|ksv-${ksStat.index}|,
+                    docUrl=@{/documents/{id}/view(id=${ks.documentId()}, q=${evalQuestion}, chunks=${ks.chunkId() != null ? ks.chunkId() : null})})}">
+                </th:block>
+            </span>
+        </div>
+        <!-- Issue 6: die ECHTEN Pipeline-Metriken der Auswertung (nur wenn die
+             Pipeline sie geliefert hat — keine erfundenen Werte). -->
+        <div th:if="${evalConfidenceOverall != null or evalCoverage != null}"
+             style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600;">Bewertung</span>
+            <span th:if="${evalConfidenceOverall != null}" class="badge badge--neutral"
+                  th:text="'Gesamtkonfidenz ' + ${evalConfidenceOverall}" style="font-size: 0.6875rem;">Konfidenz</span>
+            <span th:if="${evalConfidenceSource != null}" class="badge badge--neutral"
+                  th:text="'Quellenlage ' + ${evalConfidenceSource}" style="font-size: 0.6875rem;">Quellenlage</span>
+            <span th:if="${evalCoverage != null}" class="badge badge--neutral"
+                  th:text="'Quellenabdeckung ' + ${evalCoverage}" style="font-size: 0.6875rem;">Abdeckung</span>
+            <span th:if="${evalModel != null}" class="badge badge--neutral"
+                  th:text="'Modell: ' + ${evalModel}" style="font-size: 0.6875rem;">Modell</span>
+        </div>
+        <p th:if="${evalConfidenceExplanation != null}"
+           style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.4rem;"
+           th:text="${evalConfidenceExplanation}">Erklärung</p>
+        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+            <span th:text="'Kontrollbegriffe (in der Antwort gesucht): ' + ${#strings.listJoin(evalExpectedKeywords, ', ')}"></span>
+            <span th:if="${evalKeywordHits != null and !evalKeywordHits.isEmpty()}"
+                  th:text="' — gefunden: ' + ${#strings.listJoin(evalKeywordHits, ', ')}"></span>
+        </p>
+        <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+            Die Auswertung läuft über die bestehende Pipeline (Abruf, Belege, Prüfung).
+            Die Kontrollbegriffe sind nur eine zusätzliche Prüfung der generierten Antwort —
+            sie sind nicht der Entscheidungsmechanismus.
+        </p>
+    </div>
+</th:block>
+
+</html>

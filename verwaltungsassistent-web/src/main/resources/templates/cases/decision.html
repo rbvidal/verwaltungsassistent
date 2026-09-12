@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'cases', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <!-- Header: the decision page keeps the case context visible -->
+            <div class="case-detail__header">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title" th:text="'Entscheidung: ' + ${caseName}">Entscheidung</h1>
+                </div>
+                <div class="case-detail__meta">
+                    <div class="case-detail__meta-item">
+                        <span class="case-detail__meta-label">Fall</span>
+                        <span class="case-detail__meta-value" th:text="${caseName}">Name</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${caseType != null}">
+                        <span class="case-detail__meta-label">Fallart</span>
+                        <span class="case-detail__meta-value" th:text="${caseType}">Fallart</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${workspaceCode != null}">
+                        <span class="case-detail__meta-label">Vorgangsnummer</span>
+                        <span class="case-detail__meta-value" th:text="${workspaceCode}">WS-…</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${aktenzeichen != null}">
+                        <span class="case-detail__meta-label">Aktenzeichen</span>
+                        <span class="case-detail__meta-value" th:text="${aktenzeichen}">AZ …</span>
+                    </div>
+                    <div class="case-detail__meta-item">
+                        <span class="case-detail__meta-label">Bearbeiter</span>
+                        <span class="case-detail__meta-value" th:text="${caseOwnerDisplay}">—</span>
+                    </div>
+                    <div class="case-detail__meta-item">
+                        <span class="case-detail__meta-label">Bearbeitungsstand</span>
+                        <span class="case-detail__meta-value" th:text="${casePhase}">Phase</span>
+                    </div>
+                    <div class="case-detail__meta-item" x-data="{ docsOpen: false }">
+                        <span class="case-detail__meta-label">Dokumente im Vorgang</span>
+                        <!-- Klickbarer Zähler: öffnet die Liste der tatsächlich am
+                             Vorgang hängenden Dokumente (gleiche Viewer-Mechanik
+                             wie in der Fallansicht — kein zweiter Dokument-Viewer). -->
+                        <button th:if="${documentCount > 0}" type="button"
+                                class="case-detail__meta-value"
+                                style="background: none; border: none; padding: 0; cursor: pointer; color: var(--color-primary); text-decoration: underline;"
+                                @click="docsOpen = true"
+                                th:text="${documentCount}"
+                                title="Dokumente im Vorgang anzeigen">0</button>
+                        <span th:unless="${documentCount > 0}" class="case-detail__meta-value" th:text="${documentCount}">0</span>
+                        <div class="modal-overlay" x-cloak x-show="docsOpen" x-trap.noscroll="docsOpen"
+                             @keydown.escape.window="docsOpen = false" @click.self="docsOpen = false"
+                             role="dialog" aria-modal="true" aria-labelledby="case-docs-modal-title">
+                            <div class="modal-dialog" style="max-width: 640px;">
+                                <div class="modal__header">
+                                    <h2 class="modal__title" id="case-docs-modal-title">Dokumente im Vorgang</h2>
+                                    <button class="modal__close" @click="docsOpen = false" aria-label="Schließen">&times;</button>
+                                </div>
+                                <div class="modal__body">
+                                    <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                                        <li th:each="d : ${caseDocuments}">
+                                            <span x-data="{ viewerOpen: false }">
+                                                <button type="button" class="doc-title-link"
+                                                        @click="viewerOpen = true"
+                                                        th:attr="hx-get=|/documents/${d.documentId}/view|,hx-target=|#docviewer-${d.documentId}-body|,hx-swap=innerHTML"
+                                                        hx-trigger="click once">
+                                                    <span th:text="${d.title}">Dokumenttitel</span>
+                                                </button>
+                                                <th:block th:replace="~{fragments/components :: documentViewerModal(
+                                                    id=|docviewer-${d.documentId}|, docUrl=|/documents/${d.documentId}/view|)}">
+                                                </th:block>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="case-detail__meta-item">
+                        <span class="case-detail__meta-label">E-Mails im Vorgang</span>
+                        <span class="case-detail__meta-value" th:text="${caseEmailCount != null ? caseEmailCount : 0}">0</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${confidence != null and confidence.overallConfidence() != null}">
+                        <span class="case-detail__meta-label">Gesamtkonfidenz</span>
+                        <span class="case-detail__meta-value"
+                              th:text="${#numbers.formatDecimal(confidence.overallConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">68%</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${caseCreatedAt != null}">
+                        <span class="case-detail__meta-label">Vorgang angelegt</span>
+                        <span class="case-detail__meta-value" th:text="${caseCreatedAt}">—</span>
+                    </div>
+                    <div class="case-detail__meta-item" th:if="${latestAnalysis != null}">
+                        <span class="case-detail__meta-label">Analyse erstellt</span>
+                        <span class="case-detail__meta-value" th:text="${latestAnalysis.completedAt}">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis section -->
+            <div id="decision-result-container">
+                <!-- Rückmeldung nach "Entscheidung dokumentieren" (Phase 2D.3):
+                     Flash nach dem Redirect — sichtbar über jedem Analyse-
+                     Zustand, damit die Bestätigung nie untergeht. -->
+                <div th:if="${decisionFlash != null}" class="message message--success" role="status"
+                     th:text="${decisionFlash}" style="margin-bottom: 1rem;"></div>
+                <div th:if="${decisionFlashError != null}" class="message message--error" role="alert"
+                     th:text="${decisionFlashError}" style="margin-bottom: 1rem;"></div>
+                <!-- Running analysis: the case panel started it — the decision
+                     page shows the live progress (polling), never a second
+                     "Analyse starten" action. Auch bei einer ERNEUTEN Analyse
+                     mit vorhandenem (gespeichertem) Ergebnis: solange ein
+                     aktiver Job läuft, gehört die Seite dem Fortschritt. -->
+                <th:block th:if="${activeAnalysis != null}">
+                    <th:block th:replace="~{fragments/progress :: progressPanel(
+                        ${title}, ${messages}, ${pollUrl}, ${hint}, ${emptyMessage}, ${error}, ${nodes})}">
+                    </th:block>
+                </th:block>
+
+                <!-- Fehlgeschlagene, unterbrochene oder ergebnislose Analyse: der
+                     persistierte Marker (phaseData.analysis.status, dieselbe Quelle
+                     wie die Fallseite) kennt den Zustand auch ohne laufenden Job
+                     oder ohne abrufbares Ergebnis. Diese Seite zeigt den echten
+                     Zustand mit einem funktionierenden Neustart an — statt einer
+                     falschen "keine KI-Analyse"-Leere, die die Schleife
+                     Entscheidung ↔ Fall erzeugte. -->
+                <th:block th:if="${latestAnalysis == null and activeAnalysis == null
+                    and (analysisStatus == 'FAILED' or analysisStatus == 'RUNNING' or analysisStatus == 'COMPLETED')}">
+                    <div class="message" role="alert" style="margin-bottom: 1rem;"
+                         th:classappend="${analysisStatus == 'FAILED'} ? 'message--error' : 'message--warning'">
+                        <th:block th:if="${analysisStatus == 'FAILED'}">
+                            <strong>Die Analyse ist fehlgeschlagen.</strong>
+                            Die letzte Analyse konnte nicht abgeschlossen werden. Bitte starten Sie die Analyse erneut.
+                        </th:block>
+                        <th:block th:unless="${analysisStatus == 'FAILED'}">
+                            <th:block th:if="${analysisStatus == 'RUNNING'}">
+                                <strong>Die Analyse wurde unterbrochen.</strong>
+                                Ein laufender Analysevorgang wurde nicht abgeschlossen. Bitte starten Sie die Analyse erneut.
+                            </th:block>
+                            <th:block th:unless="${analysisStatus == 'RUNNING'}">
+                                <strong>Das Analyseergebnis ist nicht mehr verfügbar.</strong>
+                                Die Analyse wurde abgeschlossen, aber das gespeicherte Ergebnis fehlt.
+                                Bitte starten Sie die Analyse erneut.
+                            </th:block>
+                        </th:block>
+                    </div>
+                    <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                          th:attr="hx-post=|/cases/${caseId}/decision/analyze|"
+                          hx-target="#decision-result-container" hx-swap="innerHTML"
+                          hx-indicator="#analysis-retry-spinner" hx-disabled-elt="this"
+                          style="display: inline-block;">
+                        <button type="submit" class="btn btn--primary">Analyse erneut starten</button>
+                        <span id="analysis-retry-spinner" class="htmx-indicator"
+                              style="margin-left: 0.75rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                            Analyse wird durchgeführt …
+                        </span>
+                    </form>
+                    <a th:href="@{/cases/{id}(id=${caseId})}" class="btn" style="margin-left: 0.5rem;">Zum Fall</a>
+                </th:block>
+
+                <!-- Issue 2: Der Fall stammt aus einer analysierten E-Mail — die
+                     vorläufige E-Mail-Analyse (Triage) wird als Kontext gezeigt,
+                     statt den Eindruck zu erwecken, die erste Analyse sei verworfen.
+                     Die vollständige Fall-Analyse bleibt der nächste Schritt. -->
+                <th:block th:if="${latestAnalysis == null and activeAnalysis == null
+                    and analysisStatus == '' and preliminaryEmailAnalysis != null}">
+                    <div class="decision-package__section" style="margin-bottom: 1rem;">
+                        <h3 class="decision-package__section-title" style="font-size: 1rem;">
+                            Vorläufige Analyse aus der E-Mail
+                        </h3>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                            Diese Anfrage wurde bereits als E-Mail vorgeprüft (Triage). Die vollständige
+                            Fall-Analyse vertieft diesen Befund anhand aller Vorgangsunterlagen.
+                        </p>
+                        <div style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius);
+                                    background: var(--color-surface-row); padding: 0.75rem 1rem; margin-bottom: 0.75rem;">
+                            <div style="font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.3rem;"
+                                 th:text="'Betreff: ' + ${preliminaryEmailAnalysis.subject()}">Betreff</div>
+                            <div style="font-size: 0.875rem; line-height: 1.6; white-space: pre-line;"
+                                 th:text="${preliminaryEmailAnalysis.aiAnswer()}">Antwort</div>
+                            <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-top: 0.6rem;">
+                                <span class="badge" th:classappend="${preliminaryEmailAnalysis.grounded()} ? 'badge--success' : 'badge--warning'"
+                                      th:text="${preliminaryEmailAnalysis.grounded()} ? 'Quellenbelegt' : 'Eingeschränkte Quellenlage'"
+                                      style="font-size: 0.6875rem;">Status</span>
+                                <span th:if="${preliminaryEmailAnalysis.confidence() != null}" class="badge badge--neutral"
+                                      th:text="'Konfidenz ' + ${preliminaryEmailAnalysis.confidence()} + ' %'"
+                                      style="font-size: 0.6875rem;">Konfidenz</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                                  th:attr="hx-post=|/cases/${caseId}/decision/analyze|"
+                                  hx-target="#decision-result-container" hx-swap="innerHTML"
+                                  hx-indicator="#preliminary-spinner" hx-disabled-elt="this">
+                                <button type="submit" class="btn btn--primary">
+                                    Vollständige Fall-Analyse starten
+                                </button>
+                                <span id="preliminary-spinner" class="htmx-indicator"
+                                      style="margin-left: 0.75rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                                    Analyse wird durchgeführt …
+                                </span>
+                            </form>
+                            <a th:href="@{/cases/{id}(id=${caseId})}" class="btn">Zum Fall</a>
+                        </div>
+                    </div>
+                </th:block>
+
+                <!-- Initial state (analysis genuinely never started): no marker,
+                     no job, no completed run. The analysis can be started HERE —
+                     explicit action only, never automatic. Progress appears in
+                     the same result container as in the other states. -->
+                <th:block th:if="${latestAnalysis == null and activeAnalysis == null
+                    and analysisStatus == '' and preliminaryEmailAnalysis == null}">
+                    <div class="empty-state" style="text-align: center;">
+                        <h3 class="empty-state__title">Entscheidungsanalyse</h3>
+                        <p class="empty-state__desc" style="margin-bottom: 1.5rem;">
+                            Für diesen Fall liegt noch keine KI-Analyse vor. Starten Sie die Analyse – das
+                            System wertet dann die Dokumente, Ereignisse und anwendbaren Vorschriften aus
+                            und erstellt eine strukturierte Empfehlung.
+                        </p>
+                        <div style="display: flex; gap: 0.75rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                            <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                                  th:attr="hx-post=|/cases/${caseId}/decision/analyze|"
+                                  hx-target="#decision-result-container" hx-swap="innerHTML"
+                                  hx-indicator="#initial-spinner" hx-disabled-elt="this">
+                                <button type="submit" class="btn btn--primary">
+                                    Vollständige Fall-Analyse starten
+                                </button>
+                                <span id="initial-spinner" class="htmx-indicator"
+                                      style="margin-left: 0.75rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                                    Analyse wird durchgeführt …
+                                </span>
+                            </form>
+                            <a th:href="@{/cases/{id}(id=${caseId})}" class="btn">Zum Fall</a>
+                        </div>
+                        <p style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--color-text-muted);">
+                            Die Analyse kann einige Sekunden dauern. Währenddessen wird hier der Fortschritt angezeigt.
+                        </p>
+                    </div>
+                </th:block>
+
+                <!-- Stored state: previous analysis is shown and reused (no AI
+                     re-run). Während eine NEUE Analyse läuft (activeAnalysis),
+                     wird ausschließlich der Fortschritt gezeigt — das gespeicherte
+                     Ergebnis (inkl. des automatischen PDF-Öffnens aus dem
+                     Abschluss-Skript) darf während des Laufs nicht erscheinen. -->
+                <th:block th:if="${latestAnalysis != null and activeAnalysis == null}">
+                    <div class="analysis-summary">
+                        <h3 class="analysis-summary__title">Analyse vorhanden</h3>
+                        <p class="analysis-summary__meta">
+                            Letzte Analyse:
+                            <span th:text="${latestAnalysis.completedAt}">19.08.2026 22:47</span>
+                            · Grundlage: <span th:text="${latestAnalysis.documentCount}">0</span> Dokument(e)
+                            · <span th:text="'Analyse #' + ${latestAnalysis.version}">Analyse #1</span>
+                        </p>
+                        <p class="analysis-summary__new-evidence" th:if="${hasNewEvidence}">
+                            Neue Unterlagen seit der letzten Analyse – die aktuelle Analyse berücksichtigt diese Unterlagen noch nicht.
+                        </p>
+                        <div style="display: flex; gap: 0.75rem; margin-top: 1rem; align-items: center;">
+                            <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                                  th:attr="hx-post=|/cases/${caseId}/decision/analyze|"
+                                  hx-target="#decision-result-container" hx-swap="innerHTML"
+                                  hx-indicator="#analysis-spinner">
+                                <button type="submit" class="btn btn--primary"
+                                        th:text="${hasNewEvidence} ? 'Analyse aktualisieren' : 'Erneut analysieren'">
+                                    Erneut analysieren
+                                </button>
+                                <div id="analysis-spinner" class="htmx-indicator" style="display: none;">
+                                    <div class="spinner" role="status"></div>
+                                </div>
+                            </form>
+                            <!-- Issue 4/5: zwei explizite Aktionen — "PDF öffnen"
+                                 (inline im neuen Tab, kein Wechsel des aktuellen
+                                 Tabs) und "PDF herunterladen" (Download). Kein
+                                 zweites "PDF erstellen". -->
+                            <a data-pdf-action
+                               th:href="@{/cases/{id}/decision/export-pdf(id=${caseId}, inline=true)}"
+                               target="_blank" rel="noopener" class="btn btn--primary">
+                                PDF öffnen
+                            </a>
+                            <a data-pdf-action
+                               th:href="@{/cases/{id}/decision/export-pdf(id=${caseId})}"
+                               target="_blank" rel="noopener" class="btn">
+                                PDF herunterladen
+                            </a>
+                        </div>
+                        <ul class="analysis-summary__history" th:if="${analysisRuns != null and analysisRuns.size() > 1}">
+                            <li th:each="run : ${analysisRuns}">
+                                <span th:text="'Analyse #' + ${run.version} + ' · ' + ${run.completedAt} + ' · ' + ${run.documentCount} + ' Dokument(e)'">
+                                    Analyse #1 · 19.08.2026 22:47 · 0 Dokumente
+                                </span>
+                                <a th:attr="hx-get=|/cases/${caseId}/decision/result/${run.version}|"
+                                   hx-target="#analysis-result" hx-swap="innerHTML"
+                                   style="margin-left: 0.5rem;">Anzeigen</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="analysis-result" th:insert="~{cases/decision-fragments :: decisionResult}"></div>
+                </th:block>
+            </div>
+
+            <!-- Navigation -->
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+                <a th:href="@{/cases/{id}(id=${caseId})}" class="btn">← Zurück zum Fall</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

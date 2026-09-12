@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'documents', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title" th:text="${title}">Dokumenttitel</h1>
+                    <span x-data="{ viewerOpen: false }">
+                        <button type="button" class="btn btn--primary"
+                                @click="viewerOpen = true"
+                                th:attr="hx-get=|/documents/${doc.id()}/view|,hx-target=|#doc-detail-viewer-body|,hx-swap=innerHTML"
+                                hx-trigger="click once">
+                            <span class="material-symbols-outlined" aria-hidden="true">description</span>
+                            Dokumentinhalt anzeigen
+                        </button>
+                        <th:block th:replace="~{fragments/components :: documentViewerModal(
+                            id='doc-detail-viewer', docUrl=|/documents/${doc.id()}/view|)}">
+                        </th:block>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Metadata grid -->
+            <div class="rich-metrics" style="margin-bottom: 1.5rem;">
+                <div class="rich-metric">
+                    <div class="rich-metric__header">
+                        <span class="rich-metric__title">Dokumentinformationen</span>
+                    </div>
+                    <div class="rich-metric__grid rich-metric__grid--3">
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Dateiname</span>
+                            <span class="rich-metric__value" th:text="${fileName}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Titel</span>
+                            <span class="rich-metric__value" th:text="${title}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Typ</span>
+                            <span class="rich-metric__value" th:text="${type}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Kategorie</span>
+                            <span class="rich-metric__value" th:text="${category}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Status</span>
+                            <span class="rich-metric__value" th:text="${status}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">MIME-Typ</span>
+                            <span class="rich-metric__value" th:text="${contentType}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Dateigröße</span>
+                            <span class="rich-metric__value" th:text="${fileSize}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Hochgeladen</span>
+                            <span class="rich-metric__value" th:text="${createdAt}">—</span>
+                        </div>
+                        <div class="rich-metric__item">
+                            <span class="rich-metric__label">Herkunft</span>
+                            <span class="rich-metric__value" th:text="${provenance}">—</span>
+                        </div>
+                        <div class="rich-metric__item rich-metric__item--full">
+                            <span class="rich-metric__label">Prüfsumme (SHA-256)</span>
+                            <span class="rich-metric__value mono" th:text="${checksum}">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indexing History -->
+            <div class="case-detail__header">
+                <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem;">
+                    Indexierungsverlauf
+                    <form th:action="@{/documents/{id}/reindex(id=${doc.id()})}" method="post"
+                          style="display: inline; margin-left: 1rem;">
+                        <button type="submit" class="btn btn--primary"
+                                style="font-size: 0.8125rem; padding: 0.25rem 0.75rem;">
+                            Neu indexieren
+                        </button>
+                    </form>
+                    <!-- Als veraltet markieren (ADMIN): controlled lifecycle
+                         operation with confirmation + optional reason. -->
+                    <span sec:authorize="hasRole('ADMIN')"
+                          th:if="${doc.status() != T(reasoning.common.model.DocumentStatus).OBSOLETE}"
+                          x-data="{ obsoleteOpen: false }">
+                        <button type="button" class="btn"
+                                style="font-size: 0.8125rem; padding: 0.25rem 0.75rem; background: var(--color-error-100); color: var(--color-error-700); border: 1px solid var(--color-error-700);"
+                                @click="obsoleteOpen = true">
+                            Als veraltet markieren
+                        </button>
+                        <div class="modal-overlay" x-cloak x-show="obsoleteOpen" x-trap.noscroll="obsoleteOpen"
+                             @keydown.escape.window="obsoleteOpen = false" @click.self="obsoleteOpen = false"
+                             role="dialog" aria-modal="true">
+                            <div class="modal">
+                                <h3 class="modal__title">Dokument als veraltet markieren?</h3>
+                                <p class="modal__body">
+                                    Das Dokument wird aus der Wissensbasis entfernt (Textabschnitte, Vektoren,
+                                    Wissensgraph) und nicht mehr für die Suche berücksichtigt. Die Quelldatei und
+                                    der Datensatz bleiben erhalten und können bei Bedarf wieder indexiert werden.
+                                </p>
+                                <form th:action="@{/documents/{id}/obsolete(id=${doc.id()})}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <label class="filter-bar__label" for="obsolete-reason">Grund (optional)</label>
+                                    <input type="text" id="obsolete-reason" name="reason" class="form-field__input"
+                                           style="width: 100%; margin-bottom: 0.75rem;"
+                                           placeholder="z. B. Ersetzt durch neue Fassung">
+                                    <div class="modal__actions">
+                                        <button type="button" class="btn" @click="obsoleteOpen = false">Abbrechen</button>
+                                        <button type="submit" class="btn btn--primary">Als veraltet markieren</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </span>
+                </h3>
+
+                <th:block th:if="${jobs != null and !jobs.isEmpty()}">
+                    <!-- Spalte „Hinweise“ (allgemein): zeigt die Fehlermeldung
+                         fehlgeschlagener Indexierungsläufe; erfolgreiche Läufe
+                         haben nichts zu berichten und zeigen ehrlich „—“.
+                         „Auftraggeber“ + Zeitangaben mit Sekunden machen mehrere
+                         echte Läufe voneinander unterscheidbar. -->
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Gestartet</th>
+                                <th>Abgeschlossen</th>
+                                <th>Auftraggeber</th>
+                                <th title="Hinweise zum Lauf: Fehlermeldung bei fehlgeschlagener Indexierung; „—“ wenn es nichts zu berichten gibt.">Hinweise</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="job : ${jobs}">
+                                <td>
+                                    <span class="badge" th:classappend="${job.status().name() == 'COMPLETED' ? 'badge--success' : (job.status().name() == 'FAILED' ? 'badge--error' : 'badge--warning')}"
+                                          th:text="${T(verwaltungsassistent.web.controller.DocumentController).ingestionStatusLabel(job.status().name())}">Status</span>
+                                </td>
+                                <td th:text="${job.createdAt() != null ? #temporals.format(job.createdAt(), 'dd.MM.yyyy HH:mm:ss') : '—'}"
+                                    style="white-space: nowrap;">—</td>
+                                <td th:text="${job.completedAt() != null ? #temporals.format(job.completedAt(), 'dd.MM.yyyy HH:mm:ss') : '—'}"
+                                    style="white-space: nowrap;">—</td>
+                                <td style="font-size: 0.8125rem;" th:text="${job.requestedBy() != null ? (job.requestedBy() == 'system' ? 'System (automatisch)' : job.requestedBy()) : '—'}">—</td>
+                                <td th:text="${job.failureReason() != null ? job.failureReason() : '—'}"
+                                    th:style="${job.failureReason() != null} ? 'font-size: 0.8125rem; color: var(--color-error-700);' : 'font-size: 0.8125rem; color: var(--color-text-muted);'">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </th:block>
+
+                <th:block th:unless="${jobs != null and !jobs.isEmpty()}">
+                    <p style="font-size: 0.875rem; color: var(--color-text-muted);">
+                        Keine Indexierungsvorgänge vorhanden. Starten Sie die Indexierung, um das Dokument für die Suche verfügbar zu machen.
+                    </p>
+                </th:block>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem;">
+                <!-- Phase 2D.12: Zurück führt in den Kontext, aus dem das
+                     Dokument geöffnet wurde (Entscheidung/Fall), sonst in die
+                     Dokumenten-Übersicht. Der Server liefert nur ein validiertes
+                     lokales Ziel (backUrl), nie eine externe Adresse. -->
+                <a th:href="${backUrl}" class="btn">← Zurück zur Übersicht</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, 'UI Component Showcase', 'dashboard', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="showcase" style="max-width: 960px; padding-bottom: 3rem;">
+
+            <h1 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem;">UI Component Showcase</h1>
+            <p style="color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.875rem;">
+                Development-only reference page. Demonstrates every reusable fragment from
+                <code>templates/fragments/components.html</code>.
+            </p>
+
+            <!-- ============================================================
+                 SECTION 1: Badge
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">1. Badge</h2>
+                <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <th:block th:replace="~{fragments/components :: badge('Aktiv', 'success')}"></th:block>
+                    <th:block th:replace="~{fragments/components :: badge('Warnung', 'warning')}"></th:block>
+                    <th:block th:replace="~{fragments/components :: badge('Fehler', 'error')}"></th:block>
+                    <th:block th:replace="~{fragments/components :: badge('Info', 'info')}"></th:block>
+                    <th:block th:replace="~{fragments/components :: badge('Neutral', 'neutral')}"></th:block>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 2: Empty State (all 3 variants)
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">2. Empty State</h2>
+
+                <h3 style="font-size: 1rem; font-weight: 600; margin: 1rem 0 0.5rem;">Variant A — Simple</h3>
+                <th:block th:replace="~{fragments/components :: emptyState(
+                    'simple', 'Keine Aktivität', 'Aktivität erscheint hier, sobald Dokumente hochgeladen und analysiert werden.', null, null)}">
+                </th:block>
+
+                <h3 style="font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem;">Variant B — With CTA</h3>
+                <th:block th:replace="~{fragments/components :: emptyState(
+                    'cta', 'Keine Fälle', 'Sie haben noch keine Fälle angelegt. Erstellen Sie Ihren ersten Fall, um mit der Bearbeitung zu beginnen.', '/cases/new', 'Ersten Fall erstellen')}">
+                </th:block>
+
+                <h3 style="font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem;">Variant C — Search Empty</h3>
+                <th:block th:replace="~{fragments/components :: emptyState(
+                    'search', 'Keine Ergebnisse für Suchbegriff', 'Bitte überprüfen Sie die Schreibweise oder versuchen Sie einen anderen Begriff.', '/cases', 'Filter zurücksetzen')}">
+                </th:block>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 3: Filter Bar
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">3. Filter Bar</h2>
+                <th:block th:replace="~{fragments/components :: filterBar(
+                    filters=${sampleFilters}, baseUrl='/dev/showcase', targetId='showcase-table')}">
+                </th:block>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 4: Data Table + Pagination
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">4. Data Table + Pagination</h2>
+
+                <th:block th:replace="~{fragments/components :: dataTable(
+                    headers=${tableHeaders}, page=0, totalPages=5,
+                    baseUrl='/dev/showcase', queryParams='',
+                    emptyMessage='Keine Fälle gefunden', hasData=${!tableRows.isEmpty()},
+                    targetId='showcase-table', rows=~{this :: showcase-table-rows})}">
+                </th:block>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 5: Pagination (standalone)
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">5. Pagination (standalone)</h2>
+                <div class="data-table-container">
+                    <th:block th:replace="~{fragments/components :: pagination(
+                        page=${paginationPage}, totalPages=${paginationTotalPages},
+                        baseUrl='/dev/showcase', queryParams='', targetId='showcase-table')}">
+                    </th:block>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 6: Modal Dialog
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">6. Modal Dialog</h2>
+
+                <div x-data="{ demoModalOpen: false }">
+                    <button class="btn btn--primary"
+                            @click="demoModalOpen = true"
+                            style="margin-bottom: 1rem;">
+                        Modal öffnen
+                    </button>
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                        Keyboard: Tab trapped inside modal. Escape or click backdrop to close. Focus returns to trigger on close.
+                    </p>
+
+                    <!-- Modal Demo (inline — see fragments/components :: modal for reusable version) -->
+                    <div class="modal-overlay"
+                         x-show="demoModalOpen"
+                         x-trap.noscroll="demoModalOpen"
+                         @keydown.escape.window="demoModalOpen = false"
+                         @click.self="demoModalOpen = false"
+                         role="dialog"
+                         aria-modal="true"
+                         aria-labelledby="demo-modal-title"
+                         x-cloak>
+                        <div class="modal-dialog">
+                            <div class="modal__header">
+                                <h2 class="modal__title" id="demo-modal-title">Beispiel-Dialog</h2>
+                                <button class="modal__close"
+                                        @click="demoModalOpen = false"
+                                        aria-label="Schließen">&times;</button>
+                            </div>
+                            <div class="modal__body">
+                                <p>Dies ist ein Beispiel für einen modalen Dialog.</p>
+                                <p style="margin-top: 0.5rem; color: var(--color-text-muted); font-size: 0.875rem;">
+                                    Der Fokus wird innerhalb des Dialogs gefangen. Escape oder Klick auf den Hintergrund schließen den Dialog.
+                                </p>
+                                <div style="margin-top: 1rem;">
+                                    <label class="form-field__label" for="demo-input">Eingabefeld (für Fokus-Test)</label>
+                                    <input id="demo-input" type="text" class="form-field__input"
+                                           style="margin-top: 0.25rem;" placeholder="Text eingeben..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 7: Confirm Delete Dialog
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">7. Confirm Delete Dialog</h2>
+
+                <div x-data="{ confirmOpen: false }">
+                    <button class="btn btn--primary"
+                            @click="confirmOpen = true"
+                            style="margin-bottom: 1rem; background: var(--color-error); border-color: var(--color-error);">
+                        Löschen-Dialog öffnen
+                    </button>
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                        Confirm button styled as danger (red). Cancel closes the dialog. Confirm triggers HTMX delete.
+                    </p>
+
+                    <!-- Confirm Delete Demo (inline — see fragments/components :: confirmDelete for reusable version) -->
+                    <div class="modal-overlay"
+                         x-show="confirmOpen"
+                         x-trap.noscroll="confirmOpen"
+                         @keydown.escape.window="confirmOpen = false"
+                         @click.self="confirmOpen = false"
+                         role="dialog"
+                         aria-modal="true"
+                         aria-labelledby="delete-demo-title"
+                         x-cloak>
+                        <div class="modal-dialog modal-dialog--confirm">
+                            <div class="modal__header">
+                                <h2 class="modal__title" id="delete-demo-title">Löschen bestätigen</h2>
+                                <button class="modal__close"
+                                        @click="confirmOpen = false"
+                                        aria-label="Schließen">&times;</button>
+                            </div>
+                            <div class="modal__body">
+                                <p class="modal__message">Sind Sie sicher, dass Sie diesen Eintrag löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</p>
+                                <p class="modal__item-name">Fall Müller (ID: abc-123)</p>
+                            </div>
+                            <div class="modal__actions">
+                                <button class="btn modal__btn-cancel"
+                                        @click="confirmOpen = false">Abbrechen</button>
+                                <button class="btn modal__btn-confirm"
+                                        hx-delete="/dev/showcase"
+                                        hx-target="#showcase-table"
+                                        hx-swap="outerHTML"
+                                        @click="confirmOpen = false">
+                                    Löschen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 8: Tab Bar
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">8. Tab Bar</h2>
+
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                    Keyboard: Arrow keys navigate between tabs. Active tab has <code>aria-selected="true"</code>.
+                    Uses Alpine.js <code>x-show</code> for preloaded tabs.
+                </p>
+
+                <th:block th:replace="~{fragments/components :: tabBar(
+                    tabs=${sampleTabs}, activeTab='overview', panelId='demo', fallbackContent=${null})}">
+                </th:block>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 9: Loading Spinner
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">9. Loading Spinner</h2>
+                <div style="padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <th:block th:replace="~{fragments/components :: spinner('Daten werden geladen...')}"></th:block>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 10: Info Message
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">10. Info Message Banner</h2>
+                <th:block th:replace="~{fragments/components :: infoMessage('Hier finden Sie alle Ihre Fälle. Nutzen Sie die Filter, um die Liste einzugrenzen.')}"></th:block>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 4.1: Search Box
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">4.1 Search Box</h2>
+                <div style="padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <th:block th:replace="~{fragments/components :: searchBox(
+                        name='q', placeholder='Fälle durchsuchen...',
+                        baseUrl='/dev/showcase', targetId='showcase-table',
+                        showIcon=true, showClear=true)}">
+                    </th:block>
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                        HTMX search with 300ms debounce. <code>hx-push-url="true"</code> for bookmarkable state.
+                        Clear button appears when text is entered. Hidden <code>::-webkit-search-decoration</code> for clean rendering.
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 9: Validation Fragments
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">9. Validation — fieldErrors &amp; globalErrors</h2>
+
+                <h3 style="font-size: 1rem; font-weight: 600; margin: 1rem 0 0.5rem;">fieldErrors (per-field)</h3>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                    Renders <code>th:errors="*{field}"</code> with the design system's <code>.form-field__error</code> class.
+                    Hidden when the field has no errors (<code>th:if="${#fields.hasErrors(field)}"</code>).
+                </p>
+                <div style="padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <div class="form-field">
+                        <label class="form-field__label" for="demo-field">Beispielfeld</label>
+                        <input id="demo-field" type="text" class="form-field__input" value="ungültig" />
+                        <!-- Static demo: simulate validation error -->
+                        <span class="form-field__error" role="alert">Bitte geben Sie einen gültigen Wert ein.</span>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.5rem;">globalErrors (object-level)</h3>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                    Iterates over <code>${#fields.errors('*')}</code> and renders each global error as a <code>.message--error</code> banner.
+                    Silent when there are no global errors.
+                </p>
+                <div style="padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <!-- Static demo: simulate global error -->
+                    <div class="message message--error" role="alert">Die Aktion konnte nicht ausgeführt werden. Bitte versuchen Sie es erneut.</div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 10: Phase Progress
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">10. Phase Progress</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                    5 stages, current = &quot;Analyse&quot; (index 2). Green = complete, Blue = current, Gray = remaining.
+                    <code>role="progressbar"</code> with <code>aria-valuenow/min/max</code>.
+                </p>
+
+                <th:block th:replace="~{fragments/components :: phaseProgress(
+                    stages=${phaseStages}, currentIndex=${phaseCurrentIndex}, label='Phase')}">
+                </th:block>
+
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.75rem;">
+                    This component is reused by: Case Detail (phase tracking), Decision Workspace (workflow stages).
+                    Configurable stages, current index, and label via fragment parameters.
+                </p>
+            </section>
+
+            <!-- ============================================================
+                 SECTION 13: Loading Skeleton (fragment)
+                 ============================================================ -->
+            <section style="margin-bottom: 2.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border);">13. Loading Skeleton</h2>
+                <div style="padding: 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);">
+                    <th:block th:replace="~{fragments/components :: skeleton(5)}"></th:block>
+                </div>
+            </section>
+
+        </div>
+    </th:block>
+
+    <!-- Named fragment for dataTable rows — referenced via ~{this :: showcase-table-rows} -->
+    <th:block th:fragment="showcase-table-rows">
+        <tr th:each="row : ${tableRows}">
+            <td th:text="${row.name}">Name</td>
+            <td>
+                <th:block th:replace="~{fragments/components :: badge(
+                    text=${row.status}, variant=${row.status == 'Aktiv' ? 'success' : (row.status == 'Entwurf' ? 'warning' : 'neutral')})}">
+                </th:block>
+            </td>
+            <td th:text="${row.phase}">Phase</td>
+            <td th:text="${row.documents}">0</td>
+            <td th:text="${row.updated}">Datum</td>
+        </tr>
+    </th:block>
+</body>
+</html>

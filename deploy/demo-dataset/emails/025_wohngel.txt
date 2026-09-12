@@ -1,0 +1,15 @@
+From: Gisela Maier <gisela.maier@example.de>
+To: demo13@verwaltungsassistent.local
+Subject: Wohngeld – Einkommensnachweis nachgereicht
+Date: 2026-09-02T12:00:00+02:00
+Message-ID: demo-catalog-25
+
+--- body ab hier ---
+Betreff: Wohngeld Nachreichung
+
+Sehr geehrte Damen und Herren,
+
+wie besprochen reiche ich den Einkommensnachweis meines Arbeitgebers nach. Bitte um Bestätigung des Eingangs.
+
+Mit freundlichen Grüßen
+Gisela Maier

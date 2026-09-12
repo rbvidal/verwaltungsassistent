@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <h1 class="dashboard__greeting">Wissen</h1>
+        <p style="color: var(--color-text-muted);">Wissensbasis folgt in einer späteren Phase.</p>
+    </th:block>
+</body>
+</html>

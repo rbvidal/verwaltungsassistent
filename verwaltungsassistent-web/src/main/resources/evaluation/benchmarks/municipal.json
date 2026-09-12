@@ -1,0 +1,145 @@
+[
+  {
+    "id": "M01",
+    "domain": "municipal",
+    "difficulty": "EASY",
+    "question": "Ich bin in eine neue Wohnung gezogen. Welche Unterlagen benötige ich für die Ummeldung und wie schnell muss ich mich anmelden?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Bundesmeldegesetz (BMG)"
+    ],
+    "expectedDocuments": [
+      "Änderung/Wechsel der Hauptwohnung",
+      "Abmeldung einer Wohnung"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Ummeldung",
+      "zwei Wochen",
+      "Wohnungsgeberbestätigung"
+    ],
+    "minimumGroundingScore": 0.3
+  },
+  {
+    "id": "M02",
+    "domain": "municipal",
+    "difficulty": "EASY",
+    "question": "Meine Tochter ist 14 Jahre alt und braucht einen Reisepass. Welche Unterlagen benötigen wir und muss mein Mann mitkommen?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Passgesetz (PassG)"
+    ],
+    "expectedDocuments": [
+      "Reisepass beantragen",
+      "Reisepass vorläufig beantragen"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Reisepass",
+      "Eltern",
+      "Unterlagen"
+    ],
+    "minimumGroundingScore": 0.3
+  },
+  {
+    "id": "M03",
+    "domain": "municipal",
+    "difficulty": "EASY",
+    "question": "Ich möchte zum 1. September ein kleines Gewerbe anmelden. Welche Unterlagen benötige ich für die Gewerbeanmeldung und kann ich den Termin online vereinbaren?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Gewerbeordnung (GewO)"
+    ],
+    "expectedDocuments": [
+      "info_gewerbe_anmelden.pdf",
+      "Gewerbeordnung (GewO).pdf"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Gewerbeanmeldung",
+      "Gewerbeordnung",
+      "Unterlagen"
+    ],
+    "minimumGroundingScore": 0.3
+  },
+  {
+    "id": "M04",
+    "domain": "municipal",
+    "difficulty": "EASY",
+    "question": "Ich habe meinen Personalausweis verloren. Was muss ich jetzt tun und welche Unterlagen brauche ich für die Neuausstellung?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Personalausweisgesetz (PAuswG)"
+    ],
+    "expectedDocuments": [
+      "Personalausweis beantragen",
+      "Personalausweis vorläufig beantragen"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Personalausweis",
+      "Verlust",
+      "Unterlagen"
+    ],
+    "minimumGroundingScore": 0.3
+  },
+  {
+    "id": "M05",
+    "domain": "municipal",
+    "difficulty": "MEDIUM",
+    "question": "Vor zwei Wochen habe ich meinen Antrag auf Wohngeld eingereicht. Können Sie prüfen, ob noch Unterlagen fehlen und welche Nachweise ich nachreichen muss?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Wohngeldgesetz (WoGG)"
+    ],
+    "expectedDocuments": [
+      "Wohngeldgesetz (WoGG).pdf",
+      "Wohngeld-Mietzuschuss.pdf"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Wohngeld",
+      "Einkommensnachweise",
+      "Unterlagen"
+    ],
+    "minimumGroundingScore": 0.3
+  },
+  {
+    "id": "M06",
+    "domain": "municipal",
+    "difficulty": "MEDIUM",
+    "question": "Die Straßenlaterne gegenüber der Lehnitzer Straße 12 fällt seit drei Nächten aus. Wer ist zuständig und wie melde ich die defekte Straßenbeleuchtung?",
+    "expectedIntent": {
+      "primary": "municipal",
+      "strategy": "HYBRID_RETRIEVAL"
+    },
+    "expectedAuthorities": [
+      "Straßen- und Wegegesetz des Landes Brandenburg (BbgStrG)"
+    ],
+    "expectedDocuments": [
+      "Straßenbeleuchtung – Zuständigkeit und Meldung defekter Beleuchtung"
+    ],
+    "expectedFindingCount": 1,
+    "expectedRecommendationKeywords": [
+      "Straßenlaterne",
+      "Beleuchtung",
+      "Meldung"
+    ],
+    "minimumGroundingScore": 0.3
+  }
+]

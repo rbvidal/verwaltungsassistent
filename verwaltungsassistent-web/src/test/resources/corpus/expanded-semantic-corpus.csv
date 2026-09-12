@@ -1,0 +1,129 @@
+id|language|category|question|expectedDomain|expectedIntentType|expectedParams|expectedRoute|expectedDecision
+TRAV-DE-001|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer 12-stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-002|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer 8-stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=8|RULE_ENGINE|Tagegeld: 6
+TRAV-DE-003|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer 10-stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=10|RULE_ENGINE|Tagegeld: 6
+TRAV-DE-004|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer 24-stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=24|RULE_ENGINE|Tagegeld: 24
+TRAV-DE-005|DE|TRAVEL|Welche Verpflegungspauschale gilt bei einer Dienstreise von 12 Stunden?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-006|DE|TRAVEL|Wie viel Tagegeld bekomme ich bei 9 Stunden Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=9|RULE_ENGINE|Tagegeld: 6
+TRAV-DE-007|DE|TRAVEL|Tagegeld bei Abwesenheit von 11 Stunden?|TRAVEL|TRAVEL_ALLOWANCE|hours=11|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-009|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer zwölfstündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-010|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer Dienstreise von zwölf Stunden?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-011|DE|TRAVEL|Wie hoch ist die Verpflegungspauschale bei einer 12 stündigen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-012|DE|TRAVEL|Wieviel Tagegeld bekomme ich bei 12 Studen Dienstreise?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-013|DE|TRAVEL|Ich muss nächste Woche für eine Fortbildung 12 Stunden unterwegs sein. Bekomme ich Verpflegungsgeld?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-014|DE|TRAVEL|Guten Tag, ich habe eine Frage zur Erstattung: Wenn ich am Dienstag um 7 Uhr losfahre und am Mittwoch um 3 Uhr nachts zurückkomme, also insgesamt 20 Stunden unterwegs bin, welche Verpflegungspauschale bekomme ich erstattet?|TRAVEL|TRAVEL_ALLOWANCE|hours=20|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-015|DE|TRAVEL|Ich war nicht 12 Stunden, sondern nur 6 Stunden unterwegs - welches Tagegeld gilt?|TRAVEL|TRAVEL_ALLOWANCE|hours=6|NO_RULE|
+TRAV-DE-016|DE|TRAVEL|Seit 2024 gelten die neuen Sätze - wie hoch ist das Tagegeld bei 12 Stunden?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-017|DE|TRAVEL|Eine 12-stündige Dienstreise nach Potsdam kostet 80 Euro - wie hoch ist die Verpflegungspauschale?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-DE-018|DE|TRAVEL|Wie hoch ist die Kilometerpauschale bei einer Dienstreise von 120 km?|TRAVEL|TRAVEL_ALLOWANCE|distanceKm=120|RULE_ENGINE|Kilometerpauschale: 0.35
+TRAV-DE-019|DE|TRAVEL|Wie hoch ist die Kilometerpauschale bei einer Dienstreise von 120 Kilometern?|TRAVEL|TRAVEL_ALLOWANCE|distanceKm=120|RULE_ENGINE|Kilometerpauschale: 0.35
+TRAV-EN-001|EN|TRAVEL|What is the meal allowance for a 12-hour business trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-EN-002|EN|TRAVEL|What is the meal allowance for an 8-hour business trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=8|RULE_ENGINE|Tagegeld: 6
+TRAV-EN-003|EN|TRAVEL|What is the meal allowance for a 24-hour business trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=24|RULE_ENGINE|Tagegeld: 24
+TRAV-EN-004|EN|TRAVEL|What is the meal allowance for a twelve-hour business trip?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-EN-005|EN|TRAVEL|Our team is planning a site visit next month. The journey will take roughly 10 hours in total including travel time. Could you tell me what the meal allowance would be?|TRAVEL|TRAVEL_ALLOWANCE|hours=10|RULE_ENGINE|Tagegeld: 6
+TRAV-EN-006|EN|TRAVEL|I'll be traveling for work for 12 hours - what per diem do I get?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-PT-001|PT|TRAVEL|Qual é o subsídio de alimentação para uma viagem de trabalho de 12 horas?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-PT-002|PT|TRAVEL|Preciso saber quanto recebo de diária numa viagem a serviço de 12 horas.|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-PT-003|PT|TRAVEL|Se eu viajar 24 horas a trabalho, qual é a diária?|TRAVEL|TRAVEL_ALLOWANCE|hours=24|RULE_ENGINE|Tagegeld: 24
+TRAV-PT-004|PT|TRAVEL|Qual é a diária para uma viagem de trabalho de doze horas?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-PT-005|PT|TRAVEL|Vou ficar 8 horas fora em serviço, quanto recebo de alimentação?|TRAVEL|TRAVEL_ALLOWANCE|hours=8|RULE_ENGINE|Tagegeld: 6
+TRAV-FR-001|FR|TRAVEL|Quelle est l'indemnité de repas pour un voyage professionnel de 12 heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-FR-002|FR|TRAVEL|Mon déplacement professionnel dure 12 heures : à combien s'élève l'indemnité journalière ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+TRAV-FR-003|FR|TRAVEL|Quelle indemnité pour un voyage d'affaires de 24 heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=24|RULE_ENGINE|Tagegeld: 24
+TRAV-FR-004|FR|TRAVEL|Quelle est l'indemnité de repas pour un déplacement de douze heures ?|TRAVEL|TRAVEL_ALLOWANCE|hours=12|RULE_ENGINE|Tagegeld: 12
+SAL-DE-001|DE|SALARY|Wie hoch ist das Gehalt für EG 9b Stufe 3?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=3|RULE_ENGINE|4117.53
+SAL-DE-002|DE|SALARY|Was verdiene ich in EG 9b Stufe 1?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=1|RULE_ENGINE|3700.00
+SAL-DE-003|DE|SALARY|Gehalt EG 11 Stufe 4?|HR|SALARY_LOOKUP|salaryGrade=EG 11;salaryStep=4|RULE_ENGINE|5100.00
+SAL-DE-004|DE|SALARY|Wie hoch ist das Gehalt für EG 9 Stufe 3?|HR|SALARY_LOOKUP|salaryGrade=EG 9;salaryStep=3|NO_RULE|
+SAL-DE-005|DE|SALARY|Wie hoch ist das Gehalt für EG 9 Stufe 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9;salaryStep=5|NO_RULE|
+SAL-DE-006|DE|SALARY|Ich bin nicht in EG 9b Stufe 5, sondern in EG 9b Stufe 2 - wie hoch ist mein Gehalt?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=2|RULE_ENGINE|3900.00
+SAL-DE-007|DE|SALARY|Welche Entgeltgruppe hat 4.117,53 Euro?|HR|GENERAL||NO_RULE|
+SAL-EN-001|EN|SALARY|What is the salary for EG 9b step 3?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=3|RULE_ENGINE|4117.53
+SAL-EN-002|EN|SALARY|What is the salary for EG 9b step 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-EN-003|EN|SALARY|What does someone in pay grade EG 9b level 2 earn?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=2|RULE_ENGINE|3900.00
+SAL-EN-004|EN|SALARY|What is the salary for grade 9b step 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-EN-005|EN|SALARY|What is the salary for EG 9 step 3?|HR|SALARY_LOOKUP|salaryGrade=EG 9;salaryStep=3|NO_RULE|
+SAL-PT-001|PT|SALARY|Qual é o salário para EG 9b nível 5?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-PT-002|PT|SALARY|Quanto ganha um funcionário no nível 5 da faixa EG 9b?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-PT-003|PT|SALARY|Qual é o salário para EG 11 nível 4?|HR|SALARY_LOOKUP|salaryGrade=EG 11;salaryStep=4|RULE_ENGINE|5100.00
+SAL-PT-004|PT|SALARY|Qual é o salário para EG 9 nível 3?|HR|SALARY_LOOKUP|salaryGrade=EG 9;salaryStep=3|NO_RULE|
+SAL-FR-001|FR|SALARY|Quel est le salaire pour EG 9b échelon 5 ?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-FR-002|FR|SALARY|Quel est le traitement au 5e échelon du grade EG 9b ?|HR|SALARY_LOOKUP|salaryGrade=EG 9b;salaryStep=5|RULE_ENGINE|4480.00
+SAL-FR-003|FR|SALARY|Quel est le salaire pour EG 9 échelon 3 ?|HR|SALARY_LOOKUP|salaryGrade=EG 9;salaryStep=3|NO_RULE|
+PROC-DE-001|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 8.000 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-DE-002|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 85.000 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=85000|RULE_ENGINE|Beschränkte Ausschreibung
+PROC-DE-003|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 8.000,50 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag
+PROC-DE-004|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über achttausend Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-DE-005|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 850 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=850|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-DE-006|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 150.000 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=150000|RULE_ENGINE|Öffentliche Ausschreibung / EU-weit
+PROC-DE-007|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 10.000 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=10000|RULE_ENGINE|Beschränkte Ausschreibung
+PROC-DE-008|DE|PROCUREMENT|Welche Vergabeart gilt für einen Auftrag über 100.000 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=100000|RULE_ENGINE|Öffentliche Ausschreibung / EU-weit
+PROC-DE-009|DE|PROCUREMENT|Der Auftrag ist nicht über 8.000 Euro, sondern über 850 Euro - welches Verfahren gilt?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=850|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-DE-010|DE|PROCUREMENT|Unsere Rechnung vom 15.03. über 8.000 Euro - welche Vergabeart gilt?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-DE-011|DE|PROCUREMENT|Wir müssen dringend neue Büromöbel bestellen, das Angebot liegt bei 8.000 Euro ohne Mehrwertsteuer. Welches Vergabeverfahren müssen wir einhalten?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-DE-012|DE|PROCUREMENT|Vergabe bei 499 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=499|RULE_ENGINE|Kein formelles Verfahren
+PROC-DE-013|DE|PROCUREMENT|Vergabe bei 500 Euro?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=500|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-EN-001|EN|PROCUREMENT|Which procurement procedure applies to a contract of 8,000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-EN-002|EN|PROCUREMENT|Which procurement procedure applies to a contract of 8.000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-EN-003|EN|PROCUREMENT|Which procurement procedure applies to a contract of 8000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-EN-004|EN|PROCUREMENT|Which procurement procedure applies to a contract of 8,000.50 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000.5|RULE_ENGINE|Direktauftrag
+PROC-EN-005|EN|PROCUREMENT|Which procurement procedure applies to a contract of eight thousand euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-EN-006|EN|PROCUREMENT|Which procurement procedure applies to a contract of 120,000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=120000|RULE_ENGINE|Öffentliche Ausschreibung / EU-weit
+PROC-EN-007|EN|PROCUREMENT|Which procurement procedure applies to a contract of 850 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=850|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-PT-001|PT|PROCUREMENT|Qual procedimento de contratação se aplica a um contrato de 8.000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-PT-002|PT|PROCUREMENT|Qual procedimento se aplica a um contrato de 8 000 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-PT-003|PT|PROCUREMENT|Qual procedimento de contratação se aplica a um contrato de oito mil euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-PT-004|PT|PROCUREMENT|Qual procedimento se aplica a um contrato de 850 euros?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=850|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-FR-001|FR|PROCUREMENT|Quelle procédure de passation s'applique pour un marché de 8 000 euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-FR-002|FR|PROCUREMENT|Quelle procédure s'applique pour un marché de 8.000 euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-FR-003|FR|PROCUREMENT|Quelle procédure de passation s'applique pour un marché de huit mille euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=8000|RULE_ENGINE|Direktauftrag
+PROC-FR-004|FR|PROCUREMENT|Quelle procédure s'applique pour un marché de 850 euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=850|RULE_ENGINE|Direktauftrag mit Genehmigung
+PROC-FR-005|FR|PROCUREMENT|Quelle procédure s'applique pour un marché de 120 000 euros ?|PROCUREMENT|PROCUREMENT_THRESHOLD|amountEur=120000|RULE_ENGINE|Öffentliche Ausschreibung / EU-weit
+BLD-DE-001|DE|BUILDING|Welche Baugenehmigung benötige ich für ein Einfamilienhaus in Berlin?|BUILDING|GENERAL||NO_RULE|
+BLD-DE-002|DE|BUILDING|Welche Abstandsflächen sind nach BauO Bln Paragraph 6 einzuhalten?|BUILDING|GENERAL||NO_RULE|
+BLD-DE-003|DE|BUILDING|Brauche ich für einen Carport eine Baugenehmigung?|BUILDING|GENERAL||NO_RULE|
+BLD-DE-004|DE|BUILDING|Wie hoch darf ein Gartenhaus ohne Genehmigung sein?|BUILDING|GENERAL||NO_RULE|
+BLD-DE-005|DE|BUILDING|Ab wann gilt ein Gebäude als Wohngebäude?|BUILDING|GENERAL||NO_RULE|
+BLD-EN-001|EN|BUILDING|What building permit do I need for a single-family house in Berlin?|BUILDING|GENERAL||NO_RULE|
+BLD-EN-002|EN|BUILDING|Do I need a permit for a carport in Berlin?|BUILDING|GENERAL||NO_RULE|
+BLD-EN-003|EN|BUILDING|What are the setback requirements for a new garage?|BUILDING|GENERAL||NO_RULE|
+BLD-PT-001|PT|BUILDING|Que licença de construção preciso para uma casa unifamiliar em Berlim?|BUILDING|GENERAL||NO_RULE|
+BLD-PT-002|PT|BUILDING|Preciso de licença para construir uma garagem em Berlim?|BUILDING|GENERAL||NO_RULE|
+BLD-FR-001|FR|BUILDING|De quel permis de construire ai-je besoin pour une maison individuelle à Berlin ?|BUILDING|GENERAL||NO_RULE|
+BLD-FR-002|FR|BUILDING|Quelles distances de retrait s'appliquent aux garages à Berlin ?|BUILDING|GENERAL||NO_RULE|
+RET-DE-001|DE|RETRIEVAL|Welche Unterlagen brauche ich für einen Bauantrag?|BUILDING|GENERAL||NO_RULE|
+RET-DE-002|DE|RETRIEVAL|Wo finde ich die Vorschriften zur Beschaffung?|PROCUREMENT|GENERAL||NO_RULE|
+RET-DE-003|DE|RETRIEVAL|Was muss ich bei der Vergabe beachten?|PROCUREMENT|GENERAL||NO_RULE|
+RET-DE-004|DE|RETRIEVAL|Wie melde ich eine Dienstreise korrekt ab?|TRAVEL|GENERAL||NO_RULE|
+RET-DE-005|DE|RETRIEVAL|Was regelt die Bauordnung zu Stellplätzen?|BUILDING|GENERAL||NO_RULE|
+RET-DE-006|DE|RETRIEVAL|Welche Verpflegungspauschalen gelten bei Dienstreisen?|TRAVEL|TRAVEL_ALLOWANCE||NO_RULE|
+RET-EN-001|EN|RETRIEVAL|Where can I find the procurement regulations?|PROCUREMENT|GENERAL||NO_RULE|
+RET-EN-002|EN|RETRIEVAL|What does the building code say about parking spaces?|BUILDING|GENERAL||NO_RULE|
+RET-EN-003|EN|RETRIEVAL|What do I need to consider when awarding contracts?|PROCUREMENT|GENERAL||NO_RULE|
+RET-EN-004|EN|RETRIEVAL|Which meal allowances apply to business trips?|TRAVEL|TRAVEL_ALLOWANCE||NO_RULE|
+RET-PT-001|PT|RETRIEVAL|Onde encontro as regras de contratação pública em Berlim?|PROCUREMENT|GENERAL||NO_RULE|
+RET-PT-002|PT|RETRIEVAL|Que documentos são necessários para um pedido de construção?|BUILDING|GENERAL||NO_RULE|
+RET-FR-001|FR|RETRIEVAL|Où trouver la réglementation des marchés publics à Berlin ?|PROCUREMENT|GENERAL||NO_RULE|
+RET-FR-002|FR|RETRIEVAL|Quels documents faut-il pour une demande de permis de construire ?|BUILDING|GENERAL||NO_RULE|
+UNS-DE-001|DE|UNSUPPORTED|Welche Vorschriften gelten für Quantencomputer-Beschaffung in der Berliner Verwaltung?|PROCUREMENT|GENERAL||NO_RULE|
+UNS-DE-002|DE|UNSUPPORTED|Wie beantrage ich einen Reisepass in der Berliner Verwaltung?|GENERAL|GENERAL||NO_RULE|
+UNS-DE-003|DE|UNSUPPORTED|Gibt es Zuschüsse für Lastenfahrräder?|GENERAL|GENERAL||NO_RULE|
+UNS-EN-001|EN|UNSUPPORTED|What regulations apply to quantum computing procurement in the Berlin administration?|PROCUREMENT|GENERAL||NO_RULE|
+UNS-EN-002|EN|UNSUPPORTED|How do I apply for a passport in Berlin?|GENERAL|GENERAL||NO_RULE|
+UNS-EN-003|EN|UNSUPPORTED|What's the policy for outdoor events in the city?|GENERAL|GENERAL||NO_RULE|
+UNS-PT-001|PT|UNSUPPORTED|Que regras se aplicam à compra de computadores quânticos na administração de Berlim?|PROCUREMENT|GENERAL||NO_RULE|
+UNS-PT-002|PT|UNSUPPORTED|Como faço para solicitar um passaporte em Berlim?|GENERAL|GENERAL||NO_RULE|
+UNS-FR-001|FR|UNSUPPORTED|Quelles règles s'appliquent à l'achat d'ordinateurs quantiques dans l'administration berlinoise ?|PROCUREMENT|GENERAL||NO_RULE|
+AMB-DE-001|DE|AMBIGUOUS|Was gilt bei 12?|GENERAL|GENERAL||NO_RULE|
+AMB-DE-002|DE|AMBIGUOUS|Was ist mit 8.000?|GENERAL|GENERAL||NO_RULE|
+AMB-DE-003|DE|AMBIGUOUS|Was bedeutet Stufe 5?|GENERAL|GENERAL||NO_RULE|
+AMB-DE-004|DE|AMBIGUOUS|Und bei 3.000?|GENERAL|GENERAL||NO_RULE|
+AMB-EN-001|EN|AMBIGUOUS|What applies at 12?|GENERAL|GENERAL||NO_RULE|
+AMB-EN-002|EN|AMBIGUOUS|What about 8?|GENERAL|GENERAL||NO_RULE|
+AMB-EN-003|EN|AMBIGUOUS|How much for level 5?|GENERAL|GENERAL||NO_RULE|
+AMB-EN-004|EN|AMBIGUOUS|What does 24 mean here?|GENERAL|GENERAL||NO_RULE|
+AMB-PT-001|PT|AMBIGUOUS|E quanto a 8?|GENERAL|GENERAL||NO_RULE|
+AMB-PT-002|PT|AMBIGUOUS|O que significa nível 5?|GENERAL|GENERAL||NO_RULE|
+AMB-FR-001|FR|AMBIGUOUS|Qu'est-ce qui s'applique à 12 ?|GENERAL|GENERAL||NO_RULE|
+AMB-FR-002|FR|AMBIGUOUS|Et pour 8.000 ?|GENERAL|GENERAL||NO_RULE|

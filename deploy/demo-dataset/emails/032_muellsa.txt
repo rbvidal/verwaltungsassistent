@@ -1,0 +1,17 @@
+From: Familie Nowak <nowak.familie@example.de>
+To: info@verwaltungs-demo.de
+Subject: Müllsäcke an der Sammelstelle – erneute Abholung
+Date: 2026-09-03T13:30:00+02:00
+Message-ID: msg-mailbox-muell-01
+In-Reply-To: msg-muell-2026-09-01
+References: msg-muell-2026-08-29 msg-muell-2026-09-01
+
+--- body ab hier ---
+Betreff: Müllsäcke erneut
+
+Sehr geehrte Damen und Herren,
+
+an der Sammelstelle in der Lindenstraße liegen erneut Müllsäcke. Bitte veranlassen Sie die Abholung.
+
+Mit freundlichen Grüßen
+Familie Nowak

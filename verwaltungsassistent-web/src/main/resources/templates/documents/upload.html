@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, 'documents', ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Dokument hochladen</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Laden Sie Dokumente hoch, um die Wissensbasis aufzubauen. Die Dokumente werden
+                    anschließend automatisch indexiert und stehen für die KI-Analyse zur Verfügung.
+                </p>
+            </div>
+
+            <form th:action="@{/documents/upload}" method="post" enctype="multipart/form-data"
+                  class="auth-card__form" style="max-width: 600px;">
+
+                <div th:if="${uploadError != null}" class="message message--error" role="alert"
+                     th:text="${uploadError}" style="margin-bottom: 1rem;"></div>
+
+                <div class="form-field">
+                    <label for="file" class="form-field__label">Dateien *</label>
+                    <input type="file" id="file" name="file" class="form-field__input"
+                           multiple required accept=".pdf,.docx,.txt,.html">
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                        Unterstützte Formate: PDF, DOCX, TXT, HTML. Maximale Größe: 50 MB pro Datei.
+                        Sie können mehrere Dateien in einem Schritt auswählen.
+                    </p>
+                </div>
+
+                <div class="form-field">
+                    <label for="title" class="form-field__label">Titel</label>
+                    <input type="text" id="title" name="title" class="form-field__input"
+                           placeholder="z.B. Baugenehmigungssatzung Berlin 2024"
+                           maxlength="255">
+                    <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                        Lassen Sie das Feld leer, um den Dateinamen zu verwenden. Bei mehreren
+                        Dateien wird dieser Titel nur für die erste Datei verwendet.
+                    </p>
+                </div>
+
+                <div class="form-field">
+                    <label for="category" class="form-field__label">Kategorie</label>
+                    <select id="category" name="category" class="form-field__input">
+                        <option value="">— Automatisch —</option>
+                        <option th:each="c : ${categories}" th:value="${c.name()}"
+                                th:text="${categoryLabels[c.name()]}">Kategorie</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn--primary">Hochladen und indexieren</button>
+                    <a th:href="@{/documents}" class="btn">Abbrechen</a>
+                </div>
+            </form>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- Batch / directory upload                     -->
+            <!-- ═══════════════════════════════════════════ -->
+            <div style="max-width: 600px; margin-top: 2.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.35rem;">
+                    Mehrere Dokumente oder einen Ordner hochladen
+                </h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                    Die Dateien werden einzeln über die bestehende Verarbeitungskette erfasst und
+                    indexiert. Eine fehlerhafte Datei bricht die übrigen Uploads nicht ab.
+                </p>
+
+                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <button type="button" id="btn-batch" class="btn btn--primary">Mehrere Dokumente auswählen</button>
+                    <button type="button" id="btn-dir" class="btn">Ordner mit Dokumenten auswählen</button>
+                </div>
+
+                <input type="file" id="file-batch" multiple accept=".pdf,.docx,.txt,.html" hidden>
+                <input type="file" id="file-dir" webkitdirectory directory accept=".pdf,.docx,.txt,.html" hidden>
+
+                <div id="batch-summary" class="message message--info" role="status"
+                     style="display: none; margin-bottom: 0.75rem; font-size: 0.8125rem;"></div>
+
+                <div id="batch-files" style="display: none;"></div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                var SUPPORTED = ['.pdf', '.docx', '.txt', '.html'];
+
+                function isSupported(name) {
+                    var lower = name.toLowerCase();
+                    return SUPPORTED.some(function (ext) { return lower.endsWith(ext); });
+                }
+
+                function csrfHeaders() {
+                    var headers = {};
+                    var token = document.querySelector('meta[name="_csrf"]');
+                    var header = document.querySelector('meta[name="_csrf_header"]');
+                    if (token && header) headers[header.content] = token.content;
+                    return headers;
+                }
+
+                var queue = [];
+                var running = false;
+                var doneCount = 0;
+
+                function rowFor(relPath) {
+                    var container = document.getElementById('batch-files');
+                    container.style.display = 'block';
+                    var row = document.createElement('div');
+                    row.className = 'batch-file-row';
+                    row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:0.75rem; padding:0.5rem 0.75rem; border:1px solid var(--color-border); border-radius:4px; margin-bottom:0.375rem; background:var(--color-surface); font-size:0.8125rem;';
+                    var name = document.createElement('span');
+                    name.style.cssText = 'overflow:hidden; text-overflow:ellipsis; white-space:nowrap;';
+                    name.textContent = relPath;
+                    var status = document.createElement('span');
+                    status.style.cssText = 'white-space:nowrap; font-weight:500;';
+                    row.appendChild(name);
+                    row.appendChild(status);
+                    container.appendChild(row);
+                    return { row: row, status: status };
+                }
+
+                function setStatus(entry, cssClass, text) {
+                    entry.status.textContent = text;
+                    entry.status.className = '';
+                    entry.status.style.color = 'var(--color-text-muted)';
+                    if (cssClass === 'error') entry.status.style.color = 'var(--color-error-700, #c53030)';
+                    if (cssClass === 'ready') entry.status.style.color = 'var(--color-success-700, #2f855a)';
+                }
+
+                function enqueue(files, prefix) {
+                    var seen = {};
+                    for (var i = 0; i < files.length; i++) {
+                        var f = files[i];
+                        var rel = (prefix ? prefix + '/' : '') + (f.webkitRelativePath || f.name);
+                        var key = rel + '|' + f.size;
+                        if (seen[key]) continue;
+                        seen[key] = true;
+                        var entry = rowFor(rel);
+                        if (!isSupported(f.name)) {
+                            doneCount++;
+                            setStatus(entry, 'skip', 'Übersprungen – nicht unterstütztes Format');
+                            continue;
+                        }
+                        queue.push({ file: f, entry: entry });
+                    }
+                    updateSummary();
+                    if (!running) next();
+                }
+
+                function next() {
+                    if (queue.length === 0) {
+                        running = false;
+                        updateSummary();
+                        return;
+                    }
+                    running = true;
+                    upload(queue.shift());
+                }
+
+                function upload(item) {
+                    setStatus(item.entry, 'uploading', 'Wird hochgeladen …');
+                    var fd = new FormData();
+                    fd.append('file', item.file);
+                    var headers = csrfHeaders();
+                    headers['X-Batch-Upload'] = '1';
+                    fetch('/documents/upload/batch', { method: 'POST', body: fd, headers: headers })
+                        .then(function (resp) { return resp.json(); })
+                        .then(function (data) {
+                            var r = data.results && data.results.length > 0 ? data.results[0] : null;
+                            if (r && r.ok) {
+                                doneCount++;
+                                setStatus(item.entry, 'pending', 'Hochgeladen – Wird indexiert');
+                                pollStatus(item.entry, r.documentId);
+                            } else {
+                                doneCount++;
+                                setStatus(item.entry, 'error', 'Fehler: ' + (r ? r.error : 'Unbekannter Fehler'));
+                            }
+                            next();
+                        })
+                        .catch(function (err) {
+                            doneCount++;
+                            setStatus(item.entry, 'error', 'Fehler: ' + err.message);
+                            next();
+                        });
+                }
+
+                function pollStatus(entry, docId) {
+                    var attempts = 0;
+                    var timer = setInterval(function () {
+                        attempts++;
+                        if (attempts > 60) { // ~2.5 min max; indexing continues in the background
+                            clearInterval(timer);
+                            return;
+                        }
+                        fetch('/documents/' + docId + '/status', { headers: csrfHeaders() })
+                            .then(function (resp) { return resp.json(); })
+                            .then(function (s) {
+                                if (s.status === 'READY') {
+                                    clearInterval(timer);
+                                    setStatus(entry, 'ready', 'Bereit');
+                                } else if (s.status === 'FAILED') {
+                                    clearInterval(timer);
+                                    setStatus(entry, 'error', 'Fehler bei der Indexierung');
+                                }
+                            })
+                            .catch(function () { /* transient — keep polling */ });
+                    }, 2500);
+                }
+
+                function updateSummary() {
+                    var summary = document.getElementById('batch-summary');
+                    if (queue.length === 0 && doneCount === 0) {
+                        summary.style.display = 'none';
+                        return;
+                    }
+                    summary.style.display = 'block';
+                    summary.textContent = '';
+                    var queued = queue.length;
+                    if (queued > 0) {
+                        summary.textContent = queued + ' Datei' + (queued === 1 ? '' : 'en') +
+                            ' in der Warteschlange, ' + doneCount + ' abgeschlossen.';
+                    } else {
+                        summary.textContent = 'Alle ausgewählten Dateien wurden verarbeitet (' +
+                            doneCount + '). Die Indexierung läuft im Hintergrund. ';
+                        var link = document.createElement('a');
+                        link.href = '/documents';
+                        link.textContent = 'Zur Dokumentenliste';
+                        summary.appendChild(link);
+                    }
+                }
+
+                document.getElementById('btn-batch').addEventListener('click', function () {
+                    document.getElementById('file-batch').click();
+                });
+                document.getElementById('btn-dir').addEventListener('click', function () {
+                    document.getElementById('file-dir').click();
+                });
+                document.getElementById('file-batch').addEventListener('change', function () {
+                    enqueue(this.files, null);
+                    this.value = '';
+                });
+                document.getElementById('file-dir').addEventListener('change', function () {
+                    enqueue(this.files, null);
+                    this.value = '';
+                });
+            })();
+        </script>
+    </th:block>
+</body>
+</html>

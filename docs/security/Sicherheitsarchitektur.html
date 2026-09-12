@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Verwaltungsassistent Sicherheitsarchitektur</title>
+<style>
+@page {
+  size: A4;
+  margin: 16mm 15mm 17mm 15mm;
+  @top-left {
+    content: "Verwaltungsassistent Sicherheitsarchitektur · v1.1 · 16.08.2026";
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #5a6b7c; letter-spacing: 0.4pt;
+  }
+  @top-right {
+    content: string(sect);
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #123a5f; letter-spacing: 0.4pt;
+  }
+  @bottom-left {
+    content: "Kundenorientiertes Sicherheitsdokument — Stand 16.08.2026";
+    font-family: "Segoe UI", sans-serif; font-size: 7pt; color: #7d8b99;
+  }
+  @bottom-right {
+    content: "Seite " counter(page) " von " counter(pages);
+    font-family: "Segoe UI", sans-serif; font-size: 7.5pt; color: #123a5f;
+  }
+}
+@page cover {
+  margin: 0;
+  @top-left { content: none; }
+  @top-right { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+html { font-size: 9.6pt; }
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 9.6pt; line-height: 1.5; color: #1d2733; margin: 0; padding: 0;
+}
+p { margin: 0 0 4.5pt 0; text-align: justify; }
+h1, h2, h3 { font-family: "Segoe UI", sans-serif; color: #123a5f; page-break-after: avoid; }
+h1 {
+  font-size: 16pt; font-weight: 700; margin: 0 0 4pt 0; padding-bottom: 4pt;
+  border-bottom: 2.2pt solid #123a5f;
+  string-set: sect "Verwaltungsassistent Sicherheitsarchitektur"; page-break-before: always;
+}
+h2 {
+  font-size: 12.5pt; font-weight: 700; margin: 0 0 6pt 0; padding-bottom: 3pt;
+  border-bottom: 1.2pt solid #b9c6d2; string-set: sect content(); page-break-before: always;
+}
+strong { color: #10293f; }
+ul, ol { margin: 2pt 0 5.5pt 0; padding-left: 15pt; }
+li { margin-bottom: 2pt; text-align: justify; }
+code {
+  font-family: Consolas, "Courier New", monospace; font-size: 8.2pt; color: #0e4b6b;
+  background: #f2f5f8; border: 0.4pt solid #dde4ea; border-radius: 2pt; padding: 0.5pt 2pt;
+}
+pre {
+  font-family: Consolas, "Courier New", monospace; font-size: 8.2pt; line-height: 1.32;
+  background: #f2f5f8; border: 0.4pt solid #dde4ea; border-radius: 3pt;
+  padding: 6pt 8pt; margin: 5pt 0; page-break-inside: avoid; white-space: pre; overflow: hidden;
+}
+pre code { background: none; border: none; padding: 0; font-size: 8.2pt; }
+blockquote {
+  margin: 6pt 0; padding: 5.5pt 9pt; background: #f4f6f9;
+  border-left: 3pt solid #123a5f; page-break-inside: avoid;
+}
+blockquote p { margin-bottom: 2.5pt; }
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 9pt 0; page-break-inside: avoid; }
+th {
+  font-family: "Segoe UI", sans-serif; font-size: 8.4pt; font-weight: 600;
+  background: #123a5f; color: #fff; padding: 3.5pt 5pt; text-align: left; border: 0.4pt solid #123a5f;
+}
+td { font-size: 8.8pt; padding: 3.5pt 5pt; border: 0.4pt solid #ccd6df; vertical-align: top; line-height: 1.38; }
+tr:nth-child(even) td { background: #f4f7fa; }
+hr { border: none; border-top: 0.5pt solid #c4d0da; margin: 9pt 0; }
+
+.cover { page: cover; width: 210mm; height: 296mm; position: relative; }
+.cover .inner { padding: 40mm 22mm 0 22mm; }
+.cover .band { width: 100%; height: 8mm; background: #123a5f; }
+.cover .rule { width: 34mm; height: 2.2mm; background: #2e9e86; margin: 8mm 0 6mm 0; }
+.cover h1 { font-size: 21pt; line-height: 1.25; color: #123a5f; border: none; margin: 0; padding: 0; page-break-before: avoid; }
+.cover .sub {
+  font-family: "Segoe UI", sans-serif; font-size: 11pt; color: #4a5a6a; margin-top: 5mm; line-height: 1.55;
+}
+.cover .meta {
+  margin-top: 14mm; border-top: 0.6pt solid #b9c6d2; padding-top: 5mm;
+  font-family: "Segoe UI", sans-serif; font-size: 9.5pt; color: #33414f; line-height: 1.9;
+}
+.cover .meta b { color: #123a5f; }
+
+.tocpage h1 { page-break-before: avoid; }
+.toc { list-style: none; padding: 0; margin: 8pt 0 0 0; }
+.toc li { margin: 0; }
+.toc a {
+  display: flex; align-items: baseline; text-decoration: none; color: #1d2733;
+  padding: 2.5pt 0; border-bottom: 0.4pt dotted #b9c6d2;
+  font-family: "Segoe UI", sans-serif; font-size: 9.2pt;
+}
+.toc a .t-label { flex: 1; }
+.toc a::after { content: target-counter(attr(href), page); color: #123a5f; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="band"></div>
+  <div class="inner">
+    <div class="rule"></div>
+    <h1>Verwaltungsassistent Sicherheitsarchitektur</h1>
+    <div class="sub">
+      Sicherheits- und Deployment-Architektur des<br>
+      Enterprise Knowledge Reasoning Platform (Verwaltungsassistent) / Verwaltungsassistent
+    </div>
+    <div class="meta">
+      <b>Version:</b>&nbsp; 1.1 (Security Hardening)<br>
+      <b>Datum:</b>&nbsp; 16. August 2026<br>
+      <b>Status:</b>&nbsp; Kundenorientiertes Sicherheitsdokument<br>
+      <b>Zielgruppe:</b>&nbsp; IT-Verantwortliche, Administratoren, Datenschutzbeauftragte, Sicherheitsprüfer<br>
+      <b>Basis:</b>&nbsp; Quellcode, Konfiguration und verifizierte fokussierte Tests (Stand 16.08.2026)
+    </div>
+  </div>
+</section>
+
+<section class="tocpage">
+  <h1>Inhalt</h1>
+  <ol class="toc">
+<li><a href="#s-hinweis-zur-dokumentation"><span class="t-label">Hinweis zur Dokumentation</span></a></li>
+<li><a href="#s-1-kurzfassung"><span class="t-label">1. Kurzfassung</span></a></li>
+<li><a href="#s-2-sicherheitsmodell-auf-einen-blick"><span class="t-label">2. Sicherheitsmodell auf einen Blick</span></a></li>
+<li><a href="#s-3-architektur"><span class="t-label">3. Architektur</span></a></li>
+<li><a href="#s-4-client-server-kommunikation"><span class="t-label">4. Client-Server-Kommunikation</span></a></li>
+<li><a href="#s-5-anmeldung-und-authentifizierung"><span class="t-label">5. Anmeldung und Authentifizierung</span></a></li>
+<li><a href="#s-6-tokens-und-sitzungen"><span class="t-label">6. Tokens und Sitzungen</span></a></li>
+<li><a href="#s-7-benutzerrechte-und-rollen"><span class="t-label">7. Benutzerrechte und Rollen</span></a></li>
+<li><a href="#s-8-administration"><span class="t-label">8. Administration</span></a></li>
+<li><a href="#s-9-audit-und-nachvollziehbarkeit"><span class="t-label">9. Audit und Nachvollziehbarkeit</span></a></li>
+<li><a href="#s-10-browser-und-api-sicherheit"><span class="t-label">10. Browser- und API-Sicherheit</span></a></li>
+<li><a href="#s-11-dokumentensicherheit-und-verschlüsselung-at-rest"><span class="t-label">11. Dokumentensicherheit und Verschlüsselung at Rest</span></a></li>
+<li><a href="#s-12-soll-verschlüsselung-at-rest-eingeführt-werden"><span class="t-label">12. Soll Verschlüsselung at Rest eingeführt werden?</span></a></li>
+<li><a href="#s-13-ai-llm-datenschutz"><span class="t-label">13. AI-/LLM-Datenschutz</span></a></li>
+<li><a href="#s-14-air-gap-offline-betrieb"><span class="t-label">14. Air-Gap / Offline-Betrieb</span></a></li>
+<li><a href="#s-15-datenflüsse"><span class="t-label">15. Datenflüsse</span></a></li>
+<li><a href="#s-16-bedrohungsmodell"><span class="t-label">16. Bedrohungsmodell</span></a></li>
+<li><a href="#s-17-produktionsdeployment-empfehlung-für-eine-kommune"><span class="t-label">17. Produktionsdeployment (Empfehlung für eine Kommune)</span></a></li>
+<li><a href="#s-18-verantwortungsgrenzen-was-verwaltungsassistent-nicht-leistet"><span class="t-label">18. Verantwortungsgrenzen — was Verwaltungsassistent nicht leistet</span></a></li>
+<li><a href="#s-19-sicherheitsstatus"><span class="t-label">19. Sicherheitsstatus</span></a></li>
+<li><a href="#s-20-empfehlungen-priorisiert"><span class="t-label">20. Empfehlungen (priorisiert)</span></a></li>
+<li><a href="#s-21-faq"><span class="t-label">21. FAQ</span></a></li>
+<li><a href="#s-anhang-a-tls-konfiguration-reverse-proxy-beispiel"><span class="t-label">Anhang A — TLS-Konfiguration (Reverse Proxy, Beispiel)</span></a></li>
+  </ol>
+</section>
+
+<main>
+<h1>Verwaltungsassistent Sicherheitsarchitektur</h1>
+<p><strong>Sicherheits- und Deployment-Architektur des Enterprise Knowledge Reasoning Platform (Verwaltungsassistent) / Verwaltungsassistent</strong></p>
+<p>Version 1.0 · 16. August 2026 · Zielgruppe: IT-Verantwortliche, Administratoren, Datenschutzbeauftragte, Sicherheitsprüfer</p>
+<hr>
+<h2 id="s-hinweis-zur-dokumentation">Hinweis zur Dokumentation</h2>
+<p>Dieses Dokument beschreibt, <strong>was aktuell implementiert ist</strong>, getrennt von <strong>Empfehlungen für den Produktivbetrieb</strong>. Drei Kennzeichnungen werden durchgängig verwendet:</p>
+<ul>
+<li><strong>AKTUELL IMPLEMENTIERT</strong> — im Quellcode vorhanden und (wo möglich) durch Tests zur Laufzeit verifiziert.</li>
+<li><strong>EMPFOHLENE PRODUKTIONSKONFIGURATION</strong> — vom Deployment/Kunden umzusetzen.</li>
+<li><strong>EMPFOHLENE WEITERENTWICKLUNG</strong> — von Verwaltungsassistent zu implementieren.</li>
+</ul>
+<p>Alle Aussagen wurden am 16.08.2026 gegen den aktuellen Quellcode und die laufende Demo-Installation geprüft (15 fokussierte Sicherheitstests, alle bestanden; zusätzlich 171 Tests der schnellen Suite). Wo eine Lücke besteht, wird sie ausdrücklich benannt.</p>
+<hr>
+<h2 id="s-1-kurzfassung">1. Kurzfassung</h2>
+<p>Verwaltungsassistent ist eine lokal betreibbare Frage-Antwort- und Entscheidungsplattform für öffentliche Verwaltungen. Die Referenzinstallation („Verwaltungsassistent&quot;) läuft vollständig auf eigener Infrastruktur: Browser-Anwendung, PostgreSQL, Qdrant (Vektorsuche), Neo4j (Wissensgraph) und ein lokaler Modellserver (Ollama) für die KI-Verarbeitung.</p>
+<p><strong>Wichtigste Sicherheitsmerkmale (aktuell implementiert):</strong></p>
+<ul>
+<li>Passwörter werden als BCrypt-Hash (Kostenfaktor 12) gespeichert — niemals im Klartext.</li>
+<li>Anmeldung über Formular-Login mit serverseitigen Sitzungen; CSRF-Schutz aktiv (verifiziert: POST ohne Token → 403).</li>
+<li>Rollenbasierte Zugriffskontrolle über die Security-Filterkette: ADMIN, ANALYST, USER (plus AUDITOR für Audit/Korpus).</li>
+<li>Benutzerverwaltung mit Sperr-/Lösch-Schutz: kein Selbst-Sperren, kein Entfernen des letzten Administrators; gesperrte Benutzer werden sofort ausgeloggt.</li>
+<li>Audit-Protokoll für Anmeldungen, Abmeldungen, Benutzerverwaltung, Dokumente, Abfragen und KI-Ausführungen — inkl. IP-Adresse.</li>
+<li>Keine Daten verlassen den Server: Modelle laufen lokal; keine Telemetrie; kein Cloud-Zwang.</li>
+<li>Die KI-Pipeline verweigert Antworten, wenn die Belege unzureichend sind (Fail-Closed) — wichtig gegen plausibel klingende, aber unbelegte Antworten.</li>
+</ul>
+<p><strong>Wichtigste bekannte Grenzen (aktueller Stand):</strong></p>
+<ul>
+<li>Dokumente liegen <strong>unverschlüsselt</strong> auf dem Dateisystem und in den Datenbanken (keine Verschlüsselung at rest).</li>
+<li>Die Demo läuft über <strong>HTTP</strong> (kein TLS); HTTPS ist als Produktionskonfiguration über einen Reverse Proxy vorgesehen.</li>
+<li>Kein Schutz gegen Brute-Force-Angriffe auf das Login (keine Ratenbegrenzung, keine automatische Sperre nach Fehlversuchen).</li>
+<li>Fehlgeschlagene Anmeldungen werden zwar protokolliert, das Audit-Ereignis geht aber durch einen Transaktions-Rollback verloren (verifizierte Lücke, Abschnitt 9).</li>
+<li>Die Fall-Detailansicht prüft keine Eigentümerschaft anhand der Fall-ID (UUID); die Liste filtert nach Eigentümer. Das System ist für eine Organisation gedacht, nicht für mandantenfremde Benutzer.</li>
+</ul>
+<p>Diese Punkte werden in Abschnitt 20 (Empfehlungen) priorisiert behandelt.</p>
+<hr>
+<h2 id="s-2-sicherheitsmodell-auf-einen-blick">2. Sicherheitsmodell auf einen Blick</h2>
+<pre><code> NICHT VERTRAUENSWÜRDIG                VERTRAUENSWÜRDIG (Server)
+ ───────────────────────               ─────────────────────────────
+ Browser / Arbeitsplatz                Verwaltungsassistent-Anwendung (Java/Spring)
+        │                                       │
+        │  HTTP(S), Form-Login,                 │  lokale Verbindungen
+        │  Session-Cookie, CSRF-Token           │  (nur im Server-Netz)
+        ▼                                       ▼
+ ┌──────────────────┐                 ┌───────────────────────────┐
+ │  Anmeldung      │                 │ PostgreSQL  (Dokumente,    │
+ │  Rollenprüfung  │                 │             Chunks, Audit, │
+ │  Sitzungen      │                 │             Benutzer)      │
+ │  CSRF           │                 │ Qdrant     (Vektoren)     │
+ │  Audit          │                 │ Neo4j      (Graph)        │
+ └──────────────────┘                 │ Ollama     (lokale LLMs)  │
+                                      └───────────────────────────┘
+</code></pre>
+<p>Grundprinzipien:</p>
+<ol>
+<li><strong>Nichts ist öffentlich.</strong> Alle fachlichen Seiten erfordern eine Anmeldung; öffentlich sind nur Login-Seite und statische Ressourcen.</li>
+<li><strong>Rechte werden an der Filterkette erzwungen</strong>, nicht nur im UI versteckt (verifiziert durch Rollen-Tests).</li>
+<li><strong>Der Server vertraut dem Browser nicht blind:</strong> CSRF-Token für alle zustandsändernden Formulare.</li>
+<li><strong>Alles Relevante wird protokolliert:</strong> Anmeldung, Abmeldung, Verwaltungsaktionen, KI-Ausführungen — mit Zeitstempel, Benutzer und IP.</li>
+<li><strong>Lokale Verarbeitung:</strong> Fragen, Dokumente und KI-Aufrufe verlassen den Server nicht.</li>
+</ol>
+<hr>
+<h2 id="s-3-architektur">3. Architektur</h2>
+<pre><code> Browser / Arbeitsplatz
+        │
+        │ HTTP(S) — Form-Login, Session-Cookie (VA_SESSION), XSRF-Token
+        ▼
+ ┌──────────────────────────────────────────────┐
+ │ Verwaltungsassistent Web-Anwendung (Verwaltungsassistent)    │
+ │                                              │
+ │  Authentication / Authorization (Filterkette)│
+ │  Assistent · Fälle · Dokumente · Beispiele   │
+ │  Audit · Administration · Profil             │
+ │  KI-Pipeline (Intent → Regeln → Abruf →      │
+ │               Verifikation → Fail-Closed)    │
+ └──────┬──────────────┬──────────────┬─────────┘
+        │ intern       │ intern       │ intern
+        ▼              ▼              ▼
+   PostgreSQL      Qdrant         Neo4j          Ollama (lokale LLMs)
+  (Dokumente,    (Vektorsuche,   (Wissens-       (Generation, Verifikation,
+   Chunks,       768-d)          graph)           Embeddings)
+   Audit, Benutzer)
+</code></pre>
+<p><strong>Verbindungen — was ist intern, was kann das Netz verlassen?</strong></p>
+<table>
+<thead>
+<tr>
+<th>Verbindung</th>
+<th>Richtung</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browser → Verwaltungsassistent</td>
+<td>extern (Behördennetz)</td>
+<td>die einzige externe Verbindung; im VM-Deployment der einzige freigegebene Port (8081, zusätzlich SSH für Administration)</td>
+</tr>
+<tr>
+<td>Verwaltungsassistent → PostgreSQL / Qdrant / Neo4j</td>
+<td>nur Server-intern</td>
+<td>Ports 5432/6333/7687 im VM-Deployment nicht von außen erreichbar</td>
+</tr>
+<tr>
+<td>Verwaltungsassistent → Ollama</td>
+<td>nur Server-intern (localhost:11434)</td>
+<td>Modellinferenz lokal</td>
+</tr>
+<tr>
+<td>Verwaltungsassistent → Internet</td>
+<td><strong>nicht erforderlich im Betrieb</strong></td>
+<td>nur Erst-Installation (Modell-Downloads, Container-Images, OS-Updates)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AKTUELL IMPLEMENTIERT:</strong> Alle Komponenten laufen auf einem Host (Docker für die Datenbanken, Ollama als lokaler Dienst). Es existiert ein reproduzierbares VM-Bundle (docs/deployer), dessen Firewall nur Web-Port und SSH freigibt.</p>
+<p><strong>KI-Anbindung:</strong> Der Modellserver (Ollama) ist die aktive Konfiguration. Ein Provider-Modul für OpenAI-kompatible externe APIs existiert im Code, ist aber <strong>nicht aktiv</strong>. Eine Nutzung externer LLM-APIs würde Dokument- und Frageinhalte an den Anbieter senden — das wäre eine bewusste Deployment-Entscheidung, nicht der Standard.</p>
+<hr>
+<h2 id="s-4-client-server-kommunikation">4. Client-Server-Kommunikation</h2>
+<p><strong>AKTUELL IMPLEMENTIERT:</strong> Die Demo-Installation läuft über <strong>HTTP ohne TLS</strong>. Es gibt keine TLS-Terminierung in der Anwendung.</p>
+<p><strong>EMPFOHLENE PRODUKTIONSKONFIGURATION:</strong></p>
+<pre><code> Browser ── HTTPS ──► Reverse Proxy (nginx/Caddy o. ä.) ── HTTP ──► Verwaltungsassistent
+                              │
+                         TLS-Zertifikate,
+                         HSTS optional
+</code></pre>
+<p>Der Reverse Proxy übernimmt TLS-Terminierung, Zertifikatsverwaltung und optional HSTS. Die interne Verbindung Proxy → Verwaltungsassistent liegt im Server-Netz. Zusätzlich: Session-Cookie-Flags (<code>secure</code>, <code>SameSite</code>) setzen (Abschnitt 6).</p>
+<p><strong>Sitzungscookie:</strong> Name <code>VA_SESSION</code>, Timeout 30 Minuten (konfigurierbar). Seit dem Härtungs-Update explizit konfiguriert: <strong>HttpOnly=true, SameSite=Lax</strong>; <code>Secure</code> folgt der Deployment-Konfiguration (<code>COOKIE_SECURE</code>, Standard: aus für die lokale HTTP-Demo, <strong>an</strong> hinter dem HTTPS-Reverse-Proxy).</p>
+<hr>
+<h2 id="s-5-anmeldung-und-authentifizierung">5. Anmeldung und Authentifizierung</h2>
+<p><strong>Was passiert bei der Anmeldung? (AKTUELL IMPLEMENTIERT, per Test verifiziert)</strong></p>
+<pre><code> Browser                    Verwaltungsassistent                              PostgreSQL
+    │  POST /login            │                                    │
+    │  (E-Mail + Passwort)    │                                    │
+    │────────────────────────►│  Benutzer per E-Mail suchen       │
+    │                         │───────────────────────────────────►│
+    │                         │  Prüfen: enabled? locked?          │
+    │                         │  BCrypt-Vergleich des Passworts    │
+    │                         │◄───────────────────────────────────│
+    │                         │  USER_LOGIN-Audit (mit IP +       │
+    │                         │  User-Agent)                       │
+    │  302 → /dashboard       │                                    │
+    │  Set-Cookie: VA_SESSION │  Server-Session wird angelegt      │
+    │◄────────────────────────│  (SessionRegistry, max. 10)        │
+</code></pre>
+<ul>
+<li><strong>Benutzername</strong> ist die E-Mail-Adresse (normalisiert auf Kleinbuchstaben).</li>
+<li><strong>Passwörter</strong> werden mit <strong>BCrypt (Kostenfaktor 12)</strong> gehasht gespeichert (Spalte <code>password_hash</code>). Es wird nie ein Passwort verschlüsselt oder im Klartext abgelegt — gehasht ist hier das richtige Wort: Ein Hash ist eine Einwegfunktion; selbst mit Datenbankzugriff ist das Passwort nicht rückrechenbar.</li>
+<li><strong>Fehlgeschlagene Anmeldung:</strong> gleiche Fehlermeldung für „unbekannte E-Mail&quot; und „falsches Passwort&quot; (kein User-Enumeration über die Meldung); jeder Fehlversuch wird als USER_LOGIN_FAILED-Audit-Ereignis <strong>inkl. IP</strong> persistiert (eigene Transaktion, übersteht den Login-Rollback — per Test verifiziert).</li>
+<li><strong>Brute-Force-Schutz (AKTUELL IMPLEMENTIERT):</strong> Nach 5 Fehlversuchen innerhalb von 10 Minuten wird die E-Mail-Adresse für 10 Minuten gesperrt (konfigurierbar über <code>platform.auth.login.*</code> / Umgebungsvariablen LOGIN_MAX_FAILURES, LOGIN_FAILURE_WINDOW, LOGIN_LOCKOUT_DURATION). Die Sperre ist <strong>rein zeitbasiert</strong> — sie läuft automatisch ab, kein Konto (auch kein Administrator) kann dauerhaft gesperrt werden. Eine erfolgreiche Anmeldung setzt den Zähler zurück. Sperr-bedingte Ablehnungen werden mit Grund <code>too_many_attempts</code> auditiert (per Test verifiziert).</li>
+<li><strong>Gesperrte/deaktivierte/gelöschte Benutzer können sich nicht anmelden</strong> (per Test verifiziert).</li>
+<li><strong>Passwort-Zurücksetzung:</strong> existiert derzeit <strong>nicht</strong> (weder durch den Benutzer noch durch den Administrator). Für den Produktivbetrieb empfohlen: geführter Reset-Prozess (P2).</li>
+<li><strong>Abmeldung:</strong> Sitzung wird serverseitig invalidiert, Session-Cookie gelöscht, USER_LOGOUT-Audit geschrieben (per Test verifiziert).</li>
+</ul>
+<p><strong>Registrierung:</strong> Die Web-Anwendung hat <strong>keine funktionierende Registrierung</strong> (der Link „Registrieren&quot; führt ins Leere). Benutzer werden vom Administrator angelegt oder im Demo-Profil automatisch gesetzt. Hinweis: Die separate Plattform-REST-API (nicht Teil der Verwaltungsassistent-Installation) bietet einen öffentlichen Registrierungs-Endpunkt, der Rollen aus der Anfrage übernimmt — <strong>vor einem Einsatz dieser API müssen Registrierung und Rollenvergabe eingeschränkt werden</strong> (kritische Weiterentwicklung, Abschnitt 20).</p>
+<hr>
+<h2 id="s-6-tokens-und-sitzungen">6. Tokens und Sitzungen</h2>
+<p>Das System verwendet <strong>zwei verschiedene Modelle</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Bereich</th>
+<th>Modell</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verwaltungsassistent (Browser)</td>
+<td><strong>Serverseitige Sitzungen</strong></td>
+<td>VA_SESSION-Cookie, 30-min-Timeout, SessionRegistry, max. 10 gleichzeitige Sitzungen pro Benutzer</td>
+</tr>
+<tr>
+<td>Plattform-REST-API (separate App im Repository)</td>
+<td><strong>JWT + Refresh-Token</strong></td>
+<td>HS256-signierte Access-Tokens (15 min), Refresh-Tokens (30 Tage)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sitzungen (Web, AKTUELL IMPLEMENTIERT):</strong></p>
+<ul>
+<li>Ein aktiver Login = eine HTTP-Session im SessionRegistry. Der Administrator sieht aktive Sitzungen inkl. IP in der Benutzerverwaltung.</li>
+<li>Beim Überschreiten von 10 parallelen Sitzungen wird die <strong>älteste</strong> Sitzung beendet (Spring-Standard).</li>
+<li>Ablauf: <code>/login?expired</code> (bzw. HTTP 401 bei htmx-Anfragen, damit die UI sauber weiterleitet).</li>
+<li>Logout invalidiert die Sitzung serverseitig (per Test verifiziert).</li>
+<li>Benutzer-Sperrung beendet alle aktiven Sitzungen des Benutzers sofort (SessionRegistry, Code-verifiziert; Login-Sperre per Test verifiziert).</li>
+</ul>
+<p><strong>Tokens (Plattform-API, AKTUELL IMPLEMENTIERT im Code):</strong></p>
+<ul>
+<li>Access-Token: JWT, HS256, Claims <code>sub</code> (E-Mail), <code>user_id</code>, <code>roles</code>; Gültigkeit 15 Minuten.</li>
+<li>Refresh-Token: 64 Byte kryptografischer Zufall; <strong>nur als SHA-256-Hash gespeichert</strong> (kein Klartext-Token in der Datenbank); 30 Tage gültig.</li>
+<li><strong>Rotation:</strong> Jeder Refresh widerruft den alten Token und erzeugt einen neuen (Verkettung über <code>replacedByTokenId</code>; parallele Refreshes werden über optimistisches Sperren abgefangen).</li>
+<li><strong>Widerruf:</strong> Logout widerruft den Refresh-Token; Benutzer-Löschung entfernt alle Token-Sitzungen des Benutzers.</li>
+<li>Signaturschlüssel: Umgebungsvariable <code>JWT_SECRET</code>; <strong>der Standardwert im Code ist ein Entwicklungs-Schlüssel</strong> („default-dev-jwt-secret-change-in-production&quot;). <strong>Produktionspflicht:</strong> Schlüssel setzen (mind. 32 Byte, erzwungen), geheim halten, rotieren können.</li>
+</ul>
+<p><strong>Browser-Speicherung:</strong> Die Web-App speichert keine Token im Browser (nur Session-Cookie). Das XSRF-Token-Cookie ist bewusst nicht HttpOnly (die htmx-UI liest es für den CSRF-Header).</p>
+<hr>
+<h2 id="s-7-benutzerrechte-und-rollen">7. Benutzerrechte und Rollen</h2>
+<p><strong>AKTUELL IMPLEMENTIERT:</strong> Die Rechteprüfung erfolgt in der <strong>Security-Filterkette</strong> (URL-basiert) — nicht über <code>@PreAuthorize</code>-Annotationen auf den Controllern der Web-App (per Quellcode geprüft; die Rollen-Tests bestätigen die Durchsetzung). Es gibt keine zusätzliche Service-Ebenen-Autorisierung.</p>
+<p>Rollen: <strong>ADMIN, ANALYST, USER</strong> (Enum) sowie <strong>AUDITOR</strong> (als Rollenname in der Filterkette).</p>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Benutzer (USER)</th>
+<th>Analyst</th>
+<th>Auditor</th>
+<th>Administrator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anmeldung</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Assistent (Fragen)</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Fälle (eigene)</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓ (alle)</td>
+</tr>
+<tr>
+<td>Entscheidungen</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Dokumente</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Beispiele / Korpus</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Audit-Protokoll</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Benutzerverwaltung</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Benutzer sperren/entsperren</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Benutzer löschen</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p>(Verifiziert per Test: USER → /admin, /audit, /corpus = 403; ADMIN → alles erlaubt; AUDITOR → Audit ja, Admin nein; anonym → überall Weiterleitung auf /login.)</p>
+<p><strong>Daten-Sichtbarkeit (aktuelles Modell, Ein-Organisations-Betrieb):</strong></p>
+<ul>
+<li><strong>Fälle (AKTUELL IMPLEMENTIERT, per Test verifiziert):</strong> Objekt-Ebene-Autorisierung über einen zentralen Zugriffswächter (<code>CaseAccessGuard</code>): Administratoren dürfen alle Fälle öffnen; normale Benutzer <strong>nur eigene</strong> Fälle (Eigentümer-E-Mail muss übereinstimmen). Die Prüfung gilt für die Detailansicht <strong>und alle Unteraktionen</strong> (Dokumente, Timeline, Notizen, Checkliste, Phase, Dokument-Verknüpfungen, Entscheidungsanalyse inkl. Fortschritts-Polling, Archivieren). Fremde Fall-IDs → 403; unbekannte IDs → 404; anonym → Weiterleitung zur Anmeldung. Die Liste filtert weiterhin nach Eigentümer (bzw. zeigt Administratoren alle Fälle).</li>
+<li><strong>Dokumente:</strong> Die Dokumentliste ist für alle angemeldeten Benutzer sichtbar (kein Eigentümer-Filter) — bewusstes Ein-Organisations-Modell. Der Original-Download der Datei ist über die Web-UI derzeit nicht möglich (Detailseite zeigt Metadaten/Status).</li>
+<li><strong>Mandantenfähigkeit:</strong> Das Datenmodell führt <code>tenant_id</code>-Felder, die Anwendung erzwingt aber <strong>keine</strong> Mandanten-Trennung. Die Installation ist als Ein-Mandanten-Betrieb pro Behörde gedacht. Keine Mehr-Mandanten-Zusagen.</li>
+</ul>
+<hr>
+<h2 id="s-8-administration">8. Administration</h2>
+<p><strong>AKTUELL IMPLEMENTIERT (per Code und früherem Release-Commit verifiziert):</strong></p>
+<ul>
+<li>Benutzerliste mit Rollen, Sperrstatus, letzter Anmeldung/Abmeldung (aus Audit), IP und Online-Status (aus SessionRegistry).</li>
+<li><strong>Sperren/Entsperren:</strong> setzt das <code>locked</code>-Flag; gesperrte Benutzer können sich nicht mehr anmelden (per Test verifiziert) und werden sofort ausgeloggt (SessionRegistry-Expiry).</li>
+<li><strong>Löschen:</strong> entfernt zuerst alle Refresh-Token-Sitzungen des Benutzers, beendet aktive Sitzungen, löscht dann den Account.</li>
+<li><strong>Selbstschutz:</strong> Ein Administrator kann sich nicht selbst sperren oder löschen; der <strong>letzte verbleibende Administrator</strong> kann weder gesperrt noch gelöscht werden.</li>
+<li>Rollenänderungen werden als ROLE_CHANGED-Audit protokolliert; alle Verwaltungsaktionen landen im Audit.</li>
+</ul>
+<p><strong>Warum diese Schutzmechanismen existieren:</strong> Ein versehentliches Aussperren aller Administratoren wäre nur noch per Datenbankzugriff reparierbar. Die Schutzregeln verhindern genau diesen Zustand.</p>
+<hr>
+<h2 id="s-9-audit-und-nachvollziehbarkeit">9. Audit und Nachvollziehbarkeit</h2>
+<p><strong>AKTUELL IMPLEMENTIERT:</strong> Ereignisse werden in der Tabelle <code>audit_events</code> (PostgreSQL) gespeichert: Zeitstempel, Akteur, Tenant, Ereignistyp, Entität, Modul, Korrelations-ID, Request-Pfad, HTTP-Methode und <strong>IP-Adresse</strong>. Die Web-UI (Auditor/Admin) bietet Filterung, Detailansicht und CSV-Export.</p>
+<table>
+<thead>
+<tr>
+<th>Ereignis</th>
+<th>Protokolliert</th>
+<th>IP erfasst</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Anmeldung (USER_LOGIN)</td>
+<td>✓ (per Test verifiziert)</td>
+<td>✓ (per Test verifiziert)</td>
+</tr>
+<tr>
+<td>Fehlgeschlagene Anmeldung (USER_LOGIN_FAILED)</td>
+<td><strong>✗ — siehe Lücke unten</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Abmeldung (USER_LOGOUT)</td>
+<td>✓ (per Test verifiziert)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Benutzer angelegt (USER_CREATED)</td>
+<td>✓</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Rollenänderung (ROLE_CHANGED)</td>
+<td>✓</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Sperren/Entsperren/Löschen</td>
+<td>✓</td>
+<td>✓ (über Request-Kontext)</td>
+</tr>
+<tr>
+<td>Dokument-Upload/Ingestion</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Such-/Abruf-Ausführung (RETRIEVAL_EXECUTED)</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>KI-Ausführung (MODEL_INFERENCE) inkl. Strategie</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Token-Refresh/-Widerruf</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Behoben (AKTUELL IMPLEMENTIERT, per Test verifiziert):</strong> Audit-Emissionen laufen seit dem Härtungs-Update in einer <strong>eigenen Transaktion</strong> (<code>REQUIRES_NEW</code>) — <code>USER_LOGIN_FAILED</code> übersteht den Rollback der fehlgeschlagenen Anmeldung und wird <strong>inkl. IP-Adresse</strong> persistiert. Der Test <code>wrongPassword_failsAndFailedLoginAuditPersistsWithIp</code> verifiziert dieses Verhalten.</p>
+<p><strong>Wert für die Praxis:</strong> Anmeldungen (auch Fehlversuche mit Sperr-Grund), Abmeldungen und Verwaltungsaktionen sind lückenlos nachvollziehbar (wer, wann, von welcher IP) — Grundlage für Brute-Force-Erkennung und Incident-Analyse. KI-Ausführungen werden mit Strategie und Konfidenz protokolliert; die vollständigen Verifikationsschritte einer Antwort liegen derzeit nur im Server-Log, nicht im Audit-Speicher (Weiterentwicklung).</p>
+<hr>
+<h2 id="s-10-browser-und-api-sicherheit">10. Browser- und API-Sicherheit</h2>
+<p><strong>CSRF (AKTUELL IMPLEMENTIERT, per Test verifiziert):</strong> CSRF-Schutz aktiv; Token als <code>XSRF-TOKEN</code>-Cookie (bewusst nicht HttpOnly, damit htmx den <code>X-XSRF-TOKEN</code>-Header setzen kann). POST ohne Token → 403. Seit dem Härtungs-Update trägt das Cookie <strong>SameSite=Lax</strong> (per Test verifiziert); das <code>Secure</code>-Attribut folgt der Deployment-Konfiguration (<code>COOKIE_SECURE</code>, Standard: aus für die lokale HTTP-Demo, <strong>an</strong> hinter dem HTTPS-Reverse-Proxy).</p>
+<p><strong>CORS:</strong> Es gibt <strong>keine</strong> CORS-Konfiguration — Cross-Origin-Zugriffe aus Browsern werden nicht freigegeben; die Anwendung ist rein same-origin. Das ist für das aktuelle Modell korrekt und kein Handlungsbedarf.</p>
+<p><strong>HTTP-Security-Header (Web-App):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X-Frame-Options</td>
+<td>deny ✓ (Clickjacking-Schutz)</td>
+</tr>
+<tr>
+<td>X-XSS-Protection</td>
+<td><strong>deaktiviert</strong> (veraltet; Empfehlung P3: CSP stattdessen)</td>
+</tr>
+<tr>
+<td>X-Content-Type-Options</td>
+<td><strong>nosniff aktiv</strong> (seit Härtungs-Update, per Test verifiziert)</td>
+</tr>
+<tr>
+<td>Content-Security-Policy</td>
+<td>nicht gesetzt in der Web-App (nur in der separaten SPA-App) → Empfehlung P3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API-Zugriff:</strong> Die Plattform-REST-API (<code>/api/**</code>, separate App) ist zustandslos mit JWT abgesichert; öffentlich sind nur <code>register</code>, <code>login</code>, <code>refresh</code>, <code>providers</code> — <strong>Register ist kritisch</strong> (siehe Abschnitt 5/20). In der Verwaltungsassistent-Installation existieren keine <code>/api/**</code>-Endpunkte.</p>
+<hr>
+<h2 id="s-11-dokumentensicherheit-und-verschlüsselung-at-rest">11. Dokumentensicherheit und Verschlüsselung at Rest</h2>
+<p><strong>Wo liegen welche Daten? (AKTUELL IMPLEMENTIERT)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Daten</th>
+<th>Speicherort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original-Datei (PDF/DOCX/…)</td>
+<td>lokales Dateisystem (<code>uploads/</code>, Dateiname mit UUID-Präfix)</td>
+</tr>
+<tr>
+<td>SHA-256-Prüfsumme + Metadaten</td>
+<td>PostgreSQL (<code>documents</code>, <code>document_versions</code>)</td>
+</tr>
+<tr>
+<td>Extrahierter Text (Chunks)</td>
+<td>PostgreSQL (<code>search_document_chunks</code>)</td>
+</tr>
+<tr>
+<td>Embeddings (Vektoren)</td>
+<td>Qdrant (<code>mda_chunks</code>, 768-d)</td>
+</tr>
+<tr>
+<td>Wissensgraph</td>
+<td>Neo4j</td>
+</tr>
+<tr>
+<td>Audit-Daten</td>
+<td>PostgreSQL (<code>audit_events</code>)</td>
+</tr>
+<tr>
+<td>Benutzer/Passwort-Hashes</td>
+<td>PostgreSQL (<code>auth_users</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Werden Dokumente verschlüsselt gespeichert? — Nein.</strong></p>
+<ul>
+<li><strong>Dateisystem:</strong> Rohdateien ohne Anwendungs-Verschlüsselung (kein AES, kein KMS).</li>
+<li><strong>Datenbanken:</strong> keine Anwendungs-Verschlüsselung; keine TDE-Konfiguration vorgegeben.</li>
+<li><strong>Backups:</strong> Es existiert keine eingebaute Backup-Verschlüsselung.</li>
+</ul>
+<p>Klassifizierung: <strong>Verschlüsselung at rest = ✗ NICHT IMPLEMENTIERT</strong> (Anwendungsebene); infrastrukturseitige Verschlüsselung (Festplatte/LVM/Docker-Volumes) ist <strong>DEPLOYMENT-ABHÄNGIG</strong> und Aufgabe des Betreibers. Dateisystem-Rechte (nur App-Benutzer darf <code>uploads/</code> lesen) sind Zugriffskontrolle, keine Verschlüsselung.</p>
+<hr>
+<h2 id="s-12-soll-verschlüsselung-at-rest-eingeführt-werden">12. Soll Verschlüsselung at Rest eingeführt werden?</h2>
+<p><strong>Zwei Optionen:</strong></p>
+<p><strong>Option A — Infrastruktur-/Speicherverschlüsselung (empfohlen als Basis):</strong>
+Vollverschlüsselung der Datenträger (z. B. LUKS/dm-crypt), verschlüsselte Docker-Volumes, verschlüsselte VM-Disks. Vorteile: einfach, transparent für die Anwendung, kein Schlüsselmanagement in der App, schützt gegen physischen Diebstahl von Servern/Platten. Nachteile: schützt nicht gegen logischen Zugriff auf dem laufenden System (z. B. kompromittierten App-Server) und nicht gegen unverschlüsselte Backups.</p>
+<p><strong>Option B — Anwendungsverschlüsselung (AES-256-GCM, pro Dokument/Schlüssel-Hierarchie):</strong>
+Verschlüsselt Inhalte, bevor sie Platte/Backup erreichen; schützt auch gegen logische Zugriffe außerhalb der App und gegen gestohlene Backups. Nachteile: Schlüsselmanagement (Master Key, Rotation), Such-/Index-Problematik (verschlüsselte Chunks können nicht per Klartext-Suche gefunden werden — das würde die Retrieval-Architektur betreffen), höhere Komplexität.</p>
+<p><strong>Pragmatische Empfehlung für eine Kommune:</strong></p>
+<ol>
+<li><strong>Priorität 1 (Betrieb):</strong> Option A sofort — verschlüsselte Datenträger/Volumes <strong>und verschlüsselte Backups</strong> (ein verschlüsselter Primärspeicher mit unverschlüsseltem Backup ist kein vollständiges Modell).</li>
+<li><strong>Option B nur, wenn</strong> die Dokumente einen hohen Schutzbedarf haben (z. B. VS-Einstufung, besondere Sozialdaten) und das Schlüsselmanagement organisatorisch beherrscht wird. Für den Standard-Betrieb mit Option A ist der Zusatznutzen begrenzt, der Aufwand (Indexierung, Rotation) aber real.</li>
+</ol>
+<p><strong>Backups:</strong> Egal welche Option — Backups müssen verschlüsselt und zugriffsbeschränkt aufbewahrt werden, sonst ist das Sicherheitsmodell unvollständig. Ein gestohlenes Backup enthält sämtliche Dokumente, Chunks, Vektoren und Audit-Daten.</p>
+<hr>
+<h2 id="s-13-ai-llm-datenschutz">13. AI-/LLM-Datenschutz</h2>
+<p><strong>AKTUELL IMPLEMENTIERT:</strong></p>
+<ul>
+<li>Modelle (Generation, Verifikation, Embeddings) laufen <strong>lokal über Ollama</strong> (localhost). Fragen, Dokumentauszüge und Antworten verlassen den Server nicht.</li>
+<li>Die Pipeline übergibt dem Generierungsmodell <strong>nur die ausgewählten Belege</strong> (max. 4 Dokumente, kurze Auszüge) — nicht den gesamten Korpus.</li>
+<li>Die <strong>Verifikation</strong> läuft als getrennter Schritt mit eigenem Modell; nicht belegte Antworten werden verworfen (Fail-Closed: „Für diese Frage liegen in der Wissensbasis keine ausreichenden Informationen vor.&quot;).</li>
+<li>Ein optionales OpenAI-kompatibles Provider-Modul existiert im Code, ist aber <strong>nicht aktiv</strong>. Falls ein Kunde externe Modelle wünscht, wäre das eine bewusste Entscheidung mit Datenabfluss — dann greift dieses Kapitel nicht mehr.</li>
+</ul>
+<p><strong>Ehrliche Einordnung:</strong> Das ist keine „AI-Security&quot;-Zusage gegen Prompt-Injection. Dokumente werden als unzuverlässiger Inhalt behandelt (Prompt-Injection über ein hochgeladenes Dokument ist denkbar; die Verifikations-/Fail-Closed-Mechanik begrenzt die Folgen, verhindert sie aber nicht). Wer Dokumente hochladen darf, ist über die Rechte (Korpus: Auditor/Admin) begrenzt. Empfehlung P3: explizite Prompt-Injection-Tests je Modell.</p>
+<hr>
+<h2 id="s-14-air-gap-offline-betrieb">14. Air-Gap / Offline-Betrieb</h2>
+<p><strong>AKTUELL IMPLEMENTIERT (Demo + VM-Bundle):</strong></p>
+<pre><code>                    INTERNET
+                       X  (im Betrieb nicht erforderlich)
+                       │
+             ┌─────────────────────┐
+             │   Behördennetz      │
+             │                     │
+             │  Browser ── HTTP ──►│ Verwaltungsassistent (VM, Port 8081)
+             │                     │   ├── PostgreSQL (intern)
+             │                     │   ├── Qdrant      (intern)
+             │                     │   ├── Neo4j       (intern)
+             │                     │   └── Ollama      (localhost)
+             └─────────────────────┘
+</code></pre>
+<ul>
+<li><strong>Laufzeit:</strong> vollständig offline-fähig. Keine Lizenz-Dienste, keine Telemetrie, keine externen API-Aufrufe im Code-Pfad (einziger HTTP-Client: der lokale Modellserver; optionales, nicht aktives OpenAI-Modul).</li>
+<li><strong>Einmalig benötigt:</strong> Modell-Downloads (Ollama), Container-Images (Docker), OS-/Java-Updates. Diese können auf einem vergleichbaren System vorbereitet und übertragen werden — dann ist auch die Installation offline möglich.</li>
+<li><strong>„100 % offline&quot; gilt für den Betrieb, nicht für die Einrichtung.</strong> Software-Updates müssen über einen geregelten Prozess eingespielt werden (Empfehlung P2: definierter Update-/Medientransfer-Prozess).</li>
+</ul>
+<hr>
+<h2 id="s-15-datenflüsse">15. Datenflüsse</h2>
+<table>
+<thead>
+<tr>
+<th>Daten</th>
+<th>Weg</th>
+<th>Klassifizierung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login-Daten (E-Mail + Passwort)</td>
+<td>Browser → Verwaltungsassistent (HTTP; Produktion: HTTPS)</td>
+<td>nie im Klartext gespeichert (BCrypt); Übertragung in Produktion TLS-pflichtig</td>
+</tr>
+<tr>
+<td>Session-Cookie / CSRF-Token</td>
+<td>Browser ↔ Verwaltungsassistent</td>
+<td>Cookie; Produktion: Secure-Flag</td>
+</tr>
+<tr>
+<td>Benutzerfrage</td>
+<td>Browser → Verwaltungsassistent → (bei Abruf) lokale Suche + lokales LLM</td>
+<td>bleibt auf dem Server</td>
+</tr>
+<tr>
+<td>Hochgeladenes Dokument</td>
+<td>Browser → Verwaltungsassistent → Dateisystem; Text → PostgreSQL; Vektoren → Qdrant; Graph → Neo4j</td>
+<td>bleibt auf dem Server; <strong>unverschlüsselt at rest</strong></td>
+</tr>
+<tr>
+<td>LLM-Prompt / -Antwort</td>
+<td>Verwaltungsassistent ↔ lokales Ollama</td>
+<td>localhost, kein Netzaustritt</td>
+</tr>
+<tr>
+<td>Audit-Ereignis</td>
+<td>Verwaltungsassistent → PostgreSQL</td>
+<td>bleibt auf dem Server</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kein Datenpfad verlässt den Server.</strong> Der einzige externe Pfad ist der Browser ↔ Verwaltungsassistent-Kanal, der in Produktion über HTTPS laufen muss.</p>
+<hr>
+<h2 id="s-16-bedrohungsmodell">16. Bedrohungsmodell</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Bedrohung</th>
+<th>Was heute schützt</th>
+<th>Was fehlt</th>
+<th>Empfehlung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Unauthentifizierter externer Angreifer</td>
+<td>alles außer Login/Statik erfordert Anmeldung (verifiziert); keine CORS-Freigaben; CSRF aktiv</td>
+<td>HTTP im Demo; keine Ratenbegrenzung</td>
+<td>P1 HTTPS; P2 Rate-Limiting</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Gestohlenes Passwort</td>
+<td>BCrypt(12); Sperre durch Admin möglich; Audit zeigt Anmeldungen</td>
+<td>kein MFA, kein automatisches Lockout nach Fehlversuchen</td>
+<td>P3 MFA für Admins; P2 Brute-Force-Schutz</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Gestohlenes Session-Cookie</td>
+<td>serverseitige Sessions; Logout invalidiert; Admin kann Sitzungen beenden</td>
+<td>Cookie ohne Secure-Flag im Demo</td>
+<td>P2 Cookie-Flags; P1 HTTPS</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Bösartiger angemeldeter Benutzer</td>
+<td>Rollentrennung; Audit</td>
+<td>Fall-Detail ohne Eigentümer-Prüfung (UUID reicht); Dokumentliste global</td>
+<td>P2 Objekt-Prüfungen</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Kompromittierter Admin-Account</td>
+<td>Audit aller Aktionen; Selbst-/Letzter-Admin-Schutz verhindert Aussperren, nicht Missbrauch</td>
+<td>kein MFA, keine Vier-Augen-Prinzipien</td>
+<td>P3 MFA/Admin-Härtung</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Direkter Datenbankzugriff</td>
+<td>interne Ports nicht exponiert (VM-Deployment); DB-Passwörter per Umgebungsvariable</td>
+<td>Standard-Passwörter im Demo-Compose</td>
+<td>P1 echte Secrets; Netzsegmentierung</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Gestohlenes Backup</td>
+<td>— (keine Verschlüsselung vorgegeben)</td>
+<td>Backup-Verschlüsselung</td>
+<td>P1 verschlüsselte Backups</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Kompromittierter App-Server</td>
+<td>Rollen/Audit begrenzen den Schaden; Fail-Closed der KI</td>
+<td>keine at-rest-Verschlüsselung</td>
+<td>P1/P2 Verschlüsselungskonzept</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Böswillig hochgeladenes Dokument (inkl. Prompt-Injection)</td>
+<td>Upload nur angemeldet; Korpus-Verwaltung nur Auditor/Admin; Verifikation begrenzt unbelegte Antworten</td>
+<td>keine dedizierten Injection-Tests</td>
+<td>P3 Prompt-Injection-Tests</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Prompt-Injection im Dokument</td>
+<td>wie #9</td>
+<td>wie #9</td>
+<td>wie #9</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Netzwerk-Abhören (Browser ↔ Server)</td>
+<td>im Demo nichts (HTTP!)</td>
+<td>TLS</td>
+<td>P1 HTTPS via Reverse Proxy</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Physischer Diebstahl von Server/Platte</td>
+<td>— (keine Verschlüsselung)</td>
+<td>Festplattenverschlüsselung</td>
+<td>P1 Option A (Abschnitt 12)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="s-17-produktionsdeployment-empfehlung-für-eine-kommune">17. Produktionsdeployment (Empfehlung für eine Kommune)</h2>
+<p><strong>Verwaltungsassistent-Verantwortung (Anwendung):</strong></p>
+<ul>
+<li>Anwendung als Container/Systemd-Dienst; Profile für Produktion; DB-Schema-Verwaltung.</li>
+<li>Rollenmodell, CSRF, Session-Handling, Audit (wie beschrieben).</li>
+<li>Korrekte Secrets-Behandlung: <code>JWT_SECRET</code>-Pflichtwert (kein Dev-Default), DB-/Neo4j-Passwörter aus Umgebung/Secret-Store.</li>
+</ul>
+<p><strong>Kunden-/Infrastrukturverantwortung (Betrieb):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Maßnahme</th>
+<th>Priorität</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dedizierter Server/VM, nur Web-Port + SSH exponiert</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>HTTPS-Reverse-Proxy mit gültigen Zertifikaten (+ HSTS)</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Firewall: 5432/6333/7687/11434 nur serverintern</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Verschlüsselte Datenträger/Volumes <strong>und verschlüsselte Backups</strong></td>
+<td>P1</td>
+</tr>
+<tr>
+<td>OS-/Container-Security-Updates, geregelter Update-Prozess (auch offline)</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Echte, einzigartige Passwörter für PostgreSQL/Neo4j/Admin-Accounts; Demo-Accounts entfernen</td>
+<td>P1</td>
+</tr>
+<tr>
+<td>Audit-Aufbewahrung (Retention) und -Auswertung definieren</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Monitoring (Erreichbarkeit, Platten, Logs)</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Netzsegmentierung (Server in eigenem VLAN)</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>MFA für Administratoren (z. B. über Proxy)</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Vier-Augen-Prinzip für kritische Admin-Aktionen</td>
+<td>P3</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="s-18-verantwortungsgrenzen-was-verwaltungsassistent-nicht-leistet">18. Verantwortungsgrenzen — was Verwaltungsassistent nicht leistet</h2>
+<p>Verwaltungsassistent ist kein Komplett-Sicherheitsprodukt für die gesamte IT-Umgebung. Ausdrücklich <strong>nicht</strong> abgedeckt:</p>
+<ul>
+<li>Schutz eines bereits kompromittierten Betriebssystems oder Servers.</li>
+<li>Schutz vor einem gestohlenen Administrator-Passwort (ohne MFA).</li>
+<li>Netzwerk-Firewalling und Netzsegmentierung (Deployment-Aufgabe).</li>
+<li>Physische Sicherheit von Server und Speichermedien.</li>
+<li>Backup-Sicherheit (Verschlüsselung, Aufbewahrungsort).</li>
+<li>TLS-Zertifikatsverwaltung und -Erneuerung.</li>
+<li>OS-/Container-Härtung und Patch-Management.</li>
+<li>Rechtliche Bewertung (DSGVO-DPIA, Weisungsgebundenheit) — Verwaltungsassistent liefert die technischen Eigenschaften (lokale Verarbeitung, Rollen, Audit), keine Rechtsberatung.</li>
+</ul>
+<p>Diese Abgrenzung ist bewusst: Sie verhindert, dass Sicherheitslücken der Umgebung der Anwendung zugeschrieben werden — und umgekehrt.</p>
+<hr>
+<h2 id="s-19-sicherheitsstatus">19. Sicherheitsstatus</h2>
+<table>
+<thead>
+<tr>
+<th>Bereich</th>
+<th>Status</th>
+<th>Bemerkung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Passwort-Hashing</td>
+<td>✓</td>
+<td>BCrypt (Kostenfaktor 12), nie Klartext</td>
+</tr>
+<tr>
+<td>Authentifizierung</td>
+<td>✓</td>
+<td>Form-Login, E-Mail + Passwort, Sperr-/Disabled-Prüfung</td>
+</tr>
+<tr>
+<td>Fehlversuchs-Schutz</td>
+<td>✓</td>
+<td>zeitbasierte Sperre: 5 Fehlversuche/10 min → 10 min Sperre, konfigurierbar; erfolgreiche Anmeldung setzt zurück</td>
+</tr>
+<tr>
+<td>JWT/Token (API-App)</td>
+<td>✓</td>
+<td>HS256, 15 min, Claims sub/user_id/roles</td>
+</tr>
+<tr>
+<td>Refresh-Tokens (API-App)</td>
+<td>✓</td>
+<td>nur als SHA-256-Hash gespeichert, Rotation, Widerruf</td>
+</tr>
+<tr>
+<td>Sessions</td>
+<td>✓</td>
+<td>serverseitig, 30 min, Registry, max. 10, Expiry; Cookie HttpOnly/SameSite=Lax</td>
+</tr>
+<tr>
+<td>Logout</td>
+<td>✓</td>
+<td>Session invalidiert, Audit (verifiziert)</td>
+</tr>
+<tr>
+<td>Rollen/Rechte</td>
+<td>✓</td>
+<td>Filterkette: ADMIN/ANALYST/USER/AUDITOR (verifiziert)</td>
+</tr>
+<tr>
+<td>Objekt-Eigentümerschaft (Fälle)</td>
+<td>✓</td>
+<td>zentraler Zugriffswächter für Detail + alle Unteraktionen (403 bei fremden Fällen, verifiziert)</td>
+</tr>
+<tr>
+<td>CSRF</td>
+<td>✓</td>
+<td>Token-Cookie mit SameSite=Lax; POST ohne Token = 403 (verifiziert)</td>
+</tr>
+<tr>
+<td>CORS</td>
+<td>✓</td>
+<td>keine Freigaben (same-origin)</td>
+</tr>
+<tr>
+<td>Security-Header</td>
+<td>◐</td>
+<td>X-Frame-Options ✓; X-Content-Type-Options nosniff ✓; CSP offen → P3</td>
+</tr>
+<tr>
+<td>Audit</td>
+<td>✓</td>
+<td>Login (inkl. Fehlversuche + Sperr-Grund), Logout, Admin, KI protokolliert inkl. IP; Emission in eigener Transaktion</td>
+</tr>
+<tr>
+<td>IP-Erfassung</td>
+<td>✓</td>
+<td>bei Login/Logout/Request-Kontext (verifiziert)</td>
+</tr>
+<tr>
+<td>Dokumentenspeicherung</td>
+<td>✓</td>
+<td>Dateisystem + PostgreSQL + Qdrant + Neo4j, Prüfsummen</td>
+</tr>
+<tr>
+<td>Verschlüsselung at rest</td>
+<td>✗</td>
+<td>nicht implementiert; Infrastruktur-Verschlüsselung = Deployment-Aufgabe (P1)</td>
+</tr>
+<tr>
+<td>Backup-Verschlüsselung</td>
+<td>✗</td>
+<td>nicht vorgegeben → P1 (Betrieb)</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>✗ (Demo)</td>
+<td>HTTP; Produktion: HTTPS-Reverse-Proxy (P1)</td>
+</tr>
+<tr>
+<td>Air-Gap-Betrieb</td>
+<td>✓</td>
+<td>Laufzeit offline; Einrichtung braucht Downloads</td>
+</tr>
+<tr>
+<td>Lokales LLM</td>
+<td>✓</td>
+<td>Ollama lokal; kein Datenabfluss; externes Provider-Modul vorhanden, nicht aktiv</td>
+</tr>
+<tr>
+<td>Mandanten-Trennung</td>
+<td>✗</td>
+<td>Ein-Mandanten-Modell; tenant_id-Felder vorhanden, nicht erzwungen</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="s-20-empfehlungen-priorisiert">20. Empfehlungen (priorisiert)</h2>
+<h3>Priorität 1 — vor Produktivbetrieb</h3>
+<ol>
+<li><strong>HTTPS</strong> über Reverse Proxy; Session-/CSRF-Cookie-Flags (Secure, SameSite=Lax).</li>
+<li><strong>Secrets:</strong> <code>JWT_SECRET</code> setzen (kein Dev-Default), einzigartige DB-/Neo4j-Passwörter, Demo-Accounts entfernen.</li>
+<li><strong>Verschlüsselung at rest (Option A)</strong> inkl. <strong>verschlüsselter Backups</strong> — Umsetzung beim Betrieb, nicht in der App. (Begründung: physischer Diebstahl und Backup-Verlust sind die realistischsten Szenarien für eine Behörde; Infrastruktur-Verschlüsselung deckt sie ohne Eingriff in die Such-Architektur ab.)</li>
+<li><strong>Registrierung/Rollen der Plattform-API einschränken</strong>, falls diese App eingesetzt wird (öffentlicher Register-Endpunkt übernimmt Client-Rollen — kritisch).</li>
+<li>OS-/Container-Update-Prozess, Firewall-Konfiguration gemäß Abschnitt 17.</li>
+</ol>
+<h3>Priorität 2 — dringend empfohlen</h3>
+<ol start="6">
+<li><strong>Passwort-Zurücksetzung</strong> einführen (gefährdeten/vergessenen Passwörtern geregelt begegnen).</li>
+<li>Audit-Retention und Auswertung (Aufbewahrungsdauer, Alarme bei Sperr-/Lösch-Aktionen).</li>
+<li>Vollständige Verifikations-Nachvollziehbarkeit im Audit (derzeit nur im Server-Log).</li>
+</ol>
+<h3>Priorität 3 — optional / Härtung</h3>
+<ol start="11">
+<li>MFA für Administratoren (typischerweise am Proxy/IdP).</li>
+<li>CSP für die Web-App; Prompt-Injection-Tests je Modell.</li>
+<li>Secrets-Management (Vault o. ä.), Schlüsselrotation.</li>
+<li>SIEM-Anbindung des Audit-Exports; Vier-Augen-Prinzip für kritische Admin-Aktionen.</li>
+</ol>
+<hr>
+<h2 id="s-21-faq">21. FAQ</h2>
+<p><strong>Wer kann die Dokumente lesen?</strong> Alle angemeldeten Benutzer sehen die Dokumentliste (Ein-Organisations-Modell); die Originaldatei ist über die Web-UI derzeit nicht abrufbar (nur Metadaten/Status). Empfehlung P2: feinere Sichtbarkeitsregeln, falls gewünscht.</p>
+<p><strong>Werden unsere Dokumente an ChatGPT geschickt?</strong> Nein. Alle Modelle laufen lokal. Ein optionales Provider-Modul für externe APIs existiert, ist aber nicht aktiv.</p>
+<p><strong>Kann Verwaltungsassistent ohne Internet funktionieren?</strong> Ja, im Betrieb vollständig. Internet wird nur für die Erst-Einrichtung (Modell-Downloads, Images) und Updates benötigt.</p>
+<p><strong>Was passiert bei einem gestohlenen Passwort?</strong> Der Angreifer kann sich anmelden, solange das Konto aktiv ist. Alle Anmeldungen werden mit IP protokolliert; der Administrator kann das Konto sofort sperren (Logout erzwungen). Wiederholte Fehlversuche Dritter greifen in die zeitbasierte Sperre (5 Versuche/10 Minuten → 10 Minuten Sperre). Eine Passwort-Zurücksetzung existiert derzeit nicht (P2-Weiterentwicklung); MFA ist eine Empfehlung (P3).</p>
+<p><strong>Was passiert beim Logout?</strong> Die Sitzung wird serverseitig beendet, das Cookie gelöscht und der Logout protokolliert (verifiziert).</p>
+<p><strong>Kann ein Administrator Benutzer sperren?</strong> Ja — inklusive Sofort-Logout. Selbst-Sperren und Sperren des letzten Administrators sind verhindert (verifiziert).</p>
+<p><strong>Wo werden die Dokumente gespeichert?</strong> Lokales Dateisystem (Originale), PostgreSQL (Text/Metadaten), Qdrant (Vektoren), Neo4j (Graph) — alles auf dem Verwaltungsassistent-Server.</p>
+<p><strong>Sind die Dokumente verschlüsselt?</strong> Nein, aktuell nicht (weder Dateisystem noch Datenbank). Empfohlen: verschlüsselte Datenträger/Volumes und verschlüsselte Backups (P1, Betriebsaufgabe).</p>
+<p><strong>Was passiert mit Backups?</strong> Es gibt keine eingebaute Backup-Lösung; der Betrieb ist für Backups (und deren Verschlüsselung) verantwortlich.</p>
+<p><strong>Welche Daten werden protokolliert?</strong> Anmeldungen/Abmeldungen (mit IP), Benutzerverwaltung, Dokument- und Suchaktionen, KI-Ausführungen. Keine Passwörter, keine vollständigen Antwortinhalte in Metadaten außerhalb der fachlichen Daten.</p>
+<p><strong>Kann ein Benutzer die Daten eines anderen Benutzers sehen?</strong> Fälle: nein — Liste und Detailansicht (inkl. aller Unteraktionen) prüfen die Eigentümerschaft; fremde Fall-IDs werden mit 403 abgewiesen (verifiziert). Dokumente: für alle angemeldeten Benutzer sichtbar (Ein-Organisations-Modell).</p>
+<p><strong>Wo findet die KI-Verarbeitung statt?</strong> Vollständig auf dem Verwaltungsassistent-Server (lokales Ollama).</p>
+<p><strong>Kann die Anwendung in unserem Behördennetz betrieben werden?</strong> Ja — genau dafür ist sie gebaut: lokale Installation, offline-fähig, rollenbasierter Zugriff, Audit. TLS und Netzsegmentierung setzt der Betrieb um.</p>
+<hr>
+<h2 id="s-anhang-a-tls-konfiguration-reverse-proxy-beispiel">Anhang A — TLS-Konfiguration (Reverse Proxy, Beispiel)</h2>
+<p><strong>EMPFOHLENE PRODUKTIONSKONFIGURATION</strong> — Beispiel für nginx (sinngemäß auf Caddy/Traefik übertragbar):</p>
+<pre><code>server {
+    listen 443 ssl;
+    server_name verwaltungsassistent.behoerde.de;
+
+    ssl_certificate     /etc/ssl/verwaltungsassistent/fullchain.pem;   # vom Betrieb gepflegt
+    ssl_certificate_key /etc/ssl/verwaltungsassistent/privkey.pem;
+
+    # Härtung (Betriebsentscheidung)
+    add_header Strict-Transport-Security &quot;max-age=31536000&quot; always;
+
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+</code></pre>
+<p>Voraussetzungen auf Anwendungsseite: <code>COOKIE_SECURE=true</code> (Secure-Flags für Session- und CSRF-Cookie), <code>JWT_SECRET</code> gesetzt, Demo-Accounts entfernt. Zertifikate, Erneuerung und HSTS bleiben Aufgabe des Betriebs — die Anwendung selbst terminiert kein TLS (bewusste Architekturentscheidung zugunsten des Reverse-Proxy-Modells).</p>
+<hr>
+<p><em>Dieses Dokument basiert auf dem Stand vom 16.08.2026. Verifikation: 15 fokussierte Sicherheitstests (alle bestanden, eine Lücke dokumentiert), 171 Tests der schnellen Suite, Live-Prüfungen gegen die laufende Demo-Installation.</em></p>
+
+</main>
+
+</body>
+</html>

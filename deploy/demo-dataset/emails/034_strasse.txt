@@ -1,0 +1,15 @@
+From: Horst Günther <horst.guenther@example.de>
+To: info@verwaltungs-demo.de
+Subject: Straßenlaterne – erneute Störung
+Date: 2026-09-03T14:30:00+02:00
+Message-ID: msg-mailbox-laterne-01
+
+--- body ab hier ---
+Betreff: Straßenlaterne erneut defekt
+
+Guten Tag,
+
+die Straßenlaterne in der Lehnitzer Straße fällt erneut aus. Bitte prüfen Sie die Reparatur.
+
+Mit freundlichen Grüßen
+Horst Günther

@@ -1,0 +1,16 @@
+From: Frank Behrendt <frank.behrendt@example.de>
+To: info@verwaltungs-demo.de
+Subject: Defekte Straßenlaterne in der Lehnitzer Straße
+Date: 2026-09-01T07:45:00+02:00
+Message-ID: <demo-email-001@verwaltungs-demo.de>
+Attachments: lagebeschreibung-strassenlaterne.txt
+
+--- body ab hier ---
+Sehr geehrte Damen und Herren,
+
+die Straßenlaterne gegenüber der Lehnitzer Straße 12 fällt seit mehreren
+Nächten immer wieder aus. Die Beleuchtung ist dort für die Sicherheit am
+Abend wichtig. Ich habe eine kurze Lagebeschreibung als Anhang beigefügt.
+
+Mit freundlichen Grüßen
+Frank Behrendt

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Administration</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <span th:text="${adminTitle}"></span> — reale Kontodaten aus dem bestehenden Benutzer-/Sicherheitsmodell.
+                    Anmelde-/Abmeldezeitpunkte und IP-Adressen stammen aus den Audit-Ereignissen; für Zeiträume ohne
+                    protokollierte Ereignisse bleibt die Angabe leer.
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-top: 1.25rem; margin-bottom: 0.75rem;">
+                <a th:href="@{/admin/users/new}" class="btn btn--primary" style="font-size: 0.8125rem;">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">person_add</span>
+                    Benutzer anlegen
+                </a>
+                <span style="font-size: 0.75rem; color: var(--color-text-muted);">
+                    Neue Benutzer werden hier angelegt — die öffentliche Registrierung ist deaktiviert.
+                </span>
+            </div>
+
+            <div class="data-table-container data-table-container--scroll">
+                <!-- Kein width:100%: Die Tabelle bemisst sich ausschließlich am
+                     Inhalt (shrink-to-fit). So entstehen keine künstlichen
+                     Lücken zwischen den Spalten; bei zu vielen Spalten
+                     übernimmt der Container das horizontale Scrollen. -->
+                <table style="border-collapse: collapse; font-size: 0.75rem;">
+                    <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border, #ddd); text-align: left; font-size: 0.75rem;">
+                        <th style="padding: 0.25rem 0.35rem; overflow: hidden; text-overflow: ellipsis;">E-Mail</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Name</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Rolle</th>
+                        <th style="padding: 0.25rem 0.35rem; overflow: hidden; text-overflow: ellipsis;">Abteilung</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Telefon</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Büro</th>
+                        <th style="padding: 0.25rem 0.35rem; overflow: hidden; text-overflow: ellipsis;">Urlaub</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Status</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Sitzung</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Login</th>
+                        <th style="padding: 0.25rem 0.35rem; white-space: nowrap;">Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Zeilenfärbung: gesperrt → rot, sonst aktiver Urlaub → orange
+                         (deterministische Priorität: gesperrt gewinnt). Nur die
+                         Spalten E-Mail bis Urlaub werden eingefärbt. -->
+                    <tr th:each="u : ${users}"
+                        th:classappend="${u.blocked()} ? 'user-row--blocked' : (${u.onVacation()} ? 'user-row--vacation' : '')"
+                        style="border-bottom: 1px solid var(--color-border, #eee); vertical-align: top;">
+                        <td style="padding: 0.25rem 0.35rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:title="${u.email()}" th:text="${u.email()}">—</td>
+                        <td style="padding: 0.25rem 0.35rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:title="${u.displayName()}" th:text="${u.displayName()}">—</td>
+                        <td style="padding: 0.25rem 0.35rem;">
+                            <span th:each="r : ${u.roles()}" class="badge badge--neutral"
+                                  style="font-size: 0.6875rem; margin-right: 0.25rem;" th:text="${r}">—</span>
+                        </td>
+                        <td style="padding: 0.25rem 0.35rem; font-size: 0.75rem; color: var(--color-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                            th:title="${u.department() != null ? u.department() : ''}"
+                            th:text="${u.department() != null ? u.department() : '—'}">—</td>
+                        <td style="padding: 0.25rem 0.35rem; font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap;"
+                            th:text="${u.phone() != null ? u.phone() : '—'}">—</td>
+                        <td style="padding: 0.25rem 0.35rem; font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap;"
+                            th:text="${u.room() != null ? u.room() : '—'}">—</td>
+                        <td style="padding: 0.25rem 0.35rem; font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap;"
+                            th:text="${u.vacationSummary() != null ? u.vacationSummary() : '—'}">—</td>
+                        <td style="padding: 0.25rem 0.35rem;">
+                            <span th:if="${u.active()}" class="badge badge--success">aktiv</span>
+                            <span th:unless="${u.active()}" class="badge badge--warning">gesperrt/inaktiv</span>
+                        </td>
+                        <td style="padding: 0.25rem 0.35rem;">
+                            <span th:if="${u.online()}" class="badge badge--success">angemeldet</span>
+                            <span th:unless="${u.online()}" class="badge badge--neutral">nicht angemeldet</span>
+                        </td>
+                        <td style="padding: 0.25rem 0.35rem; font-size: 0.75rem; color: var(--color-text-muted); white-space: nowrap;"
+                            th:text="${u.lastLogin() != null ? u.lastLogin() : '—'}">—</td>
+                        <td style="padding: 0.2rem 0.25rem; white-space: nowrap;"
+                            x-data="{ blockOpen: false, removeOpen: false }">
+                            <!-- Sperren/Entfernen ist destruktive Kontenverwaltung:
+                                 nur SUPERADMIN (technische Verwaltung) — die Leitung
+                                 (ADMIN) bleibt aufsichtlich und sieht nur lesend. -->
+                            <th:block th:if="${superadmin and u.email() != currentUserEmail}">
+                                <!-- Block / Unblock -->
+                                <form th:if="${!u.blocked()}"
+                                      th:action="@{/admin/users/{id}/block(id=${u.id()}, blocked='true')}"
+                                      method="post" style="display: inline;"
+                                      @submit.prevent="blockOpen = true">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn" title="Sperren" aria-label="Sperren"
+                                            style="font-size: 0.6875rem; padding: 0.15rem 0.3rem;">
+                                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">block</span>
+                                    </button>
+                                </form>
+                                <form th:if="${u.blocked()}"
+                                      th:action="@{/admin/users/{id}/block(id=${u.id()}, blocked='false')}"
+                                      method="post" style="display: inline;"
+                                      @submit.prevent="blockOpen = true">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn btn--primary" title="Freigeben" aria-label="Freigeben"
+                                            style="font-size: 0.6875rem; padding: 0.15rem 0.3rem;">
+                                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">lock_open</span>
+                                    </button>
+                                </form>
+                                <!-- Remove -->
+                                <button type="button" class="btn" @click="removeOpen = true" title="Entfernen" aria-label="Entfernen"
+                                        style="font-size: 0.6875rem; padding: 0.15rem 0.3rem;">
+                                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">person_remove</span>
+                                </button>
+
+                                <!-- Block confirmation modal -->
+                                <div class="modal-overlay" x-cloak x-show="blockOpen" x-trap.noscroll="blockOpen"
+                                     @keydown.escape.window="blockOpen = false" @click.self="blockOpen = false"
+                                     role="dialog" aria-modal="true">
+                                    <div class="modal">
+                                        <h3 class="modal__title" th:text="${u.blocked()}
+                                            ? 'Benutzer wieder freigeben?'
+                                            : 'Benutzer sperren?'">Bestätigen</h3>
+                                        <p class="modal__body" th:text="${u.blocked()}
+                                            ? 'Möchten Sie diesen Benutzer wirklich wieder freigeben?'
+                                            : 'Möchten Sie diesen Benutzer wirklich sperren?'"></p>
+                                        <div class="modal__actions">
+                                            <button type="button" class="btn" @click="blockOpen = false">Abbrechen</button>
+                                            <form th:action="@{/admin/users/{id}/block(id=${u.id()}, blocked=${u.blocked() ? 'false' : 'true'})}"
+                                                  method="post" style="display: inline;">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                                <button type="submit" class="btn btn--primary"
+                                                        th:text="${u.blocked()} ? 'Freigeben' : 'Sperren'">Sperren</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Remove confirmation modal -->
+                                <div class="modal-overlay" x-cloak x-show="removeOpen" x-trap.noscroll="removeOpen"
+                                     @keydown.escape.window="removeOpen = false" @click.self="removeOpen = false"
+                                     role="dialog" aria-modal="true">
+                                    <div class="modal">
+                                        <h3 class="modal__title"
+                                            th:text="'Benutzer &quot;' + ${u.email()} + '&quot; wirklich entfernen?'">
+                                            Bestätigen</h3>
+                                        <p class="modal__body">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+                                        <div class="modal__actions">
+                                            <button type="button" class="btn" @click="removeOpen = false">Abbrechen</button>
+                                            <form th:action="@{/admin/users/{id}/remove(id=${u.id()})}" method="post"
+                                                  style="display: inline;">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                                <button type="submit" class="btn btn--primary">Entfernen</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                            <span th:if="${u.email() == currentUserEmail}" style="font-size: 0.75rem; color: var(--color-text-muted);">
+                                Ihr Account
+                            </span>
+                            <span th:if="${!superadmin and u.email() != currentUserEmail}"
+                                  style="font-size: 0.75rem; color: var(--color-text-muted);"
+                                  title="Sperren und Entfernen von Konten ist der technischen Verwaltung (SUPERADMIN) vorbehalten.">
+                                — nur lesend
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

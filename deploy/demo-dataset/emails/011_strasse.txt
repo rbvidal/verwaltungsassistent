@@ -1,0 +1,15 @@
+From: Michael Kruse <michael.kruse@example.de>
+To: demo06@verwaltungsassistent.local
+Subject: Straßenschaden in der Zeppelinstraße
+Date: 2026-09-02T20:00:00+02:00
+Message-ID: demo-catalog-11
+
+--- body ab hier ---
+Betreff: Straßenschaden
+
+Sehr geehrte Damen und Herren,
+
+in der Zeppelinstraße ist ein Schlagloch entstanden, das für Radfahrer gefährlich ist. Bitte um Reparatur.
+
+Mit freundlichen Grüßen
+Michael Kruse, Potsdam

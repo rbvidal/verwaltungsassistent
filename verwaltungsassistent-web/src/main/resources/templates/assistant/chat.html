@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Assistent</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Stellen Sie eine Frage zur deutschen Kommunalverwaltung. Die Antwort wird je
+                    nach Fragestellung aus den hinterlegten Regeln oder den indexierten Dokumenten
+                    ermittelt und anschließend durch einen separaten Prüfschritt überprüft. Liegen
+                    keine ausreichenden Quellen vor, weist der Assistent ausdrücklich darauf hin.
+                </p>
+            </div>
+
+            <!-- Leitungs-Konto (ADMIN): schreibgeschützt — der Assistent startet
+                 KI-Verarbeitung und ist für Leitungs-Konten serverseitig
+                 gesperrt (403); die Eingabeoberfläche wird nicht gerendert. -->
+            <div th:if="${supervisory}" class="message message--warning" role="status"
+                 style="margin-bottom: 1rem;">
+                Das Leitungs-Konto ist schreibgeschützt: Der Assistent steht nur der
+                Sachbearbeitung zur Verfügung — es wird keine KI-Verarbeitung gestartet.
+            </div>
+
+            <!-- Tab-Umschalter: Assistent (kommunal, Standard) | Allgemeine Fragen (direkter LLM-Dialog) -->
+            <div th:if="${!supervisory}"
+                 style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin: 0.75rem 0 1rem; border-bottom: 2px solid var(--color-border, #ddd); padding-bottom: 0.5rem;">
+                <button type="button" id="assistant-tab-assistant" class="btn"
+                        th:classappend="${assistantTab == null or assistantTab == 'assistant'} ? 'btn--primary' : ''"
+                        onclick="switchAssistantTab('assistant')">Assistent</button>
+                <button type="button" id="assistant-tab-general" class="btn"
+                        th:classappend="${assistantTab == 'general'} ? 'btn--primary' : ''"
+                        onclick="switchAssistantTab('general')">Allgemeine Fragen</button>
+            </div>
+
+            <!-- ═══ Tab: Assistent (kommunal, unverändert) ═══ -->
+            <div th:if="${!supervisory}" id="assistant-panel"
+                 th:classappend="${assistantTab == 'general'} ? 'assistant-panel--hidden' : ''">
+
+            <!-- Case context: established by /assistant?caseId=<id> (Fälle → "In Assistent öffnen") -->
+            <div th:if="${caseContext != null}" class="case-context" role="note">
+                <div class="case-context__title">
+                    <span>Fall:</span>
+                    <strong th:text="${caseContext.name()}">Fallname</strong>
+                    <a th:href="@{/cases/{id}(id=${caseContext.id()})}" class="case-context__link">Zum Fall</a>
+                </div>
+                <div class="case-context__meta">
+                    <span th:if="${caseContext.code() != null and !caseContext.code().isEmpty()}"
+                          th:text="'Vorgangsnummer: ' + ${caseContext.code()}">VORGANGSNUMMER</span>
+                    <span th:if="${caseContext.phaseLabel() != null and !caseContext.phaseLabel().isEmpty()}"
+                          th:text="'Phase: ' + ${caseContext.phaseLabel()}">PHASE</span>
+                    <span th:text="${caseContext.documentCount()} + ' Dokument(e) im Fall'">DOKUMENTE</span>
+                </div>
+                <p th:if="${!caseContext.documentTitles().isEmpty()}" class="case-context__docs">
+                    <span th:text="${#strings.listJoin(caseContext.documentTitles(), ', ')}">Dokumente</span>
+                </p>
+            </div>
+
+            <div th:if="${caseError != null}" class="message message--warning" role="status"
+                 th:text="${caseError}" style="margin-bottom: 0.75rem;"></div>
+
+            <form th:action="@{/assistant/ask}" method="post"
+                  hx-post="/assistant/ask" hx-target="#assistant-result" hx-indicator="#assistant-spinner"
+                  hx-disabled-elt="this" hx-history="false"
+                  style="margin-bottom: 1rem;">
+                <input type="hidden" name="caseId" th:value="${caseId}">
+                <!-- Phase 2D.13-Folge: "Fragen" linksbündig UNTER dem großen
+                     Eingabefeld statt seitlich daneben (nur Layout). -->
+                <div class="search-box search-box--wide">
+                    <textarea name="question" required class="search-box__input" rows="6"
+                              th:text="${question}"
+                              placeholder="z. B. Wie hoch ist die Verpflegungspauschale bei einer 12-stündigen Dienstreise?"
+                              autofocus></textarea>
+                </div>
+                <div style="display: flex; margin-top: 0.6rem;">
+                    <button type="submit" class="btn btn--primary">
+                        <span class="material-symbols-outlined" aria-hidden="true">send</span>Fragen
+                    </button>
+                </div>
+            </form>
+
+            <div id="assistant-spinner" class="htmx-indicator"
+                 style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+                Anfrage wird übermittelt …
+            </div>
+
+            <div th:if="${askError != null}" class="message message--error" role="alert"
+                 th:text="${askError}" style="margin-bottom: 1rem;"></div>
+
+            <div id="assistant-result">
+                <!-- th:replace runs before th:if, so the conditions live on wrapper blocks -->
+                <th:block th:if="${progressJobId == null}">
+                    <th:block th:replace="~{assistant/fragments :: answer}"></th:block>
+                </th:block>
+                <th:block th:if="${progressJobId != null}">
+                    <th:block th:replace="~{assistant/fragments :: progressPanel}"></th:block>
+                </th:block>
+            </div>
+
+            <div th:if="${caseId != null and caseId != ''}" style="margin-top: 1rem; font-size: 0.8125rem;">
+                <a th:href="@{/cases/{id}(id=${caseId})}" style="color: var(--color-primary);">← Zurück zum Fall</a>
+            </div>
+            </div>
+
+            <!-- ═══ Tab: Allgemeine Fragen (direkter LLM-Dialog, ohne Quellen-/Prüfmechanismen) ═══ -->
+            <div th:if="${!supervisory}" id="general-panel"
+                 th:classappend="${assistantTab != 'general'} ? 'assistant-panel--hidden' : ''"
+                 style="display: flex; flex-direction: column; gap: 0.75rem;">
+
+                <div class="message message--info" role="note" style="font-size: 0.8125rem;">
+                    <strong>Hinweis zu „Allgemeine Fragen"</strong><br>
+                    Antworten in diesem Bereich werden direkt vom Sprachmodell erzeugt. Sie basieren
+                    nicht auf der Dokumentensammlung, den Verwaltungsunterlagen oder der Wissensbasis
+                    dieser Anwendung und werden nicht durch die Quellen- und Prüfmechanismen des
+                    Assistenten verifiziert.<br>
+                    Das Sprachmodell hat in diesem Modus <strong>keinen Zugriff auf das Internet</strong>;
+                    die Informationen können daher nicht den aktuellen Stand widerspiegeln.<br>
+                    Für Verwaltungs- und Rechtsfragen verwenden Sie bitte den Tab
+                    <strong>„Assistent"</strong>, damit die Antwort auf der Wissensbasis der
+                    Anwendung beruhen kann.
+                    <div style="margin-top: 0.5rem; color: var(--color-text-muted); font-size: 0.75rem;">
+                        <sup>*</sup> Der Veröffentlichungs- bzw. Wissensstand des Sprachmodells kann
+                        anhand des Modellnamens und öffentlich verfügbarer Informationen zu diesem
+                        Modell ermittelt werden.
+                    </div>
+                </div>
+
+                <div id="general-conversation"
+                     style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius);
+                            padding: 0.75rem 1rem; max-height: 60vh; overflow-y: auto;
+                            display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start;">
+                    <th:block th:replace="~{assistant/general-fragments :: conversation}"></th:block>
+                </div>
+
+                <form th:action="@{/assistant/general/ask}" method="post"
+                      hx-post="/assistant/general/ask" hx-target="#general-conversation"
+                      hx-indicator="#general-spinner" hx-disabled-elt="this" hx-history="false"
+                      hx-on::after-request="handleGeneralAskDone(event)"
+                      style="display: flex; flex-direction: column; gap: 0.6rem;">
+                    <div class="search-box search-box--wide">
+                        <textarea id="general-question" name="question" required
+                                  class="search-box__input" rows="4"
+                                  placeholder="Zum Beispiel: Was kann ich einem Bürger zum Ablauf eines Bürgerbegehrens erklären?"
+                                  style="resize: vertical;"></textarea>
+                    </div>
+                    <div style="display: flex;">
+                        <button type="submit" class="btn btn--primary">
+                            <span class="material-symbols-outlined" aria-hidden="true">send</span>Frage stellen
+                        </button>
+                    </div>
+                </form>
+                <div id="general-spinner" class="htmx-indicator" role="status" aria-live="polite"
+                     style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Frage wird analysiert …
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function switchAssistantTab(tab) {
+                var assistant = document.getElementById('assistant-panel');
+                var general = document.getElementById('general-panel');
+                var tabA = document.getElementById('assistant-tab-assistant');
+                var tabG = document.getElementById('assistant-tab-general');
+                if (assistant) {
+                    if (tab === 'general') assistant.classList.add('assistant-panel--hidden');
+                    else assistant.classList.remove('assistant-panel--hidden');
+                }
+                if (general) {
+                    if (tab === 'general') general.classList.remove('assistant-panel--hidden');
+                    else general.classList.add('assistant-panel--hidden');
+                }
+                if (tabA) tabA.className = 'btn' + (tab === 'assistant' ? ' btn--primary' : '');
+                if (tabG) tabG.className = 'btn' + (tab === 'general' ? ' btn--primary' : '');
+                if (tab === 'general') {
+                    var input = document.getElementById('general-question');
+                    if (input) input.focus();
+                }
+            }
+            (function () {
+                // A page restored from the browser cache could show a stale progress
+                // panel without an active job. Always re-fetch to the idle state.
+                window.addEventListener('pageshow', function (e) {
+                    if (e.persisted) { window.location.reload(); }
+                });
+
+                // Liveness indicator: the progress panel title AND the active
+                // stage line cycle ". .. ..." once per second while a request is
+                // actively processed. The cycle state lives outside the swapped
+                // DOM, so htmx polling swaps do not reset it; it stops when the
+                // final answer replaces the panel.
+                var dotsTimer = null;
+                var dotStep = 0;
+                var activeTitle = null;
+                var baseTitle = '';
+                var activeLine = null;
+                var baseLine = '';
+                var dots = ['.', '..', '...'];
+
+                function stopDots() {
+                    if (dotsTimer) { clearInterval(dotsTimer); dotsTimer = null; }
+                    activeTitle = null;
+                    baseTitle = '';
+                    activeLine = null;
+                    baseLine = '';
+                    dotStep = 0;
+                }
+
+                function applyDots(el, base) {
+                    el.textContent = base + ' ' + dots[dotStep];
+                }
+
+                function tick() {
+                    if (!dotsTimer) return;
+                    var titleAlive = activeTitle && document.body.contains(activeTitle);
+                    var lineAlive = activeLine && document.body.contains(activeLine);
+                    if (!titleAlive && !lineAlive) { stopDots(); return; }
+                    dotStep = (dotStep + 1) % dots.length;
+                    if (titleAlive) applyDots(activeTitle, baseTitle);
+                    if (lineAlive) applyDots(activeLine, baseLine);
+                }
+
+                function ensureAnimation(title) {
+                    if (!title) return;
+                    var base = title.textContent.trim().replace(/[….\s]+$/, '');
+                    if (!base) return;
+                    if (activeTitle !== title) {
+                        activeTitle = title;
+                        baseTitle = base;
+                    }
+                    applyDots(title, baseTitle);
+                    if (!dotsTimer) { dotsTimer = setInterval(tick, 1000); }
+                }
+
+                function ensureLineAnimation(line) {
+                    if (!line) return;
+                    var base = line.textContent.trim().replace(/[….\s]+$/, '');
+                    if (!base) return;
+                    if (activeLine !== line) {
+                        activeLine = line;
+                        baseLine = base;
+                    }
+                    applyDots(line, baseLine);
+                    if (!dotsTimer) { dotsTimer = setInterval(tick, 1000); }
+                }
+
+                // Allgemeine Fragen: klare Verarbeitungsanzeige und Schutz vor
+                // Doppel-Absenden. Nach erfolgreicher Antwort wird das Eingabe-
+                // feld geleert (die gestellte Frage bleibt als Frage-Block im
+                // Verlauf stehen und erscheint NICHT ein zweites Mal im leeren
+                // Eingabebereich).
+                window.handleGeneralAskDone = function (evt) {
+                    var form = evt && evt.detail ? evt.detail.elt : null;
+                    if (form && form.dataset) { delete form.dataset.generalBusy; }
+                    if (evt && evt.detail && evt.detail.successful) {
+                        var input = document.getElementById('general-question');
+                        if (input) { input.value = ''; }
+                    }
+                };
+                var generalInput = document.getElementById('general-question');
+                if (generalInput) {
+                    generalInput.addEventListener('keydown', function (evt) {
+                        if (evt.key === 'Enter' && !evt.shiftKey) {
+                            evt.preventDefault();
+                            var form = generalInput.form;
+                            if (!form) return;
+                            if (form.dataset.generalBusy) return;
+                            form.dataset.generalBusy = '1';
+                            form.requestSubmit();
+                        }
+                    });
+                }
+
+                document.body.addEventListener('htmx:afterSwap', function (evt) {
+                    if (!evt.detail.target || evt.detail.target.id !== 'assistant-result') return;
+                    var title = document.querySelector('#assistant-result .progress-panel__title');
+                    var line = document.querySelector('#assistant-result .progress-terminal__line--active .progress-terminal__message');
+                    if (title || line) {
+                        ensureAnimation(title);
+                        ensureLineAnimation(line);
+                    } else {
+                        stopDots();
+                    }
+                });
+            })();
+        </script>
+    </th:block>
+</body>
+</html>

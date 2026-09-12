@@ -1,0 +1,15 @@
+# Referenz-Bearbeitungszeiten (Minuten) — initiales Domänenwissen und Fallback.
+# Konfiguration, kein gelernter Zustand: Die Anwendung schreibt diese Datei
+# NIEMALS um. Gelernte empirische Statistiken liegen in der Persistenz
+# (effort_observations / effort_estimates) und ersetzen die Baseline nur
+# nach ausreichend Beobachtungen (learning-interval).
+processing-times:
+  learning-interval: 5
+  baselines:
+    wohngeld: 45
+    gewerbeanmeldung: 30
+    ummeldung: 15
+    reisepass: 20
+    baugenehmigung: 60
+    geovorgang: 30
+    allgemein: 30

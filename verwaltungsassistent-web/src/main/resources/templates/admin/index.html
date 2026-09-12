@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Administration</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <span th:text="${adminTitle}"></span> — alle Werte stammen aus den laufenden Diensten.
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+            <div class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.75rem;">Wissensbasis</h2>
+                <div class="admin-card-grid" style="margin-bottom: 1rem;">
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Dokumente gesamt</div>
+                        <div style="font-size: 1.25rem; font-weight: 700;" th:text="${kbTotalDocuments}">0</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Bereit</div>
+                        <div style="font-size: 1.25rem; font-weight: 700;" th:text="${kbReadyDocuments}">0</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">In Verarbeitung</div>
+                        <div style="font-size: 1.25rem; font-weight: 700;" th:text="${kbProcessingDocuments}">0</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Fehlgeschlagen</div>
+                        <div style="font-size: 1.25rem; font-weight: 700;" th:text="${kbFailedDocuments}">0</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Strukturierte Wissenstabellen:
+                    <span th:text="${salaryTables} + ' Besoldungstabellen'"></span>,
+                    <span th:text="${travelTables} + ' Reisekostentabellen'"></span>,
+                    <span th:text="${thresholdTables} + ' Vergabeschwellen-Tabellen'"></span>
+                </p>
+            </div>
+
+            <div class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem;">Benutzerkonten</h2>
+                <p style="font-size: 0.8125rem;">
+                    <strong th:text="${userCount}">0</strong> registrierte Konten —
+                    <a th:href="@{/admin/users}" style="color: var(--color-primary);">zur Benutzerverwaltung</a>
+                </p>
+            </div>
+
+            <!-- Destruktive Wartung (Phase 2D.12): nur das versteckte
+                 SUPERADMIN-Konto — das ADM/Leitungs-Konto ist rein aufsichtlich
+                 und sieht diese Aktionen nicht (serverseitig zusätzlich
+                 abgewiesen). -->
+            <div class="decision-package__section"
+                 style="border: 1px solid #e8c9a8; border-left: 5px solid #d97706;"
+                 sec:authorize="hasRole('SUPERADMIN')">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem;">Demo-Daten zurücksetzen</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                    <strong>Löscht die aktuellen Demo-Daten und stellt den definierten Demo-Ausgangszustand wieder her.</strong><br>
+                    Betroffen: die 20 Demo-Benutzer (demo01…demo20@verwaltungsassistent.local), alle eingehenden E-Mails,
+                    E-Mail-Analysen, Geotagged Fotos, Geovorgänge, die allgemeinen Postfächer
+                    (kontakt@verwaltungs-demo.de, info@verwaltungs-demo.de) sowie alte Test-Fälle des
+                    Administrators. Die persistenten Original-Dateien unter uploads/ (Dokumente und Fotos)
+                    bleiben unverändert; die Indexierung wird automatisch angestoßen.
+                </p>
+                <form th:action="@{/admin/demo-reset}" method="post" onsubmit="return confirm('Wirklich ALLE Demo-Daten löschen und neu aufbauen?')">
+                    <label style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.8125rem; margin-bottom: 0.75rem;">
+                        <input type="checkbox" name="confirm" value="on" required>
+                        Ja, ich verstehe: Dies ist eine destruktive Demo-Operation.
+                    </label>
+                    <button type="submit" class="btn" style="border-color: #d97706; color: #b45309;">
+                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">restart_alt</span>
+                        Demo-Daten zurücksetzen
+                    </button>
+                </form>
+            </div>
+            <div class="decision-package__section" style="margin-top: 1rem;"
+                 sec:authorize="hasRole('SUPERADMIN')">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem;">Datensatz neu aufbauen</h2>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+                    Scannt die lokalen Verzeichnisse <code>uploads/docs/</code>, <code>uploads/photos/</code>,
+                    <code>uploads/video/</code> und <code>uploads/audio/</code> und baut den Dokument- und
+                    Medien-Datensatz über die bestehende Pipeline neu auf: neue Dokumente werden registriert
+                    und indexiert, vorhandene Dokumente neu indexiert, Fotos durchlaufen die Foto-Pipeline
+                    (EXIF → bereinigte Kopie). Video-/Audiodateien werden erkannt, aber <strong>nicht</strong>
+                    indexiert. <strong>Es werden keine Dateien gelöscht und keine Benutzerdaten verändert.</strong>
+                </p>
+                <form hx-post="/admin/dataset-rebuild" hx-target="#dataset-rebuild-result"
+                      hx-disabled-elt="this" hx-indicator="#dataset-rebuild-spinner">
+                    <label style="display: flex; gap: 0.5rem; align-items: center; font-size: 0.8125rem; margin-bottom: 0.75rem;">
+                        <input type="checkbox" name="confirm" value="on" required>
+                        Ja, ich möchte den Datensatz neu aufbauen (Neu-Indexierung des Korpus).
+                    </label>
+                    <button type="submit" class="btn">
+                        <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">database</span>
+                        Datensatz neu aufbauen
+                    </button>
+                    <span id="dataset-rebuild-spinner" class="htmx-indicator"
+                          style="font-size: 0.8125rem; color: var(--color-text-muted); margin-left: 0.75rem;">
+                        Neuaufbau läuft …
+                    </span>
+                </form>
+                <div id="dataset-rebuild-result" style="margin-top: 0.5rem;"></div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

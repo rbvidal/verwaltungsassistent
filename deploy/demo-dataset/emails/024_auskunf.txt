@@ -1,0 +1,15 @@
+From: Peter Falk <peter.falk@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Auskunft zu meinem Grundstück – Kataster
+Date: 2026-08-31T16:00:00+02:00
+Message-ID: demo-catalog-24
+
+--- body ab hier ---
+Betreff: Katasterauskunft
+
+Guten Tag,
+
+ich benötige eine Auskunft zu meinem Grundstück aus dem Liegenschaftskataster. Wie stelle ich den Antrag?
+
+Mit freundlichen Grüßen
+Peter Falk

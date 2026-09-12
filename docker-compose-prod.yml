@@ -1,0 +1,208 @@
+# ──────────────────────────────────────────────────────────
+# Municipal Decision Assistant — Production Deployment
+# (LEGACY local development stack — the installable, self-contained
+#  stack is compose.yaml, used by the install guides. This file is
+#  kept for the local Windows demo flow start-demo.bat.)
+#
+# Single-machine Docker Compose for pilot (1-2 municipalities).
+#
+# Usage:
+#   1. Copy .env.example to .env and fill in secrets
+#   2. Build:   docker compose -f docker-compose-prod.yml build
+#   3. Start:   docker compose -f docker-compose-prod.yml up -d
+#   4. Status:  docker compose -f docker-compose-prod.yml ps
+#   5. Logs:    docker compose -f docker-compose-prod.yml logs -f app
+#   6. Stop:    docker compose -f docker-compose-prod.yml down
+# ──────────────────────────────────────────────────────────
+
+services:
+  # ── PostgreSQL with pgvector ──
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: mda-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-municipal_decision_assistant}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME:-municipal_decision_assistant}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    networks:
+      - mda-network
+
+  # ── Qdrant Vector Database ──
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: mda-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+    expose:
+      - "6333"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+      - ./backups:/backups
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/6333; echo -e \"GET /readyz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n\" >&3; grep -q 200 <&3'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - mda-network
+
+  # ── Neo4j Graph Database ──
+  neo4j:
+    image: neo4j:5-community
+    container_name: mda-neo4j
+    restart: unless-stopped
+    ports:
+      - "7687:7687"
+    expose:
+      - "7687"
+    environment:
+      NEO4J_AUTH: ${NEO4J_USERNAME:-neo4j}/${NEO4J_PASSWORD}
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - mda-network
+
+  # ── Municipal Decision Assistant Application ──
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mda-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+      SERVER_SSL_ENABLED: "false"
+      # Database
+      DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-municipal_decision_assistant}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      # Auth (REQUIRED — set in .env)
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      AUTH_JWT_ISSUER: ${AUTH_JWT_ISSUER:-municipal-decision-assistant}
+      AUTH_ACCESS_TOKEN_TTL: ${AUTH_ACCESS_TOKEN_TTL:-15m}
+      AUTH_REFRESH_TOKEN_TTL: ${AUTH_REFRESH_TOKEN_TTL:-30d}
+      # Qdrant
+      QDRANT_ENABLED: "true"
+      QDRANT_HOST: qdrant
+      QDRANT_REST_PORT: "6333"
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-mda_chunks}
+      QDRANT_VECTOR_DIMENSION: ${QDRANT_VECTOR_DIMENSION:-768}
+      # Ollama
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_CHAT_MODEL: ${OLLAMA_CHAT_MODEL:-qwen2.5:14b}
+      OLLAMA_EMBEDDING_MODEL: ${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
+      OLLAMA_EMBEDDING_DIMENSION: ${OLLAMA_EMBEDDING_DIMENSION:-768}
+      # Neo4j
+      NEO4J_URI: ${NEO4J_URI:-bolt://neo4j:7687}
+      NEO4J_USERNAME: ${NEO4J_USERNAME:-neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      # AI Pipeline
+      AI_MAX_EVIDENCE_SOURCES: ${AI_MAX_EVIDENCE_SOURCES:-4}
+      AI_COVERAGE_THRESHOLD: ${AI_COVERAGE_THRESHOLD:-0.6}
+      # Tracing
+      OTLP_ENDPOINT: ${OTLP_ENDPOINT:-http://jaeger:4318/v1/traces}
+      TRACING_SAMPLING: ${TRACING_SAMPLING:-0.1}
+      # Spring
+      SERVER_PORT: "8080"
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -XX:+UseZGC -XX:+ExitOnOutOfMemoryError"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 45s
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - mda-network
+
+  # ── Jaeger Tracing (optional) ──
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: mda-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"
+    expose:
+      - "4318"
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - mda-network
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+    driver: local
+  qdrant_storage:
+    driver: local
+  neo4j_data:
+    driver: local
+
+networks:
+  mda-network:
+    driver: bridge

@@ -1,0 +1,16 @@
+From: Erika Schulze <erika.schulze@example.de>
+To: info@verwaltungs-demo.de
+Subject: Wohngeldantrag – Unterlagen
+Date: 2026-09-03T15:30:00+02:00
+Message-ID: msg-mailbox-wohngeld-antrag-01
+Attachments: Mietvertrag.pdf, Einkommensnachweis.pdf
+
+--- body ab hier ---
+Betreff: Wohngeldantrag
+
+Guten Tag,
+
+anbei übersende ich die angeforderten Unterlagen zu meinem Wohngeldantrag: den Mietvertrag und den Einkommensnachweis.
+
+Mit freundlichen Grüßen
+Erika Schulze

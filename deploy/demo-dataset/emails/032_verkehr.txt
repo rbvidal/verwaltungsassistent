@@ -1,0 +1,15 @@
+From: Paul Krüger <paul.krueger@example.de>
+To: demo15@verwaltungsassistent.local
+Subject: Verkehrsschild am Bahnhof Oranienburg umgefahren
+Date: 2026-08-31T00:00:00+02:00
+Message-ID: demo-catalog-32
+
+--- body ab hier ---
+Betreff: Verkehrsschild umgefahren
+
+Guten Tag,
+
+am Bahnhofsvorplatz ist ein Verkehrsschild umgefahren worden. Die Halteverbotszone ist nicht mehr erkennbar.
+
+Mit freundlichen Grüßen
+Paul Krüger, Oranienburg

@@ -1,0 +1,76 @@
+# Verwaltungsassistent Appliance — infrastructure containers
+# Persistent data lives OUTSIDE the application release under
+# /var/lib/verwaltungsassistent/{postgres,qdrant,neo4j} (bind mounts, see README).
+# Ports are bound to 127.0.0.1 only; the host firewall exposes only
+# 22 (SSH) and 8081 (Verwaltungsassistent).
+#
+# Manage with:
+#   docker compose -f /opt/verwaltungsassistent/current/docker-compose-appliance.yml up -d
+#   docker compose -f /opt/verwaltungsassistent/current/docker-compose-appliance.yml ps
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: va-postgres
+    restart: unless-stopped
+    env_file:
+      - /etc/verwaltungsassistent/verwaltungsassistent.env
+    environment:
+      POSTGRES_DB: verwaltungsassistent
+      POSTGRES_USER: verwaltungsassistent
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - /var/lib/verwaltungsassistent/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verwaltungsassistent -d verwaltungsassistent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: verwaltungsassistent-qdrant
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6333:6333"
+    volumes:
+      - /var/lib/verwaltungsassistent/qdrant:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/6333; echo -e \"GET /readyz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n\" >&3; grep -q 200 <&3'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: va-neo4j
+    restart: unless-stopped
+    # NOTE: no env_file here — the neo4j image maps every NEO4J_* env var
+    # to a neo4j.conf setting, so NEO4J_PASSWORD would break strict
+    # config validation. Only NEO4J_AUTH is needed.
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD}"
+    ports:
+      - "127.0.0.1:7687:7687"
+    volumes:
+      - /var/lib/verwaltungsassistent/neo4j:/data
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 1G

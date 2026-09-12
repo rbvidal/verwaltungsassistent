@@ -1,0 +1,45 @@
+Verwaltungsassistent Verwaltungsassistent — Bürgeramt-Korpus Manifest
+=======================================================
+
+Source:        Offizielles ServicePortal Berlin / Berlin.de
+Startseite:    https://service.berlin.de/standort/122297/  (Bürgeramt Prenzlauer Berg)
+Abrufdatum:    2026-08-15
+Dokumenttyp:   Offizielle PDF-Repräsentation "Seite als PDF herunterladen"
+               (generiert von https://service.berlin.de/dienstleistung/<id>/pdf/)
+Speicherort:   verwaltungsassistent-web/uploads/
+
+Hinweis: Alle ausgewählten Dienste waren am Abruftag auf der Bürgeramt-Seite
+NICHT mit "Jetzt online erledigen" markiert. Dienste mit Online-Marker wurden
+bewusst ausgeschlossen.
+
+-----------------------------------------------------------------
+#   Dienst-ID  Service                                             PDF-URL (offiziell)                    Dateiname im Uploads-Verzeichnis
+-----------------------------------------------------------------
+ 1   120335     Abmeldung einer Wohnung                            /dienstleistung/120335/pdf/            ServicePortal-120335-Abmeldung-einer-Wohnung.pdf
+ 2   120697     Änderung/Wechsel der Hauptwohnung                  /dienstleistung/120697/pdf/            ServicePortal-120697-Aenderung-Wechsel-der-Hauptwohnung.pdf
+ 3   351783     Wohnsitz - Zweitwohnsitz oder Nebenwohnung anmelden /dienstleistung/351783/pdf/           ServicePortal-351783-Wohnsitz-Zweitwohnsitz-oder-Nebenwohnung-anmelden.pdf
+ 4   331533     Melderegister - Berichtigung von Daten beantragen  /dienstleistung/331533/pdf/            ServicePortal-331533-Melderegister-Berichtigung-von-Daten.pdf
+ 5   120678     Melderegister - Auskunftssperre eintragen lassen   /dienstleistung/120678/pdf/            ServicePortal-120678-Melderegister-Auskunftssperre.pdf
+ 6   120703     Personalausweis beantragen                         /dienstleistung/120703/pdf/            ServicePortal-120703-Personalausweis-beantragen.pdf
+ 7   120682     Personalausweis vorläufig beantragen               /dienstleistung/120682/pdf/            ServicePortal-120682-Personalausweis-vorlaeufig-beantragen.pdf
+ 8   121151     Reisepass beantragen                               /dienstleistung/121151/pdf/            ServicePortal-121151-Reisepass-beantragen.pdf
+ 9   121153     Reisepass vorläufig beantragen                     /dienstleistung/121153/pdf/            ServicePortal-121153-Reisepass-vorlaeufig-beantragen.pdf
+10   121701     Beglaubigung von Kopien                            /dienstleistung/121701/pdf/            ServicePortal-121701-Beglaubigung-von-Kopien.pdf
+11   158142     Beglaubigung von Unterschriften                    /dienstleistung/158142/pdf/            ServicePortal-158142-Beglaubigung-von-Unterschriften.pdf
+12   329830     Online-Ausweisfunktion (eID) nachträglich aktivieren /dienstleistung/329830/pdf/          ServicePortal-329830-Online-Ausweisfunktion-eID-nachtraeglich-aktivieren.pdf
+13   121627     Fahrerlaubnis - Ersterteilung beantragen           /dienstleistung/121627/pdf/            ServicePortal-121627-Fahrerlaubnis-Ersterteilung.pdf
+14   121591     Fahrerlaubnis - Internationalen Führerschein beantragen /dienstleistung/121591/pdf/       ServicePortal-121591-Fahrerlaubnis-Internationaler-Fuehrerschein.pdf
+15   121593     Fahrerlaubnis - Ersatzführerschein nach Verlust oder Diebstahl beantragen /dienstleistung/121593/pdf/  ServicePortal-121593-Fahrerlaubnis-Ersatzfuehrerschein-nach-Verlust-oder-Diebstahl.pdf
+-----------------------------------------------------------------
+
+Für jeden Dienst:
+- Service-URL:            https://service.berlin.de/dienstleistung/<Dienst-ID>/
+- Direkte PDF-URL:        https://service.berlin.de/dienstleistung/<Dienst-ID>/pdf/
+- Abrufdatum:             2026-08-15
+- Online-Marker "Jetzt online erledigen" auf der Detailseite: NEIN (für alle 15)
+- Quelle:                 Offizielles ServicePortal Berlin / Berlin.de
+
+Bereits vorhandene Dokumente (nicht dupliziert, bleiben unverändert):
+- BRKG.pdf                          (Bundesreisekostengesetz)
+- AV-55-LHO-Berlin.pdf              (Ausführungsvorschriften zu § 55 LHO Berlin)
+- BauO-Bln.pdf                      (Bauordnung für Berlin)

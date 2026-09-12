@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Beispiele</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Kontrollierte Beispielfälle mit erwartetem Ergebnis.
+                    Die Auswertung eines Falles startet einen einzelnen, kontrollierten Durchlauf
+                    der bestehenden Pipeline.
+                    <span th:text="'Insgesamt ' + ${totalCases} + ' Fälle'"></span>.
+                    Das Öffnen dieser Seite führt keine Auswertung aus.
+                </p>
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+                    Die Fälle sind bewusst als kontrollierter, deterministischer Testsatz angelegt
+                    und laufen über den regelbasierten Pfad („Regelbasiert“). Andere Fragestellungen
+                    beantwortet das System über die Wissensbasis (hybride Suche) und KI-gestützte
+                    Analyse — siehe Assistent und Wissensbasis.
+                </p>
+            </div>
+
+            <div th:if="${corpora == null or corpora.isEmpty()}" class="empty-state" role="status" aria-live="polite">
+                <div class="empty-state__icon">🧪</div>
+                <h3 class="empty-state__title">Keine Beispiele geladen</h3>
+                <p class="empty-state__desc">Die Benchmark-Dateien wurden nicht gefunden.</p>
+            </div>
+
+            <div th:unless="${corpora == null or corpora.isEmpty()}" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div th:each="c : ${corpora}" class="case-detail__header case-detail__header--page"
+                     style="border-left: 3px solid var(--color-primary); padding: 0.75rem 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <a th:href="@{/corpus/{name}(name=${c.name()})}"
+                           style="font-weight: 600; font-size: 0.9375rem;"
+                           th:text="${c.label()}">Korpus</a>
+                        <span class="badge badge--neutral" th:text="${c.cases()} + ' Fälle'" style="font-size: 0.6875rem;">0</span>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.35rem;">
+                        <span th:text="${c.easy()} + ' einfach'">0</span>
+                        <span th:text="${c.medium()} + ' mittel'">0</span>
+                        <span th:text="${c.hard()} + ' schwer'">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

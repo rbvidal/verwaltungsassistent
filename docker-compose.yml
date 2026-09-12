@@ -1,0 +1,85 @@
+# Verwaltungsassistent — Docker Compose (LEGACY local development stack)
+#
+# NOT used for installations. The installable, self-contained stack is
+# compose.yaml (used by the install scripts and the README guides).
+# This file only provides the local dev infrastructure for the Windows
+# demo script start-demo.bat (infra containers + host-run app).
+#
+# Start:  docker compose up -d
+# Minimal: docker compose up -d postgres verwaltungsassistent
+# Stop:   docker compose down -v
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: va-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-verwaltungsassistent}
+      POSTGRES_USER: ${POSTGRES_USER:-verwaltungsassistent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-verwaltungsassistent}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-verwaltungsassistent} -d ${POSTGRES_DB:-verwaltungsassistent}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  verwaltungsassistent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: verwaltungsassistent-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-verwaltungsassistent}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-verwaltungsassistent}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-verwaltungsassistent}
+      JWT_SECRET: ${JWT_SECRET:-change-me-use-openssl-rand-base64-32}
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.0.0
+    container_name: verwaltungsassistent-prometheus
+    profiles: ["monitoring"]
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: verwaltungsassistent-grafana
+    profiles: ["monitoring"]
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  prometheus_data:
+  grafana_data:

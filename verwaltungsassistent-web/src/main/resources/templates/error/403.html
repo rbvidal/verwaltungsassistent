@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, '403 — Zugriff verweigert', 'none', null)}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="error-page">
+            <h1>Zugriff verweigert</h1>
+            <p th:if="${errorMessage != null}" th:text="${errorMessage}">Sie haben keine Berechtigung für diese Seite.</p>
+            <p th:if="${errorMessage == null}">Sie haben keine Berechtigung für diese Seite.</p>
+            <a th:href="@{/dashboard}" class="btn btn--primary">Zurück zum Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>

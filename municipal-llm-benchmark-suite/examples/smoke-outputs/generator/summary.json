@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "benchmark": "generator",
+    "benchmark_version": "1.0.0",
+    "model": "qwen2.5:7b",
+    "timestamp": "2026-09-07T13:18:38+00:00",
+    "host": {
+      "python": "3.13.15",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "host": "DESKTOP-5981MAQ",
+      "cpu": "Intel64 Family 6 Model 85 Stepping 4, GenuineIntel"
+    },
+    "num_ctx": 8192,
+    "temperature": 0.0,
+    "think": false,
+    "judge_model": null,
+    "ollama_version": null,
+    "gpu": {
+      "available": true,
+      "name": "Quadro P5000",
+      "note": null
+    }
+  },
+  "total_cases": 2,
+  "completed_cases": 2,
+  "pipeline_failures": 0,
+  "execution_errors": 0,
+  "extraction": {
+    "ok": 2,
+    "failed": 0,
+    "methods": {
+      "pdftotext": 2
+    }
+  },
+  "status_counts": {
+    "partially-correct": 1,
+    "fully-correct-contradiction-handled": 1
+  },
+  "answer_correctness_pct": 50.0,
+  "normal_correctness_pct": 0.0,
+  "adversarial_correctness_pct": 100.0,
+  "hallucination_unsupported_rate_pct": 0.0,
+  "insufficient_handled_pct": null,
+  "contradiction_handled_pct": 100.0,
+  "citation_ok_pct": 100.0,
+  "mean_latency_s": 7.38,
+  "median_latency_s": 7.3805,
+  "mean_generation_tok_per_s": 34.17,
+  "median_generation_tok_per_s": 34.17,
+  "mean_output_tokens": 150.5,
+  "total_wall_time_s": 14.97
+}

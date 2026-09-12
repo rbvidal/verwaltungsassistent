@@ -1,0 +1,1958 @@
+{
+ "source": "OpenStreetMap via Overpass API",
+ "date": "2026-08-25",
+ "license": "ODbL 1.0 — © OpenStreetMap contributors",
+ "note": "auf addr:-Felder reduziert (keine Kontakt-/Personendaten)",
+ "elements": [
+  {
+   "type": "node",
+   "addr:street": "Bahnhofstraße",
+   "addr:housenumber": "30",
+   "addr:postcode": "14774",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:suburb": "Kirchmöser",
+   "lat": 52.375746,
+   "lon": 12.4215881
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Hauptbahnhof",
+   "addr:housenumber": "9",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4004813,
+   "lon": 12.5657504
+  },
+  {
+   "type": "node",
+   "addr:street": "Deutsches Dorf",
+   "addr:housenumber": "47",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4084365,
+   "lon": 12.5661854
+  },
+  {
+   "type": "node",
+   "addr:street": "Warschauer Straße",
+   "addr:housenumber": "15 B",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4287943,
+   "lon": 12.5308581
+  },
+  {
+   "type": "node",
+   "addr:street": "Gartenweg",
+   "addr:housenumber": "1A",
+   "addr:postcode": "14774",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:suburb": "Plaue",
+   "lat": 52.409139,
+   "lon": 12.417289
+  },
+  {
+   "type": "node",
+   "addr:street": "Rathausstraße",
+   "addr:housenumber": "60",
+   "addr:postcode": "14774",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:suburb": "Kirchmöser",
+   "lat": 52.375039,
+   "lon": 12.425954
+  },
+  {
+   "type": "node",
+   "addr:street": "Brielower Landstraße",
+   "addr:housenumber": "17",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4301451,
+   "lon": 12.553138
+  },
+  {
+   "type": "node",
+   "addr:street": "Mendelssohnstraße",
+   "addr:housenumber": "25",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.427813,
+   "lon": 12.5039268
+  },
+  {
+   "type": "node",
+   "addr:street": "Rathenower Landstraße",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4332958,
+   "lon": 12.5333714
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4258282,
+   "lon": 12.503772
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4265453,
+   "lon": 12.5036152
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "28",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4246617,
+   "lon": 12.5004717
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "30",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4242113,
+   "lon": 12.5005834
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "32",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4237672,
+   "lon": 12.5006698
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "58",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4263375,
+   "lon": 12.5112354
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "7",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4199691,
+   "lon": 12.4963716
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "8",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.420028,
+   "lon": 12.4963436
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "1",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4205412,
+   "lon": 12.4971791
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "11",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4208617,
+   "lon": 12.4984829
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "20",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4203085,
+   "lon": 12.4972222
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "34",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4203967,
+   "lon": 12.4981184
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "36",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4201657,
+   "lon": 12.4981802
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "38",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4201995,
+   "lon": 12.4985083
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "58",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4205551,
+   "lon": 12.4987705
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "74",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4211932,
+   "lon": 12.4986757
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "6",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.420256,
+   "lon": 12.4968159
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "18",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4200788,
+   "lon": 12.4973658
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "42",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4204108,
+   "lon": 12.4984706
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "56",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4205822,
+   "lon": 12.4992437
+  },
+  {
+   "type": "node",
+   "addr:street": "Am Alten Gutshof",
+   "addr:housenumber": "44",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4203913,
+   "lon": 12.4987271
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "118",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4214905,
+   "lon": 12.4987449
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "96",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4228073,
+   "lon": 12.4986657
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "45",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4214509,
+   "lon": 12.4983636
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "23",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.423067,
+   "lon": 12.4982693
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "21",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234493,
+   "lon": 12.4982425
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "7",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4246513,
+   "lon": 12.4981734
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "7a",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4248671,
+   "lon": 12.4981587
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "3",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.423455,
+   "lon": 12.4989199
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "56",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4247964,
+   "lon": 12.4988072
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "60",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.424802,
+   "lon": 12.4985732
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "58",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.424802,
+   "lon": 12.4987102
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "5n",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4251219,
+   "lon": 12.4992767
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4231254,
+   "lon": 12.4987243
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "8",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4231364,
+   "lon": 12.4993714
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "1",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234461,
+   "lon": 12.4986346
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "7",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234155,
+   "lon": 12.4993254
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "10",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4231321,
+   "lon": 12.4997795
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "46",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4231055,
+   "lon": 12.5021362
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "48",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4231295,
+   "lon": 12.5026074
+  },
+  {
+   "type": "node",
+   "addr:street": "Begonienweg",
+   "addr:housenumber": "72",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234059,
+   "lon": 12.5038265
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "26",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4237904,
+   "lon": 12.5016513
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "24",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4242608,
+   "lon": 12.5015459
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "22",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4247247,
+   "lon": 12.5014316
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "20",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4239172,
+   "lon": 12.5026585
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "18",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4243651,
+   "lon": 12.5025577
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "16",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4248141,
+   "lon": 12.5024314
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "10",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4211994,
+   "lon": 12.496459
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "11",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4216859,
+   "lon": 12.496014
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "16",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4224543,
+   "lon": 12.495981
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "17",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4227841,
+   "lon": 12.495968
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "22",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4235503,
+   "lon": 12.4959414
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "23",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4240777,
+   "lon": 12.4959429
+  },
+  {
+   "type": "node",
+   "addr:street": "Quenzweg",
+   "addr:housenumber": "39",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4274935,
+   "lon": 12.4980229
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "71",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4215531,
+   "lon": 12.496271
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "57",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4217047,
+   "lon": 12.4971108
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "53",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4218561,
+   "lon": 12.4973561
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "49",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4219661,
+   "lon": 12.4973511
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "47",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4221373,
+   "lon": 12.4972143
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "17",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.423191,
+   "lon": 12.4971745
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4233683,
+   "lon": 12.4972953
+  },
+  {
+   "type": "node",
+   "addr:street": "Zu den Eichen",
+   "addr:housenumber": "26",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4236958,
+   "lon": 12.4972823
+  },
+  {
+   "type": "node",
+   "addr:street": "Zu den Eichen",
+   "addr:housenumber": "18",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4244359,
+   "lon": 12.4972545
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "1",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4237412,
+   "lon": 12.4962062
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "7",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4236409,
+   "lon": 12.4967133
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4236342,
+   "lon": 12.4959876
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "6",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4233093,
+   "lon": 12.4969502
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "10",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4228474,
+   "lon": 12.4967576
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "12",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4228458,
+   "lon": 12.496622
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "14",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4224664,
+   "lon": 12.4966431
+  },
+  {
+   "type": "node",
+   "addr:street": "Pflegerdorf",
+   "addr:housenumber": "24",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.421783,
+   "lon": 12.4966174
+  },
+  {
+   "type": "node",
+   "addr:street": "Zu den Eichen",
+   "addr:housenumber": "21",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4250442,
+   "lon": 12.4978287
+  },
+  {
+   "type": "node",
+   "addr:street": "Zu den Eichen",
+   "addr:housenumber": "37",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4239153,
+   "lon": 12.4966714
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "130",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4209026,
+   "lon": 12.4970822
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "120",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4211696,
+   "lon": 12.4983635
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "4",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4247844,
+   "lon": 12.4991769
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4248417,
+   "lon": 12.4991715
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "22",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4240471,
+   "lon": 12.4992764
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "26",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4237052,
+   "lon": 12.4992349
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "24",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4237137,
+   "lon": 12.499319
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "31",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4238792,
+   "lon": 12.4995328
+  },
+  {
+   "type": "node",
+   "addr:street": "Myrtenweg",
+   "addr:housenumber": "37",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4239238,
+   "lon": 12.4999802
+  },
+  {
+   "type": "node",
+   "addr:street": "Primelweg",
+   "addr:housenumber": "1",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4214877,
+   "lon": 12.4994938
+  },
+  {
+   "type": "node",
+   "addr:street": "Primelweg",
+   "addr:housenumber": "17",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4226851,
+   "lon": 12.4994792
+  },
+  {
+   "type": "node",
+   "addr:street": "Primelweg",
+   "addr:housenumber": "12",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4222982,
+   "lon": 12.4997125
+  },
+  {
+   "type": "node",
+   "addr:street": "Primelweg",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4214295,
+   "lon": 12.4997626
+  },
+  {
+   "type": "node",
+   "addr:street": "Schneeglöckchenring",
+   "addr:housenumber": "13",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.422511,
+   "lon": 12.5004288
+  },
+  {
+   "type": "node",
+   "addr:street": "Schneeglöckchenring",
+   "addr:housenumber": "25",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.422654,
+   "lon": 12.5018676
+  },
+  {
+   "type": "node",
+   "addr:street": "Schneeglöckchenring",
+   "addr:housenumber": "14",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4224676,
+   "lon": 12.5015492
+  },
+  {
+   "type": "node",
+   "addr:street": "Schneeglöckchenring",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4213286,
+   "lon": 12.5008046
+  },
+  {
+   "type": "node",
+   "addr:street": "Lupinenweg",
+   "addr:housenumber": "4",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4225314,
+   "lon": 12.503056
+  },
+  {
+   "type": "node",
+   "addr:street": "Lupinenweg",
+   "addr:housenumber": "22",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4217469,
+   "lon": 12.5041748
+  },
+  {
+   "type": "node",
+   "addr:street": "Lupinenweg",
+   "addr:housenumber": "3",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.422809,
+   "lon": 12.5031284
+  },
+  {
+   "type": "node",
+   "addr:street": "Lupinenweg",
+   "addr:housenumber": "19",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4218459,
+   "lon": 12.5036585
+  },
+  {
+   "type": "node",
+   "addr:street": "Zinnienweg",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4230881,
+   "lon": 12.5039436
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "1",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.421964,
+   "lon": 12.5045757
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "5",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4220268,
+   "lon": 12.505425
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "13",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4221082,
+   "lon": 12.5064695
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "19",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4225335,
+   "lon": 12.5069163
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4217646,
+   "lon": 12.5044085
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "34",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4225329,
+   "lon": 12.5071805
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "21",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4227257,
+   "lon": 12.5068643
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "37",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234449,
+   "lon": 12.5061647
+  },
+  {
+   "type": "node",
+   "addr:street": "Malvenbogen",
+   "addr:housenumber": "61",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4234441,
+   "lon": 12.5042623
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "2",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4230324,
+   "lon": 12.5046522
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "10",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.422674,
+   "lon": 12.5061944
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "11",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4225337,
+   "lon": 12.5064053
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4224554,
+   "lon": 12.5053536
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "16",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4222355,
+   "lon": 12.5051406
+  },
+  {
+   "type": "node",
+   "addr:street": "Krokusring",
+   "addr:housenumber": "20",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4228966,
+   "lon": 12.50494
+  },
+  {
+   "type": "node",
+   "addr:street": "Veilchenweg",
+   "addr:housenumber": "3",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4263825,
+   "lon": 12.502795
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "5",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4274312,
+   "lon": 12.5000664
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "13",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.427256,
+   "lon": 12.501276
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4271718,
+   "lon": 12.5018996
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "19",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4270715,
+   "lon": 12.5025809
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "15a",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4271077,
+   "lon": 12.5015836
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "15f",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4265035,
+   "lon": 12.5010386
+  },
+  {
+   "type": "node",
+   "addr:street": "Plauer Landstraße",
+   "addr:housenumber": "3",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4167198,
+   "lon": 12.4865784
+  },
+  {
+   "type": "node",
+   "addr:street": "Magdeburger Landstraße",
+   "addr:housenumber": "228",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4141809,
+   "lon": 12.5021943
+  },
+  {
+   "type": "node",
+   "addr:street": "Potsdamer Straße",
+   "addr:housenumber": "29",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4053867,
+   "lon": 12.5771918
+  },
+  {
+   "type": "node",
+   "addr:street": "Warschauer Straße",
+   "addr:housenumber": "23",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4304696,
+   "lon": 12.5312476
+  },
+  {
+   "type": "node",
+   "addr:street": "Upstallstraße",
+   "addr:housenumber": "22",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4304499,
+   "lon": 12.5334756
+  },
+  {
+   "type": "node",
+   "addr:street": "Alte Potsdamer Straße",
+   "addr:housenumber": "22",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4060131,
+   "lon": 12.5754676
+  },
+  {
+   "type": "node",
+   "addr:street": "Gutshof",
+   "addr:housenumber": "1",
+   "addr:postcode": "14778",
+   "addr:city": "Beetzseeheide",
+   "addr:suburb": "Butzow",
+   "lat": 52.4635404,
+   "lon": 12.5909137
+  },
+  {
+   "type": "node",
+   "addr:street": "Willi-Sänger-Straße",
+   "addr:housenumber": "15A",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4171437,
+   "lon": 12.5527309
+  },
+  {
+   "type": "node",
+   "addr:street": "Altstädtischer Markt",
+   "addr:housenumber": "8",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4138437,
+   "lon": 12.5540604
+  },
+  {
+   "type": "node",
+   "addr:street": "Trauerberg",
+   "addr:housenumber": "27-28",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4028297,
+   "lon": 12.5575175
+  },
+  {
+   "type": "node",
+   "addr:street": "Sankt-Annen-Straße",
+   "addr:housenumber": "14",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4071415,
+   "lon": 12.5660453
+  },
+  {
+   "type": "node",
+   "addr:street": "Potsdamer Straße",
+   "addr:housenumber": "2",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4064411,
+   "lon": 12.5681744
+  },
+  {
+   "type": "node",
+   "addr:street": "Malge",
+   "addr:housenumber": "2",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:suburb": "Malge",
+   "addr:country": "DE",
+   "lat": 52.3699045,
+   "lon": 12.4718753
+  },
+  {
+   "type": "node",
+   "addr:street": "Lilli-Friesicke-Straße",
+   "addr:housenumber": "2",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.420816,
+   "lon": 12.5501533
+  },
+  {
+   "type": "node",
+   "addr:street": "Freiherr-von-Thüngen-Straße",
+   "addr:housenumber": "13",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4214754,
+   "lon": 12.5499922
+  },
+  {
+   "type": "node",
+   "addr:street": "Nicolaiplatz",
+   "addr:housenumber": "8",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4114353,
+   "lon": 12.5491043
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedrich-Franz-Straße",
+   "addr:housenumber": "4",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4138476,
+   "lon": 12.5246426
+  },
+  {
+   "type": "node",
+   "addr:street": "Sankt-Annen-Straße",
+   "addr:housenumber": "23",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4079391,
+   "lon": 12.5654865
+  },
+  {
+   "type": "node",
+   "addr:street": "Sankt-Annen-Straße",
+   "addr:housenumber": "38",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4086031,
+   "lon": 12.5630767
+  },
+  {
+   "type": "node",
+   "addr:street": "Magdeburger Landstraße",
+   "addr:housenumber": "190",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4137963,
+   "lon": 12.5060044
+  },
+  {
+   "type": "node",
+   "addr:street": "Magdeburger Landstraße",
+   "addr:housenumber": "228",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.413846,
+   "lon": 12.5021769
+  },
+  {
+   "type": "node",
+   "addr:street": "Ritterstraße",
+   "addr:housenumber": "98",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4126342,
+   "lon": 12.5535706
+  },
+  {
+   "type": "node",
+   "addr:street": "August-Sonntag-Straße",
+   "addr:housenumber": "5",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4165321,
+   "lon": 12.5056985
+  },
+  {
+   "type": "node",
+   "addr:street": "Trauerberg",
+   "addr:housenumber": "1B",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.403758,
+   "lon": 12.5588007
+  },
+  {
+   "type": "node",
+   "addr:street": "Steinstraße",
+   "addr:housenumber": "19",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4073846,
+   "lon": 12.560011
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "24",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4275717,
+   "lon": 12.502699
+  },
+  {
+   "type": "node",
+   "addr:street": "Kopenhagener Straße",
+   "addr:housenumber": "56",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4295091,
+   "lon": 12.5248099
+  },
+  {
+   "type": "node",
+   "addr:street": "Gördenallee",
+   "addr:housenumber": "206",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4252,
+   "lon": 12.5261119
+  },
+  {
+   "type": "node",
+   "addr:street": "Wilhelmsdorfer Landstraße",
+   "addr:housenumber": "36",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.39522,
+   "lon": 12.540375
+  },
+  {
+   "type": "node",
+   "addr:street": "Potsdamer Straße",
+   "addr:housenumber": "23",
+   "addr:postcode": "14776",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4049091,
+   "lon": 12.5719783
+  },
+  {
+   "type": "node",
+   "addr:street": "Upstallstraße",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4314665,
+   "lon": 12.5353738
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "27",
+   "lat": 52.4323942,
+   "lon": 12.5201566
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "71",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4321126,
+   "lon": 12.5179422
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "69",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4307754,
+   "lon": 12.5176665
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "61",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4327984,
+   "lon": 12.5176073
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "9",
+   "lat": 52.4326469,
+   "lon": 12.5208238
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "112",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4315167,
+   "lon": 12.5173389
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "90",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.431903,
+   "lon": 12.5196585
+  },
+  {
+   "type": "node",
+   "addr:street": "Tschirchdamm",
+   "addr:housenumber": "9",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4326342,
+   "lon": 12.5218317
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "102",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.431864,
+   "lon": 12.5183814
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "77",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4306002,
+   "lon": 12.5168764
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "55",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4312521,
+   "lon": 12.5190587
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "75",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4307721,
+   "lon": 12.5169454
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "7",
+   "lat": 52.4327553,
+   "lon": 12.5208809
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "98",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.4318747,
+   "lon": 12.5188632
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "17",
+   "lat": 52.433049,
+   "lon": 12.5201551
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "76",
+   "lat": 52.4319024,
+   "lon": 12.5213193
+  },
+  {
+   "type": "node",
+   "addr:street": "August-Sonntag-Straße",
+   "addr:housenumber": "3",
+   "addr:postcode": "14770",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4180192,
+   "lon": 12.5103026
+  },
+  {
+   "type": "node",
+   "addr:street": "Brahmsstraße",
+   "addr:housenumber": "16",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4324748,
+   "lon": 12.5144718
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "110",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4316032,
+   "lon": 12.5175506
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "67",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.4310865,
+   "lon": 12.518015
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "88",
+   "lat": 52.4319124,
+   "lon": 12.5200583
+  },
+  {
+   "type": "node",
+   "addr:street": "Tschirchdamm",
+   "addr:housenumber": "1",
+   "lat": 52.4320534,
+   "lon": 12.5218874
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "65",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4325137,
+   "lon": 12.5177673
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "116",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4313855,
+   "lon": 12.5169693
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "21",
+   "lat": 52.432785,
+   "lon": 12.5201655
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "91",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4323318,
+   "lon": 12.5156327
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "57",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.4310872,
+   "lon": 12.5190056
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "15",
+   "lat": 52.432314,
+   "lon": 12.520823
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "84",
+   "lat": 52.4319101,
+   "lon": 12.5204983
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "67",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4324318,
+   "lon": 12.5177719
+  },
+  {
+   "type": "node",
+   "addr:street": "Brahmsstraße",
+   "addr:housenumber": "37",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4314658,
+   "lon": 12.5159777
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "118",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4312993,
+   "lon": 12.516675
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "96",
+   "addr:city": "Brandenburg an der Havel",
+   "lat": 52.4318871,
+   "lon": 12.519105
+  },
+  {
+   "type": "node",
+   "addr:street": "Tschirchdamm",
+   "addr:housenumber": "15",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4330284,
+   "lon": 12.5217296
+  },
+  {
+   "type": "node",
+   "addr:street": "Brahmsstraße",
+   "addr:housenumber": "14",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4323989,
+   "lon": 12.5146088
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "124",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4311949,
+   "lon": 12.5161625
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "69A",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.43088,
+   "lon": 12.517853
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "23",
+   "lat": 52.432658,
+   "lon": 12.5201306
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "77",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4325784,
+   "lon": 12.5168204
+  },
+  {
+   "type": "node",
+   "addr:street": "Brahmsstraße",
+   "addr:housenumber": "51",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4322133,
+   "lon": 12.5155611
+  },
+  {
+   "type": "node",
+   "addr:street": "Max-Herm-Straße",
+   "addr:housenumber": "1",
+   "lat": 52.4330793,
+   "lon": 12.5208762
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "104",
+   "addr:postcode": "14772",
+   "addr:city": "Brandenburg an der Havel",
+   "addr:country": "DE",
+   "lat": 52.4317878,
+   "lon": 12.5180428
+  },
+  {
+   "type": "node",
+   "addr:street": "Rosa-Luxemburg-Allee",
+   "addr:housenumber": "82",
+   "lat": 52.4319058,
+   "lon": 12.520757
+  }
+ ]
+}

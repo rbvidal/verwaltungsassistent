@@ -1,0 +1,13 @@
+From: Julia Weber <julia.weber@example.de>
+To: info@verwaltungs-demo.de
+Subject: Reisepass für Minderjährige beantragen
+Date: 2026-08-04T09:00:00+02:00
+Message-ID: demo-seed:reisepassminderjährige@verwaltungsassistent.local
+
+--- body ab hier ---
+Sehr geehrte Damen und Herren,
+
+Reisepass für Minderjährige – benötigte Unterlagen und Anwesenheit der Eltern.
+
+Mit freundlichen Grüßen
+Julia Weber

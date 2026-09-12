@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Administration</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    <span th:text="${adminTitle}"></span> — die tatsächlich laufende Konfiguration.
+                    Modellwechsel werden zur Laufzeit nicht unterstützt; Änderungen erfolgen über die
+                    Konfiguration (Umgebungsvariablen) und einen Neustart der Anwendung.
+                </p>
+                <th:block th:replace="~{admin/tabs :: tabs}"></th:block>
+            </div>
+
+            <div class="decision-package__section">
+                <h2 style="font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.75rem;">KI / Modelle</h2>
+                <div class="admin-card-grid">
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Ollama Endpoint</div>
+                        <div style="font-weight: 600;" th:text="${aiBaseUrl}">—</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Generator</div>
+                        <div style="font-weight: 600;" th:text="${aiChatModel}">—</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Verifikation</div>
+                        <div style="font-weight: 600;" th:text="${aiVerifierModel} + ' (' + ${aiVerificationStrategy} + ')'">—</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Semantischer Parser</div>
+                        <div style="font-weight: 600;" th:text="${aiVerifierModel}">—</div>
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">(nutzt das Verifikationsmodell)</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Embeddings</div>
+                        <div style="font-weight: 600;" th:text="${aiEmbeddingModel} + ' (' + ${aiEmbeddingDimension} + 'd)'">—</div>
+                    </div>
+                    <div class="admin-card">
+                        <div style="font-size: 0.6875rem; color: var(--color-text-muted);">Request-Timeout</div>
+                        <div style="font-weight: 600;" th:text="${aiRequestTimeout}">—</div>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 1rem;">
+                    Hinweis: Diese Seite ist eine reine Anzeige der aktiven Konfiguration. Die Architektur
+                    unterstützt keine Laufzeit-Umschaltung der Modelle — eine Änderung erfordert
+                    Konfiguration (z.&nbsp;B. OLLAMA_CHAT_MODEL, OLLAMA_VERIFIER_MODEL,
+                    OLLAMA_EMBEDDING_MODEL) und einen Neustart.
+                </p>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

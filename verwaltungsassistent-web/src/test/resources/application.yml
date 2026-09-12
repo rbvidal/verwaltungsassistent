@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  flyway:
+    enabled: false
+  thymeleaf:
+    cache: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: true
+
+demo:
+  mode: false
+
+platform:
+  auth:
+    jwt-secret: test-jwt-secret-that-is-at-least-32-bytes-long01234
+    issuer: test-issuer
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat-model: ${OLLAMA_CHAT_MODEL:qwen2.5:14b}
+      verifier-model: ${OLLAMA_VERIFIER_MODEL:qwen2.5:14b}
+      verification-strategy: ${VERIFICATION_STRATEGY:claim_batch}
+      semantic-intent:
+        enabled: ${SEMANTIC_INTENT_ENABLED:true}
+      embedding-model: ${OLLAMA_EMBEDDING_MODEL:nomic-embed-text}
+      embedding-dimension: ${OLLAMA_EMBEDDING_DIMENSION:768}
+      request-timeout: ${OLLAMA_REQUEST_TIMEOUT:300s}
+    pipeline:
+      max-evidence-sources: ${AI_MAX_EVIDENCE_SOURCES:4}
+      max-paragraphs-per-source: ${AI_MAX_PARAGRAPHS:3}
+      max-prompt-length: ${AI_MAX_PROMPT_LENGTH:3800}
+      max-excerpt-length: ${AI_MAX_EXCERPT_LENGTH:500}
+      retry-enabled: ${AI_RETRY_ENABLED:false}
+      coverage-threshold: ${AI_COVERAGE_THRESHOLD:0.6}
+      domain-boost-factor: ${AI_DOMAIN_BOOST:0.35}
+      max-mismatched-documents: ${AI_MAX_MISMATCHED_DOCS:0}
+  search:
+    qdrant:
+      enabled: false
+
+logging:
+  level:
+    verwaltungsassistent.web: DEBUG
+    org.springframework.security: DEBUG

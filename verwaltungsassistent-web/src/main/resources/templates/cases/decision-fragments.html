@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="decisionResult">
+    <div class="decision-package">
+
+        <!-- Error state -->
+        <th:block th:if="${analysisError != null}">
+            <div class="message message--error" role="alert" th:text="'Analysefehler: ' + ${analysisError}">Fehler</div>
+            <form th:if="${!supervisory}"
+                  th:attr="hx-post=|/cases/${caseId}/decision/analyze|"
+                  hx-target="#decision-result-container" hx-swap="innerHTML"
+                  hx-indicator="#analysis-retry-spinner" hx-disabled-elt="this"
+                  style="margin-top: 1rem;">
+                <button type="submit" class="btn btn--primary">Erneut versuchen</button>
+                <span id="analysis-retry-spinner" class="htmx-indicator" style="margin-left: 0.75rem; font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Analyse wird durchgeführt …
+                </span>
+            </form>
+        </th:block>
+
+        <!-- Success: Official Municipal Decision Template -->
+        <th:block th:if="${analysisComplete}">
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- HEADER                                        -->
+            <!-- ═══════════════════════════════════════════ -->
+            <div class="decision-package__header">
+                <div class="decision-package__official-stamp">
+                    <span class="decision-package__label">Entscheidungsvorlage</span>
+                    <span class="decision-package__label" th:text="${'Fall: ' + caseName}">Fall</span>
+                </div>
+
+                <!-- Quality Indicators -->
+                <div class="quality-indicators">
+                    <div class="quality-indicator">
+                        <span class="quality-indicator__label">Gesamtkonfidenz</span>
+                        <div class="quality-indicator__bar" role="progressbar"
+                             th:attr="aria-valuenow=${confidence.overallConfidence() * 100}, aria-valuemin=0, aria-valuemax=100">
+                            <div class="quality-indicator__fill" th:style="'width:' + ${confidence.overallConfidence() * 100} + '%'"
+                                 th:classappend="${overallFillClass}"></div>
+                        </div>
+                        <span class="quality-indicator__value" th:text="${confidenceScore}">0%</span>
+                    </div>
+                    <div class="quality-indicator">
+                        <span class="quality-indicator__label">Quellenlage</span>
+                        <div class="quality-indicator__bar" role="progressbar"
+                             th:attr="aria-valuenow=${confidence.sourceConfidence() * 100}, aria-valuemin=0, aria-valuemax=100">
+                            <div class="quality-indicator__fill" th:style="'width:' + ${confidence.sourceConfidence() * 100} + '%'"
+                                 th:classappend="${sourceFillClass}"></div>
+                        </div>
+                        <span class="quality-indicator__value" th:text="${#numbers.formatDecimal(confidence.sourceConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span>
+                    </div>
+                    <div class="quality-indicator">
+                        <span class="quality-indicator__label"
+                              title="Anteil der erwarteten Quellenrollen, die im Vorgang gefunden wurden — keine Aussage über die inhaltliche Vollständigkeit des Falls."
+                              th:text="'Quellenabdeckung'">Quellenabdeckung</span>
+                        <div class="quality-indicator__bar" role="progressbar"
+                             th:attr="aria-valuenow=${confidence.completenessConfidence() * 100}, aria-valuemin=0, aria-valuemax=100">
+                            <div class="quality-indicator__fill" th:style="'width:' + ${confidence.completenessConfidence() * 100} + '%'"
+                                 th:classappend="${completenessFillClass}"></div>
+                        </div>
+                        <span class="quality-indicator__value" th:text="${#numbers.formatDecimal(confidence.completenessConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span>
+                    </div>
+                </div>
+
+                <!-- Konfidenz-Erläuterung: die Gesamtkonfidenz ist die gewichtete
+                     Mischung der vier Komponenten — keine separate Messgröße.
+                     Gewichte (Backend: DefaultGroundingService): Quellenlage 20 %,
+                     Absicherung der Aussagen 25 %, Rechtsgrundlagen 25 %,
+                     Quellenabdeckung 30 %; Ergebnis wird auf 100 % begrenzt. -->
+                <p class="decision-package__confidence-note" th:if="${confidence != null}">
+                    <strong>Warum diese Gesamtkonfidenz?</strong><br>
+                    Die Gesamtkonfidenz von <span th:text="${confidenceScore}">0%</span> wird aus mehreren
+                    Qualitätswerten gewichtet berechnet:
+                </p>
+                <ul class="decision-package__confidence-note" style="margin-top: 0.25rem; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.15rem;">
+                    <li>Quellenlage: <span th:text="${#numbers.formatDecimal(confidence.sourceConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span> — Gewicht 20 %</li>
+                    <li>Absicherung der Aussagen: <span th:text="${#numbers.formatDecimal(confidence.semanticConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span> — Gewicht 25 %</li>
+                    <li>Rechtsgrundlagen: <span th:text="${#numbers.formatDecimal(confidence.structuralConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span> — Gewicht 25 %</li>
+                    <li>Quellenabdeckung: <span th:text="${#numbers.formatDecimal(confidence.completenessConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0%</span> — Gewicht 30 %</li>
+                </ul>
+                <p class="decision-package__confidence-note">
+                    <span th:if="${confidence.structuralConfidence() == 0}"><strong>Hinweis:</strong> Es wurde keine spezifische Rechtsgrundlage abgerufen — das senkt die Gesamtkonfidenz deutlich.</span>
+                    <span th:if="${secondaryFindings != null and !secondaryFindings.isEmpty() or (coverageIssues != null and !coverageIssues.isEmpty())}">Nicht durch Belege gedeckte Punkte senken die Gesamtkonfidenz.</span>
+                </p>
+
+                <div class="decision-package__meta">
+                    <div class="decision-package__meta-item">
+                        <span>Erstellt am</span>
+                        <strong th:text="${requestedAt}">—</strong>
+                    </div>
+                    <div class="decision-package__meta-item">
+                        <span>Analyseverfahren</span>
+                        <strong th:text="${strategy}">—</strong>
+                    </div>
+                    <div class="decision-package__meta-item">
+                        <span>KI-Modell</span>
+                        <strong th:text="${model}">—</strong>
+                    </div>
+                    <div class="decision-package__meta-item" th:if="${asOf != null}">
+                        <span>Stichtag (as of)</span>
+                        <strong th:text="${asOfDisplay != null ? asOfDisplay : asOf}">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sofort verfügbare PDF-Aktion im Abschluss-Zustand: sobald die
+                 Analyse erfolgreich abgeschlossen ist, ist die Entscheidungs-
+                 vorlage direkt exportierbar (inline im Browser-Viewer). Beim
+                 START der Analyse wird KEIN Tab reserviert und nichts geöffnet —
+                 erst das Abschluss-Fragment öffnet die fertige PDF in einem
+                 neuen Tab; dieser Button bleibt der sichtbare Fallback. -->
+            <div th:if="${jobId != null}" class="decision-package__pdf-action"
+                 style="margin: 0 0 1rem; padding: 0.6rem 0.85rem; border: 1px solid var(--color-primary); border-radius: var(--radius); background: var(--color-primary-50, #f0f4ff); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+                <div style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Die Analyse ist abgeschlossen — die Entscheidungsvorlage ist bereit.
+                </div>
+                <a th:attr="href=|/cases/${caseId}/decision/export-pdf?job=${jobId}&inline=true|"
+                   data-pdf-action target="_blank" rel="noopener"
+                   class="btn btn--primary" style="font-size: 0.8125rem;">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">picture_as_pdf</span>
+                    PDF öffnen
+                </a>
+            </div>
+
+            <!-- Fallbriefing-Zugang im Entscheidungs-Ergebnis (Phase 2C.4):
+                 Nach einer erfolgreichen Analyse wird das Fallbriefing aus dem
+                 gespeicherten Analyse-Ergebnis abgeleitet und als expliziter
+                 Button angeboten (das automatische Öffnen frischer Abschlüsse
+                 übernimmt der reservierte PDF-Wartetab für die
+                 Entscheidungsvorlage; das Briefing bleibt manuell wählbar). -->
+            <div th:if="${briefingAvailable}" class="decision-package__pdf-action"
+                 style="margin: 0 0 1rem; padding: 0.6rem 0.85rem; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--color-surface-row); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
+                <div style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                    Das Fallbriefing wurde aus dieser Analyse erstellt — Zusammenfassung, Erkenntnisse und Belege.
+                </div>
+                <a data-pdf-action th:href="|/cases/${caseId}/briefing/pdf?inline=true|"
+                   target="_blank" rel="noopener" class="btn" style="font-size: 0.8125rem;">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">summarize</span>
+                    Fallbriefing öffnen
+                </a>
+            </div>
+            <div th:if="${briefingAutoFailed != null}" class="message message--warning" role="status"
+                 style="margin: 0 0 1rem; font-size: 0.8125rem;"
+                 th:text="${briefingAutoFailed}">Fallbriefing-Hinweis</div>
+            <!-- Automatisches Öffnen der fertigen PDF erfolgt über den beim
+                 Analyse-Start RESERVIERTEN Wartetab (pdf-wait, Popup-Blocker-
+                 sicher): die Warteseite pollt den Analyse-Zustand und
+                 navigiert nach Abschluss selbst zur PDF. Hier im Abschluss-
+                 Fragment wird deshalb nichts mehr geöffnet — die sichtbaren
+                 "PDF öffnen"/"Fallbriefing öffnen"-Buttons bleiben der
+                 manuelle Fallback (auch für gespeicherte Analysen). -->
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 1. BESCHLUSSEMPFEHLUNG                         -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section decision-package__section--primary">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">1</span>
+                    Beschlussempfehlung
+                </h2>
+                <div class="decision-package__recommendation" th:text="${decisionAnswer}">Empfehlungstext</div>
+
+                <div class="decision-package__grounded-badge" style="margin-top: 1rem;">
+                    <span th:if="${grounded}" class="badge badge--success"><span class="material-symbols-outlined" aria-hidden="true">check</span> Durch Quellen belegt</span>
+                    <span th:unless="${grounded}" class="badge badge--warning"><span class="material-symbols-outlined" aria-hidden="true">warning</span> Eingeschränkte Quellenlage</span>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- REASONING CHAIN: Evidence → Findings → Rec   -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section" th:if="${findingRelationships != null and !findingRelationships.isEmpty()}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">2</span>
+                    Begründungszusammenhang
+                </h2>
+                <div class="reasoning-chain">
+                    <div class="reasoning-chain__step reasoning-chain__step--evidence">
+                        <span class="reasoning-chain__badge">Belege</span>
+                        <span class="reasoning-chain__count" th:text="${#lists.size(evidenceItems)} + ' Dokumente'">0</span>
+                    </div>
+                    <span class="reasoning-chain__arrow">→</span>
+                    <div class="reasoning-chain__step reasoning-chain__step--findings">
+                        <span class="reasoning-chain__badge">Feststellungen</span>
+                        <span class="reasoning-chain__count" th:text="${#lists.size(primaryFindings != null ? primaryFindings : List.of())} + ' Kernfeststellungen'">0</span>
+                    </div>
+                    <span class="reasoning-chain__arrow">→</span>
+                    <div class="reasoning-chain__step reasoning-chain__step--recommendation">
+                        <span class="reasoning-chain__badge">Empfehlung</span>
+                        <span class="reasoning-chain__count">Beschlussvorschlag</span>
+                    </div>
+                </div>
+                <ul th:each="rel : ${findingRelationships}" style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                    <li th:text="${rel}" style="margin-bottom: 0.25rem;"></li>
+                </ul>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 2. RECHTLICHE GRUNDLAGEN                      -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section"
+                     th:if="${authorities != null and !authorities.isEmpty()}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number" th:text="${findingRelationships != null and !findingRelationships.isEmpty()} ? 3 : 2">2</span>
+                    Rechtliche Grundlagen
+                </h2>
+                <p class="decision-package__section-desc">
+                    Die folgenden Vorschriften und Regelwerke wurden bei der Analyse berücksichtigt.
+                </p>
+
+                <div class="decision-package__authority-list">
+                    <div th:each="a : ${authorities}" class="decision-package__authority-item">
+                        <div class="decision-package__authority-header">
+                            <span class="decision-package__authority-title" th:text="${a.title}">Titel</span>
+                            <span class="badge" th:classappend="${a.tier == 'Primär' ? 'badge--success' : 'badge--info'}"
+                                  th:text="${a.tier}" style="font-size: 0.6875rem;">Primär</span>
+                        </div>
+                        <div class="decision-package__authority-ref">
+                            <span th:text="${a.reference}">Referenz</span>
+                            <span th:if="${a.domain != null and a.domain != '—'}"
+                                  th:text="' (' + ${a.domain} + ')'" style="font-size: 0.75rem; color: var(--color-text-muted);"></span>
+                        </div>
+                        <p th:if="${a.excerpt != null and a.excerpt != '—'}" th:text="${a.excerpt}"
+                           class="decision-package__authority-excerpt">Auszug</p>
+                        <div class="quality-indicator" style="margin-top: 0.5rem; max-width: 200px;">
+                            <span class="quality-indicator__label" style="font-size: 0.625rem;">Relevanz</span>
+                            <div class="quality-indicator__bar quality-indicator__bar--sm" role="progressbar">
+                                <div class="quality-indicator__fill" th:style="'width:' + ${a.relevanceRaw * 100} + '%'"
+                                     th:classappend="${a.fillClass}"></div>
+                            </div>
+                            <span class="quality-indicator__value" th:text="${a.relevance}" style="font-size: 0.6875rem;">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2a. RECHTLICHE GRUNDLAGEN — honest empty state -->
+            <section class="decision-package__section"
+                     th:if="${authorities == null or authorities.isEmpty()}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number" th:text="${findingRelationships != null and !findingRelationships.isEmpty()} ? 3 : 2">2</span>
+                    Rechtliche Grundlagen
+                </h2>
+                <p class="decision-package__section-desc">
+                    Die folgenden Vorschriften und Regelwerke wurden bei der Analyse berücksichtigt.
+                </p>
+                <p class="decision-package__section-empty" style="font-size: 0.875rem; color: var(--color-text-muted);">
+                    Keine spezifische Rechtsgrundlage ermittelt.
+                </p>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 3. UNTERSTÜTZENDE DOKUMENTE (clickable)        -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section"
+                     th:if="${evidenceItems != null and !evidenceItems.isEmpty()}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number" th:text="${(authorities != null and !authorities.isEmpty()) ? 4 : 3}">3</span>
+                    Unterstützende Dokumente
+                </h2>
+                <p class="decision-package__section-desc">
+                    Die folgenden Dokumente stützen die Beschlussempfehlung. Klicken Sie auf ein Dokument, um es zu öffnen.
+                </p>
+
+                <!-- Dokumentgruppierung: EINE Überschrift pro Dokument, darunter
+                     jeder einzelne abgerufene Abschnitt. Die Abschnitte bleiben
+                     unverändert einzeln sichtbar und anklickbar; die Reihung
+                     entspricht der Rangfolge des Retrievals (keine Umordnung). -->
+                <div class="decision-package__evidence-list">
+                    <th:block th:each="g, gStat : ${evidenceGroups != null ? evidenceGroups : List.of()}">
+                        <div class="decision-package__evidence-group"
+                             th:attr="data-doc-id=${g.documentId}">
+                            <div class="decision-package__evidence-header">
+                                <strong class="decision-package__evidence-title"
+                                        th:text="${g.title}">Quelle</strong>
+                                <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                                    <span class="badge" th:classappend="${g.tier == 'Primär' ? 'badge--success' : (g.tier == 'Unterstützend' ? 'badge--info' : 'badge--neutral')}"
+                                          th:text="${g.tier}" style="font-size: 0.6875rem;">TIER</span>
+                                    <span th:if="${g.documentVersion != null}" class="badge badge--neutral"
+                                          th:text="'Version ' + ${g.documentVersion}" style="font-size: 0.6875rem;"></span>
+                                    <span th:if="${g.pageNumber != null}" class="badge badge--neutral"
+                                          th:text="'S. ' + ${g.pageNumber}" style="font-size: 0.6875rem;"></span>
+                                    <span th:if="${g.items != null and #lists.size(g.items) > 1}" class="badge badge--neutral"
+                                          th:text="${#lists.size(g.items)} + ' Abschnitte'" style="font-size: 0.6875rem;"></span>
+                                </div>
+                            </div>
+                            <!-- Phase 2C.11: Quelle öffnen → Viewer, der exakt die
+                                 EVIDENCE-Chunks dieses Dokuments markiert (q =
+                                 Analyse-Begriffe, chunks = Beleg-Chunks). Ohne
+                                 Chunk-Referenz: ehrliches Dokument öffnen. -->
+                            <div th:if="${g.documentId != null}" x-data="{ srcOpen: false }"
+                                 style="margin: 0.15rem 0 0.45rem;">
+                                <button type="button" class="btn btn--sm" style="font-size: 0.75rem;"
+                                        th:attr="hx-get=${(g.chunkIds != null and !g.chunkIds.isEmpty())
+                                            ? '/documents/' + g.documentId + '/view?q=' + (analysisHighlightQuery != null ? analysisHighlightQuery : '') + '&chunks=' + g.chunkIds
+                                            : '/documents/' + g.documentId + '/view?q=' + (analysisHighlightQuery != null ? analysisHighlightQuery : '')},
+                                        hx-target=|#evsrc-${gStat.index}-body|,hx-swap=innerHTML"
+                                        hx-trigger="click once" @click="srcOpen = true">
+                                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 0.875rem; vertical-align: middle;">open_in_new</span>
+                                    <th:block th:if="${g.pageNumber != null}"
+                                              th:text="'Quelle öffnen · S. ' + ${g.pageNumber}">Quelle öffnen</th:block>
+                                    <th:block th:unless="${g.pageNumber != null}">Quelle öffnen</th:block>
+                                </button>
+                                <th:block th:replace="~{fragments/components :: documentViewerModal(
+                                    id=|evsrc-${gStat.index}|,
+                                    docUrl=|/documents/${g.documentId}/view?q=${analysisHighlightQuery != null ? analysisHighlightQuery : ''}${g.chunkIds != null and !g.chunkIds.isEmpty() ? '&chunks=' + g.chunkIds : ''}|)}">
+                                </th:block>
+                            </div>
+                            <div th:each="e : ${g.items}" class="decision-package__evidence-item"
+                                 x-data="{ open: false }"
+                                 style="border-left: 2px solid var(--color-border-subtle); padding-left: 0.85rem; margin-left: 0.15rem;">
+                                <p style="margin: 0.15rem 0 0; font-size: 0.75rem; color: var(--color-text-muted);">
+                                    <button type="button" @click="open = true"
+                                            style="background: none; border: none; padding: 0; color: var(--color-primary, #1a56db); cursor: pointer; font-size: 0.75rem; text-decoration: underline;">
+                                        Beleg ansehen – Quelle, Fundstelle und unterstützte Feststellungen
+                                    </button>
+                                </p>
+                                <div class="decision-package__evidence-meta" style="font-size: 0.75rem; color: var(--text-muted, #6b7280); margin-top: 0.5rem;">
+                                    <span th:if="${e.validFrom != null and e.validUntil != null}">
+                                        Gültig: <span th:text="${#temporals.format(e.validFrom, 'dd.MM.yyyy')}">—</span>
+                                        – <span th:text="${#temporals.format(e.validUntil, 'dd.MM.yyyy')}">—</span>
+                                    </span>
+                                    <span th:if="${e.validFrom != null and e.validUntil == null}">
+                                        Gültig ab: <span th:text="${#temporals.format(e.validFrom, 'dd.MM.yyyy')}">—</span>
+                                    </span>
+                                    <span th:if="${e.validFrom == null and e.validUntil != null}">
+                                        Gültig bis: <span th:text="${#temporals.format(e.validUntil, 'dd.MM.yyyy')}">—</span>
+                                    </span>
+                                    <span th:if="${e.validFrom == null and e.validUntil == null}">Gültigkeit: unbekannt</span>
+                                </div>
+                                <blockquote class="decision-package__evidence-excerpt" th:text="${e.excerpt}">
+                                    Auszug aus dem Dokument
+                                </blockquote>
+                                <div class="decision-package__evidence-meta">
+                                    <span>Quellenrelevanz: </span>
+                                    <div class="quality-indicator" style="display: inline-flex; max-width: 120px; vertical-align: middle;">
+                                        <div class="quality-indicator__bar quality-indicator__bar--sm" role="progressbar">
+                                            <div class="quality-indicator__fill" th:style="'width:' + ${e.confidenceRaw * 100} + '%'"
+                                                 th:classappend="${e.fillClass}"></div>
+                                        </div>
+                                    </div>
+                                    <strong th:text="${e.confidence}" style="font-size: 0.75rem; margin-left: 0.25rem;">0%</strong>
+                                </div>
+
+                                <!-- ── Beleg-Detail (Modal) ── -->
+                                <div class="modal-overlay" x-cloak x-show="open" x-trap.noscroll="open"
+                                     @keydown.escape.window="open = false" @click.self="open = false"
+                                     x-effect="if (open) highlightEvidence($el)"
+                                     role="dialog" aria-modal="true"
+                                     th:attr="data-question=${analysisQuestion},
+                                              data-highlight-terms=${analysisHighlightTerms != null ? analysisHighlightTerms : ''}">
+                                    <div class="modal-dialog" style="max-width: 860px;">
+                                        <div class="modal__header">
+                                            <h2 class="modal__title" th:text="${e.title}">Quelle</h2>
+                                            <button class="modal__close" @click="open = false">&times;</button>
+                                        </div>
+                                        <div class="modal__body">
+                                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                                                <span class="badge" th:classappend="${e.tier == 'Primär' ? 'badge--success' : (e.tier == 'Unterstützend' ? 'badge--info' : 'badge--neutral')}"
+                                                      th:text="${e.tier}" style="font-size: 0.6875rem;">TIER</span>
+                                                <span th:if="${e.documentVersion != null}" class="badge badge--neutral"
+                                                      th:text="'Version ' + ${e.documentVersion}" style="font-size: 0.6875rem;"></span>
+                                                <span th:if="${e.pageNumber != null}" class="badge badge--neutral"
+                                                      th:text="'Fundstelle: S. ' + ${e.pageNumber}" style="font-size: 0.6875rem;"></span>
+                                                <span class="badge badge--neutral"
+                                                      th:text="'Quellenrelevanz: ' + ${e.confidence}" style="font-size: 0.6875rem;"></span>
+                                            </div>
+                                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin: 0 0 0.5rem;">
+                                                <strong>Belegter Auszug</strong> – Begriffe der Analysefrage sind
+                                                zur Orientierung markiert (Textmarker). Die Antwort entsteht durch
+                                                die kombinierte Suche und inhaltliche Prüfung der Wissensbasis –
+                                                nicht durch eine einfache Stichwortsuche.
+                                            </p>
+                                            <blockquote class="decision-package__evidence-excerpt evidence-highlight"
+                                                        th:text="${e.excerpt}" style="font-size: 0.875rem; line-height: 1.7;">
+                                                Auszug aus dem Dokument
+                                            </blockquote>
+                                            <div th:if="${e.containsKey('supportedBy') and e.supportedBy.size() > 0}"
+                                                 style="border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 0.6rem 0.85rem; margin-top: 0.75rem;">
+                                                <p style="font-size: 0.75rem; font-weight: 600; margin: 0 0 0.3rem;">
+                                                    Trägt bei zu:</p>
+                                                <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.8125rem;">
+                                                    <li th:each="f : ${e.supportedBy}" th:text="${f}" style="margin-bottom: 0.15rem;"></li>
+                                                </ul>
+                                            </div>
+                                            <div th:if="${e.validFrom != null or e.validUntil != null}"
+                                                 style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                                                <span th:if="${e.validFrom != null}">
+                                                    Gültig ab: <span th:text="${#temporals.format(e.validFrom, 'dd.MM.yyyy')}">—</span>
+                                                </span>
+                                                <span th:if="${e.validUntil != null}">
+                                                    Gültig bis: <span th:text="${#temporals.format(e.validUntil, 'dd.MM.yyyy')}">—</span>
+                                                </span>
+                                            </div>
+                                            <div class="modal__actions" style="margin-top: 1rem;">
+                                                <a th:attr="href=|/documents/${e.documentId}|" target="_blank"
+                                                   class="btn btn--primary">Dokument öffnen</a>
+                                                <button type="button" class="btn" @click="open = false">Schließen</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 4. FESTSTELLUNGEN (expandable with citations)  -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section"
+                     th:if="${(primaryFindings != null and !primaryFindings.isEmpty()) or (secondaryFindings != null and !secondaryFindings.isEmpty())}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">5</span>
+                    Feststellungen zum Sachverhalt
+                </h2>
+
+                <!-- Primary findings — EXPANDABLE -->
+                <div th:if="${primaryFindings != null and !primaryFindings.isEmpty()}" style="margin-bottom: 1.25rem;">
+                    <h3 class="decision-package__subsection-title">Kernfeststellungen</h3>
+                    <div class="decision-package__findings-list">
+                        <details th:each="f : ${primaryFindings}" class="decision-package__finding-detail"
+                                 th:attr="open=${f.evidenceLinks != null and !f.evidenceLinks.isEmpty()} ? null : 'open'">
+                            <summary class="decision-package__finding-summary">
+                                <span class="decision-package__finding-label" th:text="${f.label}">Label</span>
+                                <span class="decision-package__finding-role" th:text="${f.role}">Rolle</span>
+                                <div class="quality-indicator" style="display: inline-flex; max-width: 80px; margin-left: 0.5rem;">
+                                    <div class="quality-indicator__bar quality-indicator__bar--sm" role="progressbar">
+                                        <div class="quality-indicator__fill" th:style="'width:' + ${f.priorityRaw * 100} + '%'"
+                                             th:classappend="${f.fillClass}"></div>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div class="decision-package__finding-body">
+                                <p th:if="${f.description != null and !f.description.isEmpty()}"
+                                   th:text="${f.description}"
+                                   style="font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 0.75rem;"></p>
+
+                                <!-- Supporting citations for this finding -->
+                                <th:block th:if="${f.evidenceLinks != null and !f.evidenceLinks.isEmpty()}">
+                                    <p style="font-size: 0.75rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.5rem;">
+                                        Belegt durch:</p>
+                                    <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+                                        <a th:each="ev : ${f.evidenceLinks}"
+                                           th:attr="href=|/documents/${ev.documentId}|"
+                                           target="_blank"
+                                           class="decision-package__citation-link"
+                                           th:text="${ev.title} + (${ev.pageNumber} != null ? ', S. ' + ${ev.pageNumber} : '')">
+                                            Quelle</a>
+                                    </div>
+                                </th:block>
+
+                                <p th:if="${f.governingRefs != null and !f.governingRefs.isEmpty()}"
+                                   style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                                    <span style="font-weight: 500;">Zugeordnete Referenzen:</span>
+                                    <span th:each="ref, iter : ${f.governingRefs}"
+                                          th:text="${ref + (iter.last ? '' : ', ')}"></span>
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <!-- Secondary findings -->
+                <div th:if="${secondaryFindings != null and !secondaryFindings.isEmpty()}">
+                    <h3 class="decision-package__subsection-title">Weitere Erkenntnisse</h3>
+                    <div class="decision-package__findings-list">
+                        <details th:each="f : ${secondaryFindings}" class="decision-package__finding-detail">
+                            <summary class="decision-package__finding-summary">
+                                <span class="decision-package__finding-label" th:text="${f.label}">Label</span>
+                                <span class="decision-package__finding-role decision-package__finding-role--secondary"
+                                      th:text="${f.role}">Rolle</span>
+                            </summary>
+                            <div class="decision-package__finding-body">
+                                <p th:if="${f.description != null and !f.description.isEmpty()}"
+                                   th:text="${f.description}"
+                                   style="font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.6;"></p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 5. OFFENE PUNKTE                             -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">6</span>
+                    Offene Punkte und fehlende Informationen
+                </h2>
+
+                <th:block th:if="${coverageIssues != null and !coverageIssues.isEmpty()}">
+                    <ul class="decision-package__issues-list">
+                        <li th:each="issue : ${coverageIssues}" th:text="${issue}"
+                            class="decision-package__issue">Issue</li>
+                    </ul>
+                </th:block>
+
+                <!-- Missing documents, described in user-facing German (internal role names stay in the debug panel) -->
+                <details th:if="${missingDocs != null and !missingDocs.isEmpty()}"
+                         class="decision-package__finding-detail" style="margin-top: 0.75rem;">
+                    <summary class="decision-package__finding-summary">
+                        <span class="decision-package__finding-label">Unvollständige Informationsgrundlage</span>
+                    </summary>
+                    <div class="decision-package__finding-body">
+                        <p style="font-size: 0.8125rem; color: var(--color-text); line-height: 1.6; margin-bottom: 0.5rem;">
+                            Für eine abschließende Bewertung liegen noch nicht genügend Informationen vor.
+                            Es fehlen unter anderem:
+                            <strong th:text="${#strings.listJoin(missingDocs, ', ')}">…</strong>.
+                        </p>
+                        <p style="font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.6;">
+                            Bitte prüfen Sie, ob diese Unterlagen beim Antragsteller angefordert werden müssen.
+                        </p>
+                    </div>
+                </details>
+
+                <th:block th:unless="${(coverageIssues != null and !coverageIssues.isEmpty()) or (missingDocs != null and !missingDocs.isEmpty())}">
+                    <div class="decision-package__complete-notice">
+                        <span class="status-dot status-dot--green"></span>
+                        Alle erforderlichen Informationen liegen vor. Keine offenen Punkte identifiziert.
+                    </div>
+                </th:block>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 6. EMPFOHLENE HANDLUNGSSCHRITTE                -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section"
+                     th:if="${proceduralFindings != null and !proceduralFindings.isEmpty()}">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">7</span>
+                    Empfohlene Handlungsschritte
+                </h2>
+                <p class="decision-package__section-desc">
+                    Die folgenden administrativen Schritte werden auf Grundlage der Analyse empfohlen.
+                </p>
+                <ol class="decision-package__steps-list">
+                    <li th:each="f : ${proceduralFindings}" class="decision-package__step">
+                        <strong th:text="${f.label}">Schritt</strong>
+                        <span th:if="${f.description != null and !f.description.isEmpty()}"
+                              th:text="${f.description}"
+                              style="display: block; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;"></span>
+                    </li>
+                </ol>
+            </section>
+
+            <th:block th:unless="${proceduralFindings != null and !proceduralFindings.isEmpty()}">
+                <section class="decision-package__section">
+                    <h2 class="decision-package__section-title">
+                        <span class="decision-package__section-number">7</span>
+                        Empfohlene Handlungsschritte
+                    </h2>
+                    <ol class="decision-package__steps-list">
+                        <li class="decision-package__step">
+                            <strong>Entscheidungsvorlage prüfen</strong>
+                            <span style="display: block; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Prüfen Sie die Beschlussempfehlung auf Vollständigkeit und Richtigkeit.
+                            </span>
+                        </li>
+                        <li class="decision-package__step">
+                            <strong>Ggf. weitere Dokumente anfordern</strong>
+                            <span style="display: block; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Falls Informationen fehlen, fordern Sie diese bei den zuständigen Stellen an.
+                            </span>
+                        </li>
+                        <li class="decision-package__step">
+                            <strong>Entscheidung dokumentieren</strong>
+                            <span style="display: block; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Dokumentieren Sie die getroffene Entscheidung mit Verweis auf diese Vorlage.
+                            </span>
+                        </li>
+                        <li class="decision-package__step">
+                            <strong>Beteiligte informieren</strong>
+                            <span style="display: block; font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                Informieren Sie Antragsteller und beteiligte Fachbereiche über die Entscheidung.
+                            </span>
+                        </li>
+                    </ol>
+                </section>
+            </th:block>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 7. ENTSCHEIDUNGSVORLAGE (PDF-Export)            -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section decision-package__approval">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">8</span>
+                    Entscheidungsvorlage
+                </h2>
+                <p class="decision-package__section-desc">
+                    Diese Entscheidungsvorlage wurde maschinell erstellt und ist vor der Umsetzung durch eine zuständige Person zu prüfen und freizugeben.
+                    Öffnen oder laden Sie die Vorlage über die Aktionen im Analyse-Kopf — die PDF wird aus dem
+                    gespeicherten Ergebnis erzeugt, ein separater „Erstellen“-Schritt ist nicht nötig.
+                </p>
+
+                <div class="decision-package__approval-notice">
+                    <th:block th:replace="~{fragments/components :: infoMessage(
+                        'Gemäß § 35 VwVfG ist diese maschinell erstellte Entscheidungsvorlage vor der Umsetzung durch eine zuständige Person zu prüfen. Die Letztentscheidung liegt beim zuständigen Sachbearbeiter.' )}">
+                    </th:block>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- 9. ENTSCHEIDUNG DER SACHBEARBEITUNG (2D.3)    -->
+            <!-- Die Abschnitte 1–8 sind die KI-ANALYSE (Belege,               -->
+            <!-- Feststellungen, EMPFEHLUNG). Die Entscheidung ist ein          -->
+            <!-- eigenständiger menschlicher Schritt und wird hier explizit     -->
+            <!-- dokumentiert — employee-only, serverseitig geschützt,          -->
+            <!-- persistiert, ohne die Analyse zu verändern.                    -->
+            <!-- ═══════════════════════════════════════════ -->
+            <section class="decision-package__section decision-package__approval">
+                <h2 class="decision-package__section-title">
+                    <span class="decision-package__section-number">9</span>
+                    Entscheidung der Sachbearbeitung
+                </h2>
+                <p class="decision-package__section-desc">
+                    Die Abschnitte 1–8 sind das Ergebnis der KI-Analyse: eine <strong>Empfehlung</strong>
+                    auf Grundlage von Belegen und Feststellungen. Die Entscheidung selbst ist davon
+                    getrennt — sie wird von der zuständigen Sachbearbeiterin oder dem zuständigen
+                    Sachbearbeiter getroffen und hier dokumentiert. Die Analyse wird dabei nicht verändert.
+                </p>
+
+                <th:block th:if="${decisionInfo != null}">
+                    <div class="decision-package__approval-notice"
+                         style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <span class="badge badge--success" style="font-size: 0.75rem;">
+                            <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 0.875rem; vertical-align: middle;">how_to_reg</span>
+                            Entscheidung dokumentiert
+                        </span>
+                        <span style="font-size: 0.875rem;">
+                            <strong th:text="${decisionInfo.confirmedByName()}">Name</strong> ·
+                            <span th:text="${decisionInfo.confirmedAt()}">19.08.2026 22:47</span> ·
+                            auf Grundlage der <strong th:text="'Analyse #' + ${decisionInfo.analysisVersion()}">Analyse #1</strong>
+                        </span>
+                    </div>
+                </th:block>
+                <th:block th:if="${decisionInfo == null}">
+                    <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin: 0 0 0.75rem;">
+                        Noch nicht dokumentiert. Erst mit der Dokumentation übernehmen Sie die Verantwortung
+                        für die Entscheidung — die Empfehlung der KI wird dadurch weder verändert noch
+                        automatisch umgesetzt.
+                    </p>
+                    <form th:if="${!supervisory and (caseClosed == null or !caseClosed)}"
+                          th:action="|/cases/${caseId}/decision/confirm|" method="post"
+                          onsubmit="return window.confirm('Eigene Entscheidung festlegen?\n\nSie bestätigen, die Entscheidung auf Grundlage der KI-Analyse (Abschnitte 1–8) geprüft und getroffen zu haben.')">
+                        <!-- CSRF: im MVC-Render übernimmt Spring Security das
+                             Hidden-Feld automatisch; im roh gerenderten
+                             Abschluss-Fragment (Worker) wird die Token manuell
+                             mitgeführt (_csrfToken setzt nur der Worker-Render). -->
+                        <input type="hidden" name="_csrf" th:if="${_csrfToken != null}" th:value="${_csrfToken}"/>
+                        <button type="submit" class="btn btn--primary">
+                            <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1rem;">how_to_reg</span>
+                            Eigene Entscheidung festlegen
+                        </button>
+                    </form>
+                    <p th:if="${supervisory}" style="font-size: 0.8125rem; color: var(--color-text-muted);">
+                        Leitungs-Konten sind schreibgeschützt — die Entscheidung wird durch die zuständige
+                        Sachbearbeitung dokumentiert.
+                    </p>
+                </th:block>
+            </section>
+
+            <!-- ═══════════════════════════════════════════ -->
+            <!-- DEVELOPER DIAGNOSTICS (debug mode)            -->
+            <!-- ═══════════════════════════════════════════ -->
+            <th:block th:if="${debugMode}">
+                <section class="decision-package__section"
+                         style="border: 2px dashed var(--color-dot-amber); background: #1c1917;">
+                    <h2 class="decision-package__section-title">
+                        <span class="decision-package__section-number" style="background: var(--color-dot-amber);"><span class="material-symbols-outlined" style="font-size: 0.875rem;" aria-hidden="true">settings</span></span>
+                        Pipeline-Diagnose & Verifikation
+                    </h2>
+
+                    <div class="debug-panel">
+                        <!-- Pipeline Profile -->
+                        <div class="debug-panel__section" th:if="${debugProfile != null}">
+                            <h3 class="debug-panel__heading">Pipeline-Profil (Latenz)</h3>
+                            <table class="activity-table" style="font-size: 0.75rem;">
+                                <thead><tr><th>Phase</th><th>Dauer (ms)</th></tr></thead>
+                                <tbody>
+                                    <tr th:each="stage : ${debugProfile.entrySet()}">
+                                        <td th:text="${stage.key}">phase</td>
+                                        <td>
+                                            <span class="badge" th:classappend="${stage.value.ms() < 100 ? 'badge--success' : (stage.value.ms() < 1000 ? 'badge--info' : 'badge--warning')}"
+                                                  th:text="${stage.value.ms()} + ' ms'">0</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                                Gesamt: <strong th:text="${debugTotalMs + ' ms'}">0</strong>
+                            </p>
+                        </div>
+
+                        <!-- Inference Metadata -->
+                        <div class="debug-panel__section" th:if="${debugMetadata != null}">
+                            <h3 class="debug-panel__heading">Inferenz-Metadaten</h3>
+                            <table class="activity-table" style="font-size: 0.75rem;">
+                                <tbody>
+                                    <tr><td>Modell</td><td th:text="${debugMetadata.model()}">—</td></tr>
+                                    <tr><td>Provider</td><td th:text="${debugMetadata.provider()}">—</td></tr>
+                                    <tr><td>Strategie</td><td th:text="${debugMetadata.retrievalStrategy()}">—</td></tr>
+                                    <tr><td>Request-ID</td><td th:text="${debugMetadata.requestId()}">—</td></tr>
+                                    <tr><td>Prompt-Version</td><td th:text="${debugMetadata.promptTemplateVersion()}">—</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Source coverage internals (raw roles) -->
+                        <div class="debug-panel__section" th:if="${coverageScoreRaw != null}">
+                            <h3 class="debug-panel__heading">Quellenabdeckung (intern)</h3>
+                            <p style="font-size: 0.75rem;">Abdeckungsgrad: <strong th:text="${coverageScore}">—</strong></p>
+                            <p style="font-size: 0.75rem;">Vorhandene Rollen: <span th:text="${presentRoles != null ? #strings.listJoin(presentRoles, ', ') : '—'}">—</span></p>
+                            <p style="font-size: 0.75rem;">Fehlende Rollen: <span th:text="${missingRoles != null ? #strings.listJoin(missingRoles, ', ') : '—'}">—</span></p>
+                            <p th:if="${assessmentNote != null}" style="font-size: 0.75rem;">Einschätzung: <span th:text="${assessmentNote}">—</span></p>
+                        </div>
+
+                        <!-- Verification: Pipeline Stages -->
+                        <th:block th:if="${verificationResult != null}">
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">1. Intent-Klassifikation</h3>
+                                <p style="font-size: 0.75rem;">Primär: <strong th:text="${verificationResult.intentPrimary()}">—</strong>
+                                    (<span th:text="${#numbers.formatDecimal(verificationResult.intentConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>)
+                                    <span th:if="${verificationResult.intentSecondary() != null}">| Sekundär: <strong th:text="${verificationResult.intentSecondary()}">—</strong></span>
+                                </p>
+                                <p th:if="${verificationResult.intentMismatch() != null}" style="font-size: 0.6875rem; color: #e53e3e;"
+                                   th:text="'Intent-Mismatch: ' + ${verificationResult.intentMismatch()}"></p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">2. Routing</h3>
+                                <p style="font-size: 0.75rem;">Strategie: <strong th:text="${verificationResult.routingStrategy()}">—</strong>
+                                    <span th:if="${verificationResult.routingDeterministic()}" class="badge badge--success" style="font-size: 0.625rem;">Deterministisch</span>
+                                    <span th:if="${verificationResult.routingNeedsRetrieval()}" class="badge badge--info" style="font-size: 0.625rem;">Retrieval</span>
+                                </p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">3. Strukturiertes Wissen</h3>
+                                <p style="font-size: 0.75rem;">Regeln: <strong th:text="${#strings.listJoin(verificationResult.rulesFired(), ', ')}">—</strong></p>
+                                <p style="font-size: 0.75rem;">Tabellen: <strong th:text="${#strings.listJoin(verificationResult.tablesConsulted(), ', ')}">—</strong></p>
+                                <p th:if="${!verificationResult.unusedRules().isEmpty()}" style="font-size: 0.6875rem; color: #d69e2e;"
+                                   th:text="'Ungenutzte Regeln: ' + ${#strings.listJoin(verificationResult.unusedRules(), ', ')}"></p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">4. Hybrid Retrieval</h3>
+                                <div style="display: flex; gap: 0.5rem; font-size: 0.75rem;">
+                                    <span class="badge badge--info" th:text="'Keyword: ' + ${verificationResult.keywordHits()}">0</span>
+                                    <span class="badge badge--success" th:text="'Vektor: ' + ${verificationResult.vectorHits()}">0</span>
+                                    <span class="badge badge--neutral" th:text="'Graph: ' + ${verificationResult.graphHits()}">0</span>
+                                    <span class="badge badge--warning" th:text="'Merged: ' + ${verificationResult.mergedCandidates()}">0</span>
+                                </div>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">5. Candidate Generation</h3>
+                                <p style="font-size: 0.75rem;">Belege: <strong th:text="${verificationResult.evidenceCount()}">0</strong> |
+                                    Vorschriften: <strong th:text="${verificationResult.authorityCount()}">0</strong> |
+                                    Duplikate: <strong th:text="${verificationResult.duplicateEvidence()}">0</strong>
+                                </p>
+                                <p th:if="${verificationResult.candidateNote() != null}" style="font-size: 0.6875rem; color: #d69e2e;"
+                                   th:text="${verificationResult.candidateNote()}"></p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">6. Reranking</h3>
+                                <div th:each="r : ${verificationResult.rerankingExplanations()}" style="font-size: 0.6875rem; margin-bottom: 0.25rem;">
+                                    <strong th:text="${r.document()}">Doc</strong>:
+                                    <span th:text="'Final ' + ${#numbers.formatDecimal(r.finalScore(), 2, 'COMMA', 2, 'POINT')}">0</span>
+                                    <span th:text="' (' + ${r.reason()} + ')'" style="color: var(--color-text-muted);"></span>
+                                </div>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">7. Evidence Package</h3>
+                                <p style="font-size: 0.75rem;">
+                                    Abdeckung: <strong th:text="${#numbers.formatDecimal(verificationResult.coverage() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong> |
+                                    Seitenref.: <strong th:text="${verificationResult.pageReferences() + '/' + verificationResult.totalCitations()}">0</strong> |
+                                    Orphan: <strong th:text="${verificationResult.orphanEvidence()}">0</strong>
+                                </p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">8. Prompt Builder</h3>
+                                <p style="font-size: 0.75rem;">
+                                    Tokens: <strong th:text="${verificationResult.promptTokens()}">0</strong> |
+                                    Belege: <strong th:text="${verificationResult.promptEvidenceCount()}">0</strong> |
+                                    Regeln: <strong th:text="${verificationResult.promptRuleCount()}">0</strong> |
+                                    Vorschriften: <strong th:text="${verificationResult.promptAuthorityCount()}">0</strong>
+                                </p>
+                                <p th:if="${!verificationResult.missingContext().isEmpty()}" style="font-size: 0.6875rem; color: #d69e2e;"
+                                   th:text="'Fehlend: ' + ${#strings.listJoin(verificationResult.missingContext(), ', ')}"></p>
+                            </div>
+
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading">9. LLM Output — Validierung</h3>
+                                <p style="font-size: 0.75rem;">
+                                    Regelkonsistent: <strong th:text="${verificationResult.ruleConsistent() ? 'Ja' : 'Nein'}"></strong> |
+                                    Konfidenz: <strong th:text="${#numbers.formatDecimal(verificationResult.finalConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong>
+                                </p>
+                                <p th:if="${!verificationResult.unsupportedFindings().isEmpty()}"
+                                   style="font-size: 0.6875rem; color: #e53e3e;"
+                                   th:text="'Unbelegte Feststellungen: ' + ${#lists.size(verificationResult.unsupportedFindings())}"></p>
+                                <p th:if="${!verificationResult.unsupportedRecommendations().isEmpty()}"
+                                   style="font-size: 0.6875rem; color: #e53e3e;"
+                                   th:text="'Unbelegte Empfehlungen: ' + ${#lists.size(verificationResult.unsupportedRecommendations())}"></p>
+                                <p th:if="${!verificationResult.invalidCitations().isEmpty()}"
+                                   style="font-size: 0.6875rem; color: #d69e2e;"
+                                   th:text="'Ungültige Zitate: ' + ${#lists.size(verificationResult.invalidCitations())}"></p>
+                            </div>
+
+                            <!-- Retrieval Attribution -->
+                            <div class="debug-panel__section" th:if="${!verificationResult.attributions().isEmpty()}">
+                                <h3 class="debug-panel__heading">Retrieval Attribution</h3>
+                                <div th:each="attr : ${verificationResult.attributions()}" style="font-size: 0.6875rem; margin-bottom: 0.5rem;">
+                                    <p style="font-weight: 600; margin-bottom: 0.25rem;" th:text="${attr.finding()}">Finding</p>
+                                    <div th:each="src : ${attr.sources()}" style="padding-left: 0.75rem; border-left: 2px solid var(--color-border); margin-bottom: 0.25rem;">
+                                        <span th:text="${src.document()}">Doc</span>
+                                        <span class="badge badge--neutral" th:text="${src.retrievalSource()}" style="font-size: 0.5625rem;"></span>
+                                        <span style="color: var(--color-text-muted);" th:text="'(Score: ' + ${#numbers.formatDecimal(src.similarityScore(), 2, 'COMMA', 2, 'POINT')} + ')'">0</span>
+                                        <br><span style="color: var(--color-text-muted); font-style: italic;" th:text="${src.rerankingExplanation()}">explanation</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <!-- Evidence Summary -->
+                        <div class="debug-panel__section">
+                            <h3 class="debug-panel__heading">Zusammenfassung</h3>
+                            <p style="font-size: 0.75rem; color: var(--color-text-muted);">
+                                Belege: <strong th:text="${#lists.size(evidenceItems)}">0</strong> |
+                                Vorschriften: <strong th:text="${#lists.size(authorities)}">0</strong> |
+                                Feststellungen: <strong th:text="${#lists.size(primaryFindings != null ? primaryFindings : List.of())}">0</strong>
+                            </p>
+                        </div>
+                        <!-- Decision Judge Comparison -->
+                        <th:block th:if="${governanceComparison != null}">
+                            <div class="debug-panel__section" style="border: 2px solid #34d399; background: #022c22;">
+                                <h3 class="debug-panel__heading" style="color: #38a169;"><span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">balance</span> Decision Judge</h3>
+                                <p style="font-size: 0.75rem;">
+                                    Auswahl: <strong th:text="${governanceComparison.isRepairedSelected() ? 'Reparierte Version' : 'Original'}"></strong>
+                                </p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; font-size: 0.6875rem;">
+                                    <div style="padding: 0.5rem; background: #0d162a; border-radius: 3px;"
+                                         th:classappend="${governanceComparison.isOriginalSelected() ? 'style=border: 2px solid #38a169' : ''}">
+                                        <strong>Original</strong>
+                                        <span th:text="${'Score: ' + #numbers.formatDecimal(governanceComparison.originalScore(), 3, 'COMMA', 3, 'POINT')}"></span>
+                                    </div>
+                                    <div style="padding: 0.5rem; background: #0d162a; border-radius: 3px;"
+                                         th:classappend="${governanceComparison.isRepairedSelected() ? 'style=border: 2px solid #38a169' : ''}">
+                                        <strong>Repariert</strong>
+                                        <span th:text="${'Score: ' + #numbers.formatDecimal(governanceComparison.candidateScore(), 3, 'COMMA', 3, 'POINT')}"></span>
+                                    </div>
+                                </div>
+                                <div th:if="${!governanceComparison.reasons().isEmpty()}" style="margin-top: 0.5rem;">
+                                    <p style="font-size: 0.6875rem; font-weight: 600;">Begründung:</p>
+                                    <ul style="font-size: 0.6875rem; padding-left: 1rem;">
+                                        <li th:each="reason : ${governanceComparison.reasons()}" th:text="${reason}"></li>
+                                    </ul>
+                                </div>
+                                <p style="font-size: 0.6875rem; color: var(--color-text-muted); margin-top: 0.25rem;"
+                                   th:text="${governanceComparison.rationale()}"></p>
+                            </div>
+                        </th:block>
+
+                        <!-- Decision Lineage Explorer -->
+                        <th:block th:if="${decisionLineage != null}">
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading"><span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">link</span> Decision Lineage</h3>
+                                <div style="display: flex; flex-direction: column; gap: 0.375rem;">
+                                    <th:block th:each="node : ${decisionLineage.allNodes()}">
+                                        <details class="lineage-node" th:classappend="${node.status() == 'error' ? 'lineage-node--error' : (node.status() == 'warning' ? 'lineage-node--warning' : (node.status() == 'repaired' ? 'lineage-node--repaired' : ''))}">
+                                            <summary class="lineage-node__summary">
+                                                <span class="lineage-node__order" th:text="${node.order()}">1</span>
+                                                <span class="lineage-node__label" th:text="${node.label()}">Stage</span>
+                                                <span th:if="${node.latencyMs() > 0}" class="badge badge--neutral"
+                                                      th:text="${node.latencyMs() + ' ms'}" style="font-size: 0.5625rem; margin-left: auto;"></span>
+                                                <span th:if="${node.status() == 'error'}" class="badge badge--error" style="font-size: 0.5625rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span></span>
+                                                <span th:if="${node.status() == 'warning'}" class="badge badge--warning" style="font-size: 0.5625rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">warning</span></span>
+                                                <span th:if="${node.status() == 'repaired'}" class="badge badge--success" style="font-size: 0.5625rem;"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span></span>
+                                            </summary>
+                                            <div class="lineage-node__body">
+                                                <table class="activity-table" style="font-size: 0.6875rem; width: 100%;">
+                                                    <tbody>
+                                                        <tr th:each="entry : ${node.details().entrySet()}">
+                                                            <td th:text="${entry.key}" style="font-weight: 500;">key</td>
+                                                            <td>
+                                                                <span th:if="${entry.value instanceof java.util.List}"
+                                                                      th:text="${#strings.listJoin(entry.value, ', ')}"></span>
+                                                                <span th:unless="${entry.value instanceof java.util.List}"
+                                                                      th:text="${entry.value}"></span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </details>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <!-- Analytics Tab -->
+                        <th:block th:if="${pipelineHealth != null}">
+                            <div class="debug-panel__section">
+                                <h3 class="debug-panel__heading"><span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">monitoring</span> Pipeline Health Analytics</h3>
+                                <p style="font-size: 0.75rem; color: var(--color-text-muted);">
+                                    Läufe: <strong th:text="${pipelineHealth.totalRuns()}">0</strong> |
+                                    Ø Konfidenz: <strong th:text="${#numbers.formatDecimal(pipelineHealth.avgConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong> |
+                                    Ø Latenz: <strong th:text="${#numbers.formatDecimal(pipelineHealth.avgLatencyMs(), 1, 'COMMA', 0, 'POINT') + ' ms'}">0</strong>
+                                </p>
+                                <!-- Stage Health Table -->
+                                <table class="activity-table" style="font-size: 0.6875rem; margin-top: 0.5rem;">
+                                    <thead><tr><th>Stage</th><th>Health</th><th>Ø Latenz</th><th>Fehlerrate</th><th>Trend</th></tr></thead>
+                                    <tbody>
+                                        <tr th:each="s : ${pipelineHealth.stages()}">
+                                            <td th:text="${s.stageName()}">stage</td>
+                                            <td>
+                                                <span class="badge" th:classappend="${s.status() == 'GOOD' ? 'badge--success' : (s.status() == 'WARNING' ? 'badge--warning' : 'badge--error')}"
+                                                      th:text="${s.status()}" style="font-size: 0.5625rem;">OK</span>
+                                            </td>
+                                            <td th:text="${#numbers.formatDecimal(s.avgLatencyMs(), 1, 'COMMA', 0, 'POINT') + ' ms'}">0</td>
+                                            <td th:text="${#numbers.formatDecimal(s.failureRate() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</td>
+                                            <td>
+                                                <span th:if="${s.trend() == 'improving'}" style="color: #38a169;">↓ Verbessernd</span>
+                                                <span th:if="${s.trend() == 'stable'}" style="color: var(--color-text-muted);">→ Stabil</span>
+                                                <span th:if="${s.trend() == 'degrading'}" style="color: #e53e3e;">↑ Verschlechternd</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- Bottleneck -->
+                                <p th:if="${pipelineHealth.bottleneck() != null}" style="font-size: 0.6875rem; margin-top: 0.5rem;"
+                                   th:text="'Engpass: ' + ${pipelineHealth.bottleneck().stageName()} + ' (' + ${#numbers.formatDecimal(pipelineHealth.bottleneck().avgLatencyMs(), 1, 'COMMA', 0, 'POINT')} + ' ms)'"></p>
+
+                                <!-- Metrics Grid -->
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem 1rem; margin-top: 0.5rem; font-size: 0.6875rem;">
+                                    <span>Verifikation: <strong th:text="${#numbers.formatDecimal(pipelineHealth.verificationSuccessRate() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong></span>
+                                    <span>Reparaturen: <strong th:text="${#numbers.formatDecimal(pipelineHealth.repairFrequency() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong></span>
+                                    <span>Repair-Erfolg: <strong th:text="${#numbers.formatDecimal(pipelineHealth.repairSuccessRate() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong></span>
+                                    <span>Judge Override: <strong th:text="${#numbers.formatDecimal(pipelineHealth.judgeOverrideRate() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong></span>
+                                    <span>Ø Abdeckung: <strong th:text="${#numbers.formatDecimal(pipelineHealth.avgEvidenceCoverage() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong></span>
+                                </div>
+                                <!-- Most common repair reason -->
+                                <p th:if="${pipelineHealth.mostCommonRepairReason() != 'none'}" style="font-size: 0.6875rem; margin-top: 0.25rem; color: var(--color-text-muted);"
+                                   th:text="'Häufigste Reparatur: ' + ${pipelineHealth.mostCommonRepairReason()}"></p>
+
+                                <!-- Outcome Distribution -->
+                                <div th:if="${!pipelineHealth.outcomeDistribution().isEmpty()}" style="margin-top: 0.5rem;">
+                                    <p style="font-size: 0.6875rem; font-weight: 600;">Ergebnis-Verteilung:</p>
+                                    <div style="display: flex; gap: 0.5rem; font-size: 0.625rem;">
+                                        <span th:each="entry : ${pipelineHealth.outcomeDistribution().entrySet()}"
+                                              class="badge" th:classappend="${entry.key == 'success' ? 'badge--success' : (entry.key == 'repaired' ? 'badge--info' : 'badge--error')}"
+                                              th:text="${entry.key + ': ' + entry.value}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <!-- Pipeline Diagnostics -->
+                        <th:block th:if="${diagnosticReport != null}">
+                            <div class="debug-panel__section" style="border: 2px solid #805ad5; background: #faf8ff;">
+                                <h3 class="debug-panel__heading" style="color: #805ad5;"><span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">science</span> Pipeline-Diagnostik</h3>
+
+                                <!-- Overall Health -->
+                                <p style="font-size: 0.75rem; margin-bottom: 0.5rem;">
+                                    Gesamtzustand:
+                                    <span th:if="${diagnosticReport.overallHealth() == 'GOOD'}" class="badge badge--success"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Gut</span>
+                                    <span th:if="${diagnosticReport.overallHealth() == 'WARNING'}" class="badge badge--warning"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">warning</span> Warnung</span>
+                                    <span th:if="${diagnosticReport.overallHealth() == 'CRITICAL'}" class="badge badge--error"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">close</span> Kritisch</span>
+                                    <span th:if="${diagnosticReport.overallHealth() == 'INSUFFICIENT_DATA'}" class="badge badge--neutral">∅ Unzureichende Daten</span>
+                                </p>
+
+                                <!-- Insufficient Data -->
+                                <th:block th:if="${diagnosticReport.insufficientData()}">
+                                    <p style="font-size: 0.6875rem; color: var(--color-text-muted);">
+                                        Unzureichende historische Daten für eine Regressionsanalyse.
+                                        <br/>Baseline: <strong th:text="${diagnosticReport.baselineRunCount()}">0</strong> Läufe |
+                                        Aktuell: <strong th:text="${diagnosticReport.currentRunCount()}">0</strong> Läufe
+                                        <br/>Mindestens <strong>25</strong> Läufe pro Fenster werden benötigt.
+                                    </p>
+                                </th:block>
+
+                                <!-- Findings -->
+                                <th:block th:if="${!diagnosticReport.findings().isEmpty()}">
+                                    <div style="display: flex; flex-direction: column; gap: 0.375rem; margin-top: 0.5rem;">
+                                        <th:block th:each="finding : ${diagnosticReport.findings()}">
+                                            <div style="padding: 0.5rem; background: #0d162a; border-radius: 3px; border-left: 3px solid; font-size: 0.6875rem;"
+                                                 th:style="'border-left-color: ' + (${finding.severity().name() == 'CRITICAL'} ? '#e53e3e' : (${finding.severity().name() == 'WARNING'} ? '#d69e2e' : '#718096'))">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                                    <span th:if="${finding.causalRelation().name() == 'OBSERVED_REGRESSION'}">
+                                                        <span th:if="${finding.severity().name() == 'CRITICAL'}" class="badge badge--error" style="font-size: 0.5625rem;">CRITICAL</span>
+                                                        <span th:if="${finding.severity().name() == 'WARNING'}" class="badge badge--warning" style="font-size: 0.5625rem;">WARNING</span>
+                                                        <span th:if="${finding.severity().name() == 'INFO'}" class="badge badge--info" style="font-size: 0.5625rem;">INFO</span>
+                                                        <strong th:text="${finding.regressionType().name()}"></strong>
+                                                    </span>
+                                                    <span th:if="${finding.causalRelation().name() == 'CORRELATED_SIGNAL'}" class="badge badge--info" style="font-size: 0.5625rem;">KORRELIERT</span>
+                                                    <span th:if="${finding.causalRelation().name() == 'LIKELY_EXPLANATION'}" class="badge badge--warning" style="font-size: 0.5625rem;">ERKLÄRUNG</span>
+                                                    <span th:if="${finding.causalRelation().name() == 'CONFIRMED_CAUSE'}" class="badge badge--error" style="font-size: 0.5625rem;">URSACHE</span>
+                                                    <span style="color: var(--color-text-muted);" th:text="${finding.affectedStage()}">stage</span>
+                                                </div>
+                                                <p style="margin: 0.25rem 0; line-height: 1.4;" th:text="${finding.explanation()}"></p>
+                                                <div th:if="${finding.causalRelation().name() == 'OBSERVED_REGRESSION'}"
+                                                     style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; font-size: 0.625rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                                                    <span th:text="'Baseline: ' + (${finding.metricLabel().contains('Latenz')} ? ${#numbers.formatDecimal(finding.baselineValue(), 0, 'COMMA', 0, 'POINT') + ' ms'} : (${finding.metricLabel().contains('Rate') or finding.metricLabel().contains('Abdeckung') or finding.metricLabel().contains('Konfidenz') or finding.metricLabel().contains('Fehlerrate') or finding.metricLabel().contains('Häufigkeit')} ? ${#numbers.formatDecimal(finding.baselineValue() * 100, 1, 'COMMA', 0, 'POINT') + '%'} : ${#numbers.formatDecimal(finding.baselineValue(), 1, 'COMMA', 0, 'POINT')}))"></span>
+                                                    <span th:text="'Aktuell: ' + (${finding.metricLabel().contains('Latenz')} ? ${#numbers.formatDecimal(finding.currentValue(), 0, 'COMMA', 0, 'POINT') + ' ms'} : (${finding.metricLabel().contains('Rate') or finding.metricLabel().contains('Abdeckung') or finding.metricLabel().contains('Konfidenz') or finding.metricLabel().contains('Fehlerrate') or finding.metricLabel().contains('Häufigkeit')} ? ${#numbers.formatDecimal(finding.currentValue() * 100, 1, 'COMMA', 0, 'POINT') + '%'} : ${#numbers.formatDecimal(finding.currentValue(), 1, 'COMMA', 0, 'POINT')}))"></span>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </th:block>
+
+                                <!-- No findings = healthy -->
+                                <th:block th:if="${diagnosticReport.findings().isEmpty() and !diagnosticReport.insufficientData()}">
+                                    <p style="font-size: 0.6875rem; color: #38a169;"><span class="material-symbols-outlined" style="font-size: 0.75rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">check</span> Keine Regressionen erkannt. Pipeline-Metriken sind stabil.</p>
+                                </th:block>
+
+                                <!-- Primary Bottleneck -->
+                                <th:block th:if="${diagnosticReport.primaryBottleneck() != null}">
+                                    <p style="font-size: 0.6875rem; margin-top: 0.5rem; color: var(--color-text-muted);">
+                                        Primärer Engpass:
+                                        <strong th:text="${diagnosticReport.primaryBottleneck().stageName()}">stage</strong>
+                                        (<span th:text="${#numbers.formatDecimal(diagnosticReport.primaryBottleneck().avgLatencyMs(), 0, 'COMMA', 0, 'POINT') + ' ms'}">0</span>)
+                                    </p>
+                                </th:block>
+
+                                <!-- Data window info -->
+                                <p style="font-size: 0.625rem; color: var(--color-text-muted); margin-top: 0.5rem;">
+                                    Daten: Aktuelles Fenster <strong th:text="${diagnosticReport.currentRunCount()}">0</strong> Läufe |
+                                    Baseline <strong th:text="${diagnosticReport.baselineRunCount()}">0</strong> Läufe
+                                </p>
+                            </div>
+                        </th:block>
+
+                        <!-- Repair Engine Status -->
+                        <th:block th:if="${repairResult != null}">
+                            <div class="debug-panel__section" style="border: 2px solid var(--color-primary); background: #f0f7ff;">
+                                <h3 class="debug-panel__heading" style="color: var(--color-primary);"><span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle; margin-right: 0.25rem;" aria-hidden="true">build</span> Decision Repair Engine</h3>
+                                <p style="font-size: 0.75rem;">
+                                    Aktiviert: <strong th:text="${repairResult.activated() ? 'Ja' : 'Nein'}">—</strong>
+                                </p>
+                                <p th:if="${repairResult.reason() != null}" style="font-size: 0.75rem;">
+                                    Grund: <strong th:text="${repairResult.reason()}">—</strong>
+                                </p>
+
+                                <!-- Repair steps -->
+                                <div th:if="${!repairResult.steps().isEmpty()}" style="margin-top: 0.5rem;">
+                                    <p style="font-size: 0.6875rem; font-weight: 600; margin-bottom: 0.25rem;">Reparatur-Schritte:</p>
+                                    <div th:each="step : ${repairResult.steps()}" style="padding: 0.25rem 0.5rem; margin-bottom: 0.25rem; background: #0d162a; border-radius: 3px; font-size: 0.6875rem;">
+                                        <strong th:text="${step.stage()}">stage</strong>:
+                                        <span th:text="${step.action()}" style="color: var(--color-text-muted);"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Repair cycles -->
+                                <div th:if="${!repairResult.cycles().isEmpty()}" style="margin-top: 0.5rem;">
+                                    <p style="font-size: 0.6875rem; font-weight: 600; margin-bottom: 0.25rem;">Konfidenz-Entwicklung:</p>
+                                    <div th:each="cycle : ${repairResult.cycles()}" style="font-size: 0.6875rem;">
+                                        Zyklus <span th:text="${cycle.cycle()}">1</span>:
+                                        <span style="color: #e53e3e;" th:text="${#numbers.formatDecimal(cycle.confidenceBefore() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>
+                                        →
+                                        <span style="color: #38a169;" th:text="${#numbers.formatDecimal(cycle.confidenceAfter() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>
+                                        (<span th:text="${cycle.confidenceAfter() > cycle.confidenceBefore() ? '↑' : '↓'}"></span>
+                                        <span th:text="${#numbers.formatDecimal((cycle.confidenceAfter() - cycle.confidenceBefore()) * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>)
+                                    </div>
+                                </div>
+
+                                <!-- Final status -->
+                                <p style="font-size: 0.75rem; margin-top: 0.5rem;">
+                                    Ergebnis:
+                                    <span th:if="${repairResult.passed()}" class="badge badge--success"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">check</span> Erfolgreich</span>
+                                    <span th:unless="${repairResult.passed()}" class="badge badge--warning"><span class="material-symbols-outlined" style="font-size: 0.75rem;" aria-hidden="true">warning</span> Teilweise</span>
+                                </p>
+                                <p style="font-size: 0.6875rem; color: var(--color-text-muted);">
+                                    Vorher: <span th:text="${#numbers.formatDecimal(repairResult.originalConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>
+                                    → Nachher: <span th:text="${#numbers.formatDecimal(repairResult.finalConfidence() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</span>
+                                    (Gewinn: <strong th:text="${#numbers.formatDecimal(repairResult.confidenceGain() * 100, 1, 'COMMA', 0, 'POINT') + '%'}">0</strong>)
+                                </p>
+                            </div>
+                        </th:block>
+                    </div>
+                </section>
+            </th:block>
+
+        </th:block>
+
+    </div>
+</th:block>
+
+</html>

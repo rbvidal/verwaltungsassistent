@@ -1,0 +1,1179 @@
+{
+ "source": "OpenStreetMap via Overpass API",
+ "date": "2026-08-25",
+ "license": "ODbL 1.0 — © OpenStreetMap contributors",
+ "note": "auf addr:-Felder reduziert (keine Kontakt-/Personendaten)",
+ "elements": [
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7493991,
+   "lon": 13.2237084
+  },
+  {
+   "type": "node",
+   "addr:street": "Albert-Buchmann-Straße",
+   "addr:housenumber": "11",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7488565,
+   "lon": 13.2415476
+  },
+  {
+   "type": "node",
+   "addr:street": "Heinrich-Grüber-Platz",
+   "addr:housenumber": "3",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7612112,
+   "lon": 13.2616944
+  },
+  {
+   "type": "node",
+   "addr:street": "Schulstraße",
+   "addr:housenumber": "4-8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7548815,
+   "lon": 13.2464864
+  },
+  {
+   "type": "node",
+   "addr:street": "Eichenhof",
+   "addr:housenumber": "6",
+   "addr:postcode": "16767",
+   "addr:city": "Leegebruch",
+   "lat": 52.7243083,
+   "lon": 13.1929152
+  },
+  {
+   "type": "node",
+   "addr:street": "Eichenhof",
+   "addr:housenumber": "7",
+   "addr:postcode": "16767",
+   "addr:city": "Leegebruch",
+   "addr:country": "DE",
+   "lat": 52.7238651,
+   "lon": 13.1935498
+  },
+  {
+   "type": "node",
+   "addr:street": "Eichenhof",
+   "addr:housenumber": "3",
+   "addr:postcode": "16767",
+   "addr:city": "Leegebruch",
+   "addr:country": "DE",
+   "lat": 52.7238034,
+   "lon": 13.1916716
+  },
+  {
+   "type": "node",
+   "addr:street": "Eichenhof",
+   "addr:housenumber": "1",
+   "addr:postcode": "16767",
+   "addr:city": "Leegebruch",
+   "addr:country": "DE",
+   "lat": 52.7241294,
+   "lon": 13.1912429
+  },
+  {
+   "type": "node",
+   "addr:street": "Rungestraße",
+   "addr:housenumber": "36",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7595649,
+   "lon": 13.239514
+  },
+  {
+   "type": "node",
+   "addr:street": "Schloßplatz",
+   "addr:housenumber": "2",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7536591,
+   "lon": 13.2375355
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "25",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7555644,
+   "lon": 13.2412715
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "27",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7557845,
+   "lon": 13.2420089
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7490523,
+   "lon": 13.2242346
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7493635,
+   "lon": 13.2243649
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7493822,
+   "lon": 13.2246154
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedrich-Engels-Straße",
+   "addr:housenumber": "10b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7417026,
+   "lon": 13.2328773
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "14",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7420184,
+   "lon": 13.2359201
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "10",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7417714,
+   "lon": 13.2359834
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7416532,
+   "lon": 13.2359971
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "13",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7421601,
+   "lon": 13.2361705
+  },
+  {
+   "type": "node",
+   "addr:street": "Melniker Straße",
+   "addr:housenumber": "6",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7413045,
+   "lon": 13.2379829
+  },
+  {
+   "type": "node",
+   "addr:street": "Melniker Straße",
+   "addr:housenumber": "12",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7416786,
+   "lon": 13.237994
+  },
+  {
+   "type": "node",
+   "addr:street": "Melniker Straße",
+   "addr:housenumber": "18",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7420449,
+   "lon": 13.2379414
+  },
+  {
+   "type": "node",
+   "addr:street": "Bagnoletstraße",
+   "addr:housenumber": "12",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7417282,
+   "lon": 13.2369873
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7540081,
+   "lon": 13.2427868
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21A",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7539772,
+   "lon": 13.2424052
+  },
+  {
+   "type": "node",
+   "addr:street": "Wiesbadener Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7537135,
+   "lon": 13.2560346
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "100",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7584259,
+   "lon": 13.2531941
+  },
+  {
+   "type": "node",
+   "addr:street": "Granseer Straße",
+   "addr:housenumber": "23b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:suburb": "Sachsenhausen",
+   "lat": 52.7774775,
+   "lon": 13.2424424
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "12a",
+   "addr:postcode": "16556",
+   "addr:city": "Hohen Neuendorf",
+   "addr:suburb": "Borgsdorf",
+   "addr:country": "DE",
+   "lat": 52.712622,
+   "lon": 13.2771445
+  },
+  {
+   "type": "node",
+   "addr:street": "Schloßplatz",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7548876,
+   "lon": 13.2370964
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "146",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7624393,
+   "lon": 13.2695574
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedrich-Wolf-Straße",
+   "addr:housenumber": "26",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:suburb": "Lehnitz",
+   "lat": 52.7454629,
+   "lon": 13.2639443
+  },
+  {
+   "type": "node",
+   "addr:street": "Gutsplatz",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:suburb": "Lehnitz",
+   "lat": 52.7419733,
+   "lon": 13.2615134
+  },
+  {
+   "type": "node",
+   "addr:street": "Hans-Grade-Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7213266,
+   "lon": 13.22316
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "12a",
+   "addr:postcode": "16556",
+   "addr:city": "Hohen Neuendorf",
+   "addr:suburb": "Borgsdorf",
+   "addr:country": "DE",
+   "lat": 52.7118594,
+   "lon": 13.2768094
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16556",
+   "addr:city": "Hohen Neuendorf",
+   "addr:suburb": "Borgsdorf",
+   "addr:country": "DE",
+   "lat": 52.7142146,
+   "lon": 13.2759867
+  },
+  {
+   "type": "node",
+   "addr:street": "Schloßplatz",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7548315,
+   "lon": 13.2366621
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "87-89",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7445626,
+   "lon": 13.2548973
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "8c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7613654,
+   "lon": 13.2570041
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "5b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7603168,
+   "lon": 13.257834
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "6c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7606993,
+   "lon": 13.2576769
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "7a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.761436,
+   "lon": 13.2574116
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "6a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7609318,
+   "lon": 13.2575554
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "8b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7612632,
+   "lon": 13.2570665
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "5c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7602024,
+   "lon": 13.2579013
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "5a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7604085,
+   "lon": 13.25778
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "7b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7613255,
+   "lon": 13.2574766
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "6b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7608178,
+   "lon": 13.257615
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "8a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.761154,
+   "lon": 13.2571331
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "7c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7612197,
+   "lon": 13.257539
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "23",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7534013,
+   "lon": 13.2552095
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "23",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.753819,
+   "lon": 13.2551824
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "3b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7611794,
+   "lon": 13.2583932
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "3a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7611416,
+   "lon": 13.2582095
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "4a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.761348,
+   "lon": 13.2584566
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "2b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7607654,
+   "lon": 13.2585734
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "4b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7615073,
+   "lon": 13.258367
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "2c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7608125,
+   "lon": 13.2587928
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "1a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7605292,
+   "lon": 13.2585191
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "2a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7607307,
+   "lon": 13.258412
+  },
+  {
+   "type": "node",
+   "addr:street": "Ernst-Schneller-Straße",
+   "addr:housenumber": "1A",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7602272,
+   "lon": 13.2587446
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "1c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7606067,
+   "lon": 13.2588904
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "4c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7616649,
+   "lon": 13.2582782
+  },
+  {
+   "type": "node",
+   "addr:street": "Ernst-Schneller-Straße",
+   "addr:housenumber": "1B",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7602784,
+   "lon": 13.2589931
+  },
+  {
+   "type": "node",
+   "addr:street": "Mathias-Thesen-Straße",
+   "addr:housenumber": "1b",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7605655,
+   "lon": 13.2586929
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7491751,
+   "lon": 13.2231696
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "2-8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7490008,
+   "lon": 13.2232112
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "4",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7503599,
+   "lon": 13.2238716
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "4",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7504171,
+   "lon": 13.2243527
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "2",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7504283,
+   "lon": 13.224523
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7493403,
+   "lon": 13.2236239
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedensstraße",
+   "addr:housenumber": "6-8",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7504419,
+   "lon": 13.2250555
+  },
+  {
+   "type": "node",
+   "addr:street": "Walther-Bothe-Straße",
+   "addr:housenumber": "75",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7434011,
+   "lon": 13.224849
+  },
+  {
+   "type": "node",
+   "addr:street": "Bötzower Platz",
+   "addr:housenumber": "7",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7525623,
+   "lon": 13.2343111
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "10",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7555057,
+   "lon": 13.2392993
+  },
+  {
+   "type": "node",
+   "addr:street": "Rüdesheimer Straße",
+   "addr:housenumber": "21",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7551949,
+   "lon": 13.2633211
+  },
+  {
+   "type": "node",
+   "addr:street": "Havelstraße",
+   "addr:housenumber": "31",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7518018,
+   "lon": 13.2362829
+  },
+  {
+   "type": "node",
+   "addr:street": "Straße am Globus",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:suburb": "Germendorf",
+   "addr:country": "DE",
+   "lat": 52.7472432,
+   "lon": 13.1899298
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "73",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7443546,
+   "lon": 13.2377176
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "26",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7430426,
+   "lon": 13.2355413
+  },
+  {
+   "type": "node",
+   "addr:street": "Rungestraße",
+   "addr:housenumber": "22",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.758214,
+   "lon": 13.245215
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "54A",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7567887,
+   "lon": 13.2450699
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "54B",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7568527,
+   "lon": 13.2453668
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "41A",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7490828,
+   "lon": 13.2566263
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "42",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7500874,
+   "lon": 13.2576089
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "41B",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.747355,
+   "lon": 13.2559456
+  },
+  {
+   "type": "node",
+   "addr:street": "André-Pican-Straße",
+   "addr:housenumber": "41C",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7471128,
+   "lon": 13.2552488
+  },
+  {
+   "type": "node",
+   "addr:street": "Bahnhofstraße",
+   "addr:housenumber": "33",
+   "addr:postcode": "16556",
+   "addr:city": "Hohen Neuendorf",
+   "addr:suburb": "Borgsdorf",
+   "addr:country": "DE",
+   "lat": 52.7156662,
+   "lon": 13.2697416
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "162",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7655359,
+   "lon": 13.2750605
+  },
+  {
+   "type": "node",
+   "addr:street": "Keithstraße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:suburb": "Friedrichsthal",
+   "lat": 52.7972693,
+   "lon": 13.278611
+  },
+  {
+   "type": "node",
+   "addr:street": "Freiburger Straße",
+   "addr:housenumber": "35",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7540826,
+   "lon": 13.2529002
+  },
+  {
+   "type": "node",
+   "addr:street": "Freiburger Straße",
+   "addr:housenumber": "38",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7542613,
+   "lon": 13.2531021
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "12a",
+   "addr:postcode": "16556",
+   "addr:city": "Hohen Neuendorf",
+   "addr:suburb": "Borgsdorf",
+   "addr:country": "DE",
+   "lat": 52.7124467,
+   "lon": 13.2772227
+  },
+  {
+   "type": "node",
+   "addr:street": "Robert-Koch-Straße",
+   "addr:housenumber": "67",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7386871,
+   "lon": 13.2532771
+  },
+  {
+   "type": "node",
+   "addr:street": "Hans-Grade-Straße",
+   "addr:housenumber": "3",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7221868,
+   "lon": 13.2210375
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "94",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7436975,
+   "lon": 13.2386814
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "39",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.756027,
+   "lon": 13.2433777
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "209",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7262311,
+   "lon": 13.2475506
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "67",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7573546,
+   "lon": 13.2499669
+  },
+  {
+   "type": "node",
+   "addr:street": "Saarlandstraße",
+   "addr:housenumber": "48",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7382067,
+   "lon": 13.2493004
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21A",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7540348,
+   "lon": 13.2428117
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21B",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7538921,
+   "lon": 13.2421658
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21c",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7538668,
+   "lon": 13.2419277
+  },
+  {
+   "type": "node",
+   "addr:street": "Lehnitzstraße",
+   "addr:housenumber": "21D",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7537863,
+   "lon": 13.2416065
+  },
+  {
+   "type": "node",
+   "addr:street": "Eichenhof",
+   "addr:housenumber": "2",
+   "addr:postcode": "16767",
+   "addr:city": "Leegebruch",
+   "lat": 52.7242276,
+   "lon": 13.1917143
+  },
+  {
+   "type": "node",
+   "addr:street": "Mittelstraße",
+   "addr:housenumber": "9",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.754374,
+   "lon": 13.2454805
+  },
+  {
+   "type": "node",
+   "addr:street": "Mittelstraße",
+   "addr:housenumber": "9a",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7542397,
+   "lon": 13.2455544
+  },
+  {
+   "type": "node",
+   "addr:street": "Berliner Straße",
+   "addr:housenumber": "119",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.736164,
+   "lon": 13.2419194
+  },
+  {
+   "type": "node",
+   "addr:street": "Vughter Straße",
+   "addr:housenumber": "5",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7439435,
+   "lon": 13.2355793
+  },
+  {
+   "type": "node",
+   "addr:street": "Bernauer Straße",
+   "addr:housenumber": "48",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.756572,
+   "lon": 13.2441585
+  },
+  {
+   "type": "node",
+   "addr:street": "Havelstraße",
+   "addr:housenumber": "9",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "lat": 52.7519432,
+   "lon": 13.2363061
+  },
+  {
+   "type": "node",
+   "addr:street": "Spitzwegstraße",
+   "addr:housenumber": "6",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7250902,
+   "lon": 13.2500829
+  },
+  {
+   "type": "node",
+   "addr:street": "Artur-Becker-Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7415751,
+   "lon": 13.234339
+  },
+  {
+   "type": "node",
+   "addr:street": "Bagnoletstraße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7411347,
+   "lon": 13.2372411
+  },
+  {
+   "type": "node",
+   "addr:street": "Friedrich-Engels-Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7408793,
+   "lon": 13.2394394
+  },
+  {
+   "type": "node",
+   "addr:street": "Hammer Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.741247,
+   "lon": 13.2362565
+  },
+  {
+   "type": "node",
+   "addr:street": "Theodor-Neubauer-Straße",
+   "addr:housenumber": "1",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7413198,
+   "lon": 13.2352692
+  },
+  {
+   "type": "node",
+   "addr:street": "Artur-Becker-Straße",
+   "addr:housenumber": "10",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7422662,
+   "lon": 13.2336858
+  },
+  {
+   "type": "node",
+   "addr:street": "Bagnoletstraße",
+   "addr:housenumber": "10",
+   "addr:postcode": "16515",
+   "addr:city": "Oranienburg",
+   "addr:country": "DE",
+   "lat": 52.7416183,
+   "lon": 13.2369933
+  }
+ ]
+}

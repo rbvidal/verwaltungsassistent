@@ -1,0 +1,15 @@
+From: Monika Krause <monika.krause@example.de>
+To: demo09@verwaltungsassistent.local
+Subject: Sachstand zu meinem Bauantrag in Bernau
+Date: 2026-09-01T20:00:00+02:00
+Message-ID: demo-catalog-17
+
+--- body ab hier ---
+Betreff: Sachstand Bauantrag
+
+Sehr geehrte Damen und Herren,
+
+können Sie mir den Bearbeitungsstand meines Bauantrags (Carport) mitteilen? Mein Aktenzeichen lautet 2026-0881-B.
+
+Mit freundlichen Grüßen
+Monika Krause, Bernau bei Berlin

@@ -1,0 +1,15 @@
+From: Klaus Neumann <klaus.neumann@example.de>
+To: demo03@verwaltungsassistent.local
+Subject: Beschädigtes Verkehrsschild am Bahnhof
+Date: 2026-09-03T10:00:00+02:00
+Message-ID: demo-catalog-05
+
+--- body ab hier ---
+Betreff: Verkehrsschild beschädigt
+
+Sehr geehrte Damen und Herren,
+
+am Bahnhof ist ein Verkehrsschild umgeknickt und beschädigt. Die Vorfahrtssituation ist dadurch nicht mehr erkennbar.
+
+Mit freundlichen Grüßen
+Klaus Neumann, Brandenburg an der Havel

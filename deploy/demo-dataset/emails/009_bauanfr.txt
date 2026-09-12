@@ -1,0 +1,15 @@
+From: Andreas Vogt <andreas.vogt@example.de>
+To: demo05@verwaltungsassistent.local
+Subject: Bauanfrage: Garage in Werder (Havel)
+Date: 2026-09-03T00:00:00+02:00
+Message-ID: demo-catalog-09
+
+--- body ab hier ---
+Betreff: Bauanfrage Garage
+
+Sehr geehrte Damen und Herren,
+
+ich möchte auf meinem Grundstück eine Garage bauen. Ist dafür eine Baugenehmigung erforderlich und welche Unterlagen brauche ich?
+
+Mit freundlichen Grüßen
+Andreas Vogt

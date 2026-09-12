@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fallbriefing DIN A4 – Revisionssichere Sachverhaltsanalyse</title>
+  <style>
+    /* ==========================================================================
+       DIN A4 PAGE SETUP & CSS RESET
+       Exact Vector Print Layout for Fallbriefing
+       ========================================================================== */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #0f172a;
+      padding: 24px 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Print toolbar at top of page */
+    .no-print-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      background: #1e293b;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      font-size: 13px;
+    }
+    .no-print-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .no-print-btn:hover {
+      background: #1d4ed8;
+    }
+
+    /* Exact DIN A4 Page (210mm x 297mm = 793.7px x 1122.5px @ 96 DPI) */
+    .a4-page {
+      width: 210mm;
+      height: 297mm;
+      min-width: 210mm;
+      min-height: 297mm;
+      max-width: 210mm;
+      max-height: 297mm;
+      background: #ffffff;
+      padding: 36px 38px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4), 0 10px 15px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+      }
+      .no-print-toolbar {
+        display: none !important;
+      }
+      .a4-page {
+        box-shadow: none;
+        margin: 0;
+        padding: 32px 36px;
+        page-break-after: always;
+      }
+    }
+
+    /* ==========================================================================
+       AREA A: HEADER / CASE COCKPIT
+       ========================================================================== */
+    .security-ribbon {
+      width: 100%;
+      background: #0f172a;
+      border-radius: 6px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .security-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .security-icon {
+      width: 16px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .security-title {
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .security-sub {
+      font-size: 9.5px;
+      color: #cbd5e1;
+    }
+    .security-tag {
+      font-size: 8.5px;
+      font-weight: 800;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      color: #bfdbfe;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .header-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 8px;
+    }
+
+    .authority-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .authority-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .authority-text .city-name {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #020617;
+      line-height: 1.15;
+    }
+    .authority-text .division-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+    .authority-text .address-text {
+      font-size: 9px;
+      color: #64748b;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .cockpit-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .cockpit-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+    }
+    .case-badge {
+      font-size: 10.5px;
+      font-family: monospace;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .status-badge {
+      font-size: 9px;
+      font-weight: 800;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .cockpit-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9px;
+      color: #334155;
+    }
+    .cockpit-meta span {
+      color: #64748b;
+    }
+
+    .confidence-row {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 8px;
+      color: #475569;
+    }
+
+    .title-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .title-bar h1 {
+      font-size: 22px;
+      font-weight: 900;
+      color: #020617;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .title-bar .subtitle {
+      font-size: 9px;
+      color: #64748b;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .doc-id-pill {
+      font-size: 8.5px;
+      font-family: monospace;
+      font-weight: 700;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 8px;
+      border-radius: 5px;
+      color: #334155;
+    }
+
+    /* ==========================================================================
+       AREA B: KURZFASSUNG & ENTSCHEIDUNG (HERO SUMMARY)
+       ========================================================================== */
+    .hero-summary-box {
+      background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #bfdbfe;
+      padding-bottom: 6px;
+    }
+    .section-title {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #172554;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-tag {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #1d4ed8;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .conclusion-lead {
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .conclusion-lead-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+    .conclusion-lead-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.45;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .summary-item {
+      padding-left: 10px;
+    }
+    .summary-item.border-green {
+      border-left: 2px solid #10b981;
+    }
+    .summary-item.border-blue {
+      border-left: 2px solid #2563eb;
+    }
+    .summary-item.border-slate {
+      border-left: 2px solid #334155;
+    }
+    .summary-item.border-amber {
+      border-left: 2px solid #f59e0b;
+    }
+    .summary-label {
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+    .summary-content {
+      font-size: 9.5px;
+      color: #0f172a;
+      line-height: 1.35;
+    }
+    .summary-content strong {
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       AREA C: SACHVERHALT + GESICHERTE ERKENNTNISSE + BELEGE
+       ========================================================================== */
+    .factual-dossier-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .factual-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+    .factual-title {
+      font-size: 11.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+    }
+    .factual-sub {
+      font-size: 8.5px;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .narrative-sachverhalt {
+      font-size: 11px;
+      line-height: 1.45;
+      color: #1e293b;
+      background: #f8fafc;
+      border-left: 2px solid #2563eb;
+      padding: 9px 12px;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .findings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .finding-pill {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #064e3b;
+      line-height: 1.3;
+    }
+    .finding-icon {
+      color: #059669;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .proof-subarea {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 8px;
+    }
+    .proof-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .proof-row {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 9.5px;
+    }
+    .proof-row .title {
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .proof-row .badge {
+      font-size: 8px;
+      font-weight: 700;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #475569;
+    }
+
+    /* ==========================================================================
+       AREA D: ZUSTÄNDIGKEIT & NÄCHSTE SCHRITTE
+       ========================================================================== */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 16px;
+    }
+    .action-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .action-card.secondary {
+      background: #f8fafc;
+    }
+    .action-card-header {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #0f172a;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 5px;
+      margin-bottom: 6px;
+    }
+    .officer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .officer-avatar {
+      width: 30px;
+      height: 30px;
+      background: #0f172a;
+      color: white;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+    .officer-info {
+      font-size: 9px;
+      line-height: 1.3;
+    }
+    .officer-info .email {
+      font-family: monospace;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+    .officer-info .role {
+      color: #64748b;
+      font-size: 8.5px;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 9.5px;
+    }
+    .step-check {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: bold;
+    }
+    .step-check.done {
+      background: #10b981;
+      color: white;
+      border: 1px solid #059669;
+    }
+    .step-check.open {
+      background: white;
+      border: 1px solid #94a3b8;
+    }
+    .step-text {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .step-text.done {
+      color: #64748b;
+      text-decoration: line-through;
+    }
+
+    /* ==========================================================================
+       AREA E: COMPLIANCE & FOOTER
+       ========================================================================== */
+    .compliance-bar {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 8.5px;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+    .compliance-hash {
+      font-family: monospace;
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 8px;
+    }
+
+    .footer-bar {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .footer-bar strong {
+      color: #0f172a;
+    }
+  </style>
+<script src="/_aistudio-iframe.js?v=2f1c016a"></script></head>
+<body>
+
+  <!-- Screen Toolbar for Printing -->
+  <div class="no-print-toolbar">
+    <span><strong>DIN A4 Fallbriefing</strong> (Revisionssichere Sachverhaltsdarstellung)</span>
+    <button class="no-print-btn" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Als PDF drucken (300 DPI)
+    </button>
+  </div>
+
+  <!-- Exact DIN A4 Printable Page -->
+  <div class="a4-page">
+
+    <!-- =======================================================================
+         AREA A: HEADER / CASE COCKPIT
+         "What is this case?"
+         ======================================================================= -->
+    <div>
+      <!-- Security Classification Ribbon -->
+      <div class="security-ribbon">
+        <div class="security-left">
+          <div class="security-icon">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div>
+            <span class="security-title">Fallbriefing — Internes Dokument</span>
+            <span class="security-sub">• Zur internen Sachverhaltsdarstellung — keine Weitergabe an Dritte</span>
+          </div>
+        </div>
+        <span class="security-tag">VS-Nur für den Dienstgebrauch</span>
+      </div>
+
+      <!-- Authority Identity & Cockpit Grid -->
+      <div class="header-grid">
+        <div class="authority-box">
+          <div class="authority-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="22" x2="21" y2="22"></line>
+              <line x1="6" y1="18" x2="6" y2="11"></line>
+              <line x1="10" y1="18" x2="10" y2="11"></line>
+              <line x1="14" y1="18" x2="14" y2="11"></line>
+              <line x1="18" y1="18" x2="18" y2="11"></line>
+              <polygon points="12 2 20 7 4 7"></polygon>
+            </svg>
+          </div>
+          <div class="authority-text">
+            <div class="city-name">Bezirksamt Nordstadt von Potsdam</div>
+            <div class="division-name">Abt. Stadtentwicklung und Bürgerdienste</div>
+            <div class="address-text">Amt für Bürgerdienste · Bürgeramt Nordstadt · Fiktive Str. 24a–26</div>
+          </div>
+        </div>
+
+        <div class="cockpit-box">
+          <div class="cockpit-top">
+            <div>
+              <span style="font-size: 8.5px; color: #64748b; text-transform: uppercase; font-weight: 800;">Vorgangs-Nr:</span>
+              <span class="case-badge">WS-D97C8C6D</span>
+            </div>
+            <span class="status-badge">Abgeschlossen</span>
+          </div>
+
+          <div class="cockpit-meta">
+            <div><span>Erstellt:</span> <strong>01.09.2026, 13:36</strong></div>
+            <div><span>Quellen:</span> <strong>1 Beleg(e)</strong></div>
+            <div><span>Validierung:</span> <strong style="color: #047857;">76% Konfidenz</strong></div>
+          </div>
+
+          <div class="confidence-row">
+            <span>✨ Hohe Validität: Pflichtangaben, Fristen (§ 17 BMG) und Nachweise geprüft</span>
+            <strong style="color: #047857;">Rechtssicher</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case Headline Bar -->
+      <div class="title-bar">
+        <div>
+          <div style="display: flex; align-items: baseline; gap: 12px;">
+            <h1>Ummeldung Krüger</h1>
+            <span style="font-size: 10.5px; font-weight: 800; color: #1d4ed8; text-transform: uppercase;">Fallbriefing</span>
+          </div>
+          <div class="subtitle">
+            Verwaltungsassistent v1.0.0-RC2 • KI-gestützte Sachverhaltsanalyse & Aktenprüfung
+          </div>
+        </div>
+        <div class="doc-id-pill">
+          DOK-ID: WS-D97C8C6D-20260901-76CONF
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         AREA B: KURZFASSUNG & ENTSCHEIDUNG (HERO SUMMARY)
+         "What is the conclusion?"
+         ======================================================================= -->
+    <div class="hero-summary-box">
+      <div class="section-header-row">
+        <div class="section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          1. Kurzfassung & Entscheidungssynopse
+        </div>
+        <span class="section-tag">Bürgeramt Nordstadt · Meldewesen</span>
+      </div>
+
+      <!-- Lead Conclusion Text -->
+      <div class="conclusion-lead">
+        <div class="conclusion-lead-label">Kernaussage & Befund</div>
+        <div class="conclusion-lead-text">
+          Die Ummeldung wurde vollständig bearbeitet. Die Anmeldung der neuen Wohnung ist fristgerecht erfolgt und die Meldebestätigung wurde ausgehändigt.
+        </div>
+      </div>
+
+      <!-- 2-Column Metadata Grid -->
+      <div class="summary-grid">
+        <div class="summary-item border-green">
+          <div class="summary-label">Entscheidung</div>
+          <div class="summary-content">
+            <strong>Vorgang abgeschlossen:</strong> Die Ummeldung wird nach § 17 Abs. 1 BMG als rechtzeitig angemeldet geführt.
+          </div>
+        </div>
+
+        <div class="summary-item border-slate">
+          <div class="summary-label">Rechtsgrundlage</div>
+          <div class="summary-content">
+            <strong>Bundesmeldegesetz (BMG):</strong> § 17 Abs. 1 (Anmeldefrist), § 19 (Wohnungsgeberbestätigung)
+          </div>
+        </div>
+
+        <div class="summary-item border-blue">
+          <div class="summary-label">Verfahren & Datenweitergabe</div>
+          <div class="summary-content">
+            Meldebestätigung übergeben; Datenweitergabe an beteiligte Stellen (Wegzugsgemeinde) erfolgte gemäß BMG.
+          </div>
+        </div>
+
+        <div class="summary-item border-amber">
+          <div class="summary-label">Nächster Schritt & Dokumentation</div>
+          <div class="summary-content">
+            Vorgang ist dokumentiert und archiviert. Bei Bürger-Rückfragen zuständige Sachbearbeitung kontaktieren.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         AREA C: SACHVERHALT + GESICHERTE ERKENNTNISSE + BELEGE
+         "What evidence supports it?"
+         ======================================================================= -->
+    <div class="factual-dossier-box">
+      <div class="factual-header">
+        <div class="factual-title">2. Sachverhalt & Gesicherte Erkenntnisse</div>
+        <div class="factual-sub">Revisionssichere Aktenprüfung</div>
+      </div>
+
+      <!-- Narrative Sachverhalt Paragraph -->
+      <div class="narrative-sachverhalt">
+        <strong>Sachverhalt:</strong> Ummeldung nach Umzug nach Oranienburg. Wohnungsgeberbestätigung und Personaldokumente wurden vorgelegt und mit der zentralen Meldekartei abgeglichen.
+      </div>
+
+      <!-- Gesicherte Erkenntnisse List -->
+      <div class="findings-grid">
+        <div class="finding-pill">
+          <span class="finding-icon">✓</span>
+          <span>Wohnsitzanmeldung innerhalb der gesetzlichen Frist erfolgt</span>
+        </div>
+        <div class="finding-pill">
+          <span class="finding-icon">✓</span>
+          <span>Angaben zur Person und Anschrift vollständig geprüft</span>
+        </div>
+      </div>
+
+      <!-- Light Proof Area -->
+      <div class="proof-subarea">
+        <div class="proof-header">
+          <span>Belege & Nachweise (Dokumentenreferenzen)</span>
+          <span style="font-family: monospace;">Status: Elektronisch verifiziert</span>
+        </div>
+        <div class="proof-grid">
+          <div class="proof-row">
+            <span class="title">📄 Änderung/Wechsel der Hauptwohnung</span>
+            <span class="badge">PDF / Meldeakte</span>
+          </div>
+          <div class="proof-row">
+            <span class="title">📄 Wohnungsgeberbestätigung (§ 19 BMG)</span>
+            <span class="badge">Geprüft & Hinterlegt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         AREA D: ZUSTÄNDIGKEIT & NÄCHSTE SCHRITTE
+         "What do I need to do?"
+         ======================================================================= -->
+    <div class="action-grid">
+      <!-- Left: Zuständigkeit (Secondary) -->
+      <div class="action-card secondary">
+        <div class="action-card-header">3. Zuständigkeit</div>
+        <div class="officer-row">
+          <div class="officer-avatar">DK</div>
+          <div class="officer-info">
+            <div style="font-weight: 700; color: #0f172a;">Zuständige Sachbearbeitung</div>
+            <div class="email">demo02@verwaltungsassistent.local</div>
+            <div class="role">Bürgeramt Nordstadt (Team Meldewesen)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Nächste Schritte -->
+      <div class="action-card">
+        <div class="action-card-header">4. Handlungsschritte & Dokumentation</div>
+        <div class="steps-list">
+          <div class="step-item">
+            <div class="step-check open"></div>
+            <span class="step-text">Meldebescheinigung für den Arbeitgeber anfordern (falls benötigt)</span>
+          </div>
+          <div class="step-item">
+            <div class="step-check done">✓</div>
+            <span class="step-text done">Vorgang dokumentieren und abschließen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======================================================================
+         AREA E: COMPLIANCE & FOOTER
+         ======================================================================= -->
+    <div style="margin-top: auto; padding-top: 10px;">
+      <div class="compliance-bar">
+        <span>🛡️ Maschinell erstelltes Fallbriefing gemäß § 35 VwVfG • Revisionssichere Dokumentation • Menschliche Endabnahme obligatorisch</span>
+        <span class="compliance-hash">Hash: WS-D97C8C6D-20260901-76CONF</span>
+      </div>
+
+      <div class="footer-bar">
+        <div><strong>Verwaltungsassistent v1.0.0-RC2</strong> · Fallbriefing</div>
+        <div>Bezirksamt Nordstadt von Potsdam · Amt für Bürgerdienste · Bürgeramt Nordstadt</div>
+        <div>Erstellt: 01.09.2026, 13:36 Uhr · <strong>Seite 1 von 1</strong></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+From: Horst Günther <horst.guenther@example.de>
+To: demo14@verwaltungsassistent.local
+Subject: Straßenlaterne repariert – Rückmeldung
+Date: 2026-08-30T18:00:00+02:00
+Message-ID: demo-catalog-30
+
+--- body ab hier ---
+Betreff: Rückmeldung Straßenlaterne
+
+Guten Tag,
+
+vielen Dank für die schnelle Reparatur der Straßenlaterne. Alles funktioniert wieder.
+
+Mit freundlichen Grüßen
+Horst Günther

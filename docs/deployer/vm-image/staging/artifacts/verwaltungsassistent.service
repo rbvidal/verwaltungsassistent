@@ -1,0 +1,35 @@
+[Unit]
+Description=Verwaltungsassistent Verwaltungsassistent
+Documentation=file:/opt/verwaltungsassistent/README.txt
+After=network-online.target docker.service ollama.service
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=verwaltungsassistent
+Group=verwaltungsassistent
+WorkingDirectory=/opt/verwaltungsassistent/current
+EnvironmentFile=/etc/verwaltungsassistent/verwaltungsassistent.env
+Environment=SPRING_PROFILES_ACTIVE=demo
+Environment=SPRING_CONFIG_ADDITIONAL_LOCATION=file:/etc/verwaltungsassistent/application-production.yml
+Environment=APP_UPLOAD_DIR=/var/lib/verwaltungsassistent/uploads
+Environment=SERVER_PORT=8081
+Environment=JAVA_OPTS=-Xmx3g
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /opt/verwaltungsassistent/current/verwaltungsassistent.jar
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=600
+
+# Hardening (AppArmor profile of the distribution remains active)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/var/lib/verwaltungsassistent /var/log/verwaltungsassistent
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/default :: layout(~{::content}, ${pageTitle}, ${activeSection}, ${breadcrumbs})}"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+    <th:block th:fragment="content">
+        <div class="case-detail">
+            <div class="case-detail__header case-detail__header--page">
+                <div class="case-detail__title-row">
+                    <h1 class="case-detail__title">Audit</h1>
+                </div>
+                <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-top: 0.25rem;">
+                    Nachvollziehbarkeit der Systemaktivitäten. Angezeigt werden ausschließlich
+                    tatsächlich protokollierte Ereignisse der bestehenden Audit-Infrastruktur.
+                    <span th:text="'Insgesamt ' + ${totalElements} + ' Ereignisse'"></span>.
+                    Standardmäßig werden die letzten 3 Tage angezeigt; ältere Ereignisse
+                    bleiben vollständig im System erhalten.
+                </p>
+            </div>
+
+            <!-- Filter form (server-side query) -->
+            <form th:action="@{/audit}" method="get"
+                  style="display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1rem;">
+                <div>
+                    <label for="from" style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.25rem;">Von</label>
+                    <input type="date" id="from" name="from" th:value="${from}" class="form-field__input">
+                </div>
+                <div>
+                    <label for="to" style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.25rem;">Bis</label>
+                    <input type="date" id="to" name="to" th:value="${to}" class="form-field__input">
+                </div>
+                <div>
+                    <label for="actor" style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.25rem;">Benutzer</label>
+                    <input type="text" id="actor" name="actor" th:value="${actor}" class="form-field__input"
+                           placeholder="E-Mail oder Name" style="min-width: 200px;">
+                </div>
+                <button type="submit" class="btn btn--primary" style="font-size: 0.8125rem;">Filtern</button>
+                <a th:href="@{/audit}" class="btn" style="font-size: 0.8125rem;">Zurücksetzen</a>
+            </form>
+
+            <!-- Export control -->
+            <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn--primary" style="font-size: 0.8125rem;"
+                        onclick="exportSelected()">Auswahl als CSV exportieren</button>
+                <span id="export-message" class="message message--error" role="alert"
+                      style="display: none; font-size: 0.8125rem;">Bitte wählen Sie mindestens einen Eintrag aus.</span>
+            </div>
+
+            <div th:if="${rows == null or rows.isEmpty()}" class="empty-state" role="status" aria-live="polite">
+                <div class="empty-state__icon material-symbols-outlined" aria-hidden="true">manage_search</div>
+                <h3 class="empty-state__title">Keine Ereignisse</h3>
+                <p class="empty-state__desc">Es wurden noch keine Aktivitäten protokolliert.</p>
+            </div>
+
+            <div th:unless="${rows == null or rows.isEmpty()}" class="data-table-container data-table-container--scroll">
+                <table id="audit-table" style="width: 100%; border-collapse: collapse; font-size: 0.8125rem;">
+                    <thead>
+                    <tr style="border-bottom: 2px solid var(--color-border, #ddd); text-align: left;">
+                        <th style="padding: 0.5rem; width: 2rem;">
+                            <input type="checkbox" id="audit-select-all" onclick="toggleAll(this)">
+                        </th>
+                        <th style="padding: 0.5rem; width: 3.5rem;">Kopieren</th>
+                        <th style="padding: 0.5rem;">Zeitpunkt</th>
+                        <th style="padding: 0.5rem;">Benutzer</th>
+                        <th style="padding: 0.5rem;">Ereignis</th>
+                        <th style="padding: 0.5rem;">Objekt</th>
+                        <th style="padding: 0.5rem;">Kennung</th>
+                        <th style="padding: 0.5rem;">Anfrage</th>
+                        <th style="padding: 0.5rem;">Client-IP</th>
+                        <th style="padding: 0.5rem;">Quelle</th>
+                        <th style="padding: 0.5rem;">Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${rows}" style="border-bottom: 1px solid var(--color-border, #eee); vertical-align: top;"
+                        class="audit-row">
+                        <td style="padding: 0.5rem;">
+                            <input type="checkbox" class="audit-select" th:value="${r.id()}">
+                        </td>
+                        <td style="padding: 0.5rem; text-align: center;">
+                            <button type="button" class="btn" title="Zeile kopieren" aria-label="Zeile kopieren"
+                                    style="font-size: 0.6875rem; padding: 0.2rem 0.45rem;"
+                                    onclick="copyRow(this)">
+                                <span class="material-symbols-outlined" style="font-size: 0.875rem; vertical-align: middle;" aria-hidden="true">content_copy</span>
+                            </button>
+                        </td>
+                        <td style="padding: 0.5rem; white-space: nowrap;" th:text="${r.timestamp()}">—</td>
+                        <td style="padding: 0.5rem;" th:text="${r.actor()}">—</td>
+                        <td style="padding: 0.5rem;">
+                            <span class="badge badge--neutral" style="font-size: 0.6875rem;" th:text="${r.eventLabel()}">—</span>
+                        </td>
+                        <td style="padding: 0.5rem;" th:text="${r.entityType()}">—</td>
+                        <td style="padding: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);"
+                            th:text="${#strings.abbreviate(r.entityId(), 12)}">—</td>
+                        <td style="padding: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);"
+                            th:text="${r.request()}">—</td>
+                        <td style="padding: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted);"
+                            th:text="${r.ip()}">—</td>
+                        <td style="padding: 0.5rem; font-size: 0.75rem;">
+                            <span class="badge" th:classappend="${r.source() == 'Web-Anfrage'} ? 'badge--info' : 'badge--neutral'"
+                                  style="font-size: 0.6875rem;" th:text="${r.source()}">—</span>
+                        </td>
+                        <td style="padding: 0.5rem; font-size: 0.75rem; color: var(--color-text-muted); max-width: 260px;">
+                            <span th:text="${r.metadata()}">—</span>
+                            <details th:if="${r.details() != null and !r.details().isEmpty()}">
+                                <summary style="cursor: pointer; font-weight: 600; color: var(--color-primary); margin-top: 0.25rem;">
+                                    Details
+                                </summary>
+                                <pre th:text="${r.details()}"
+                                     style="white-space: pre-wrap; word-break: break-word; font-size: 0.7rem;
+                                            background: var(--color-surface-row, #f6f7f9); padding: 0.5rem;
+                                            border-radius: 4px; margin-top: 0.375rem; max-height: 14rem; overflow-y: auto;">—</pre>
+                            </details>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <nav class="pagination" aria-label="Seitennavigation" style="margin-top: 1rem;">
+                    <span th:if="${page > 0}">
+                        <a th:href="@{/audit(page=${page - 1}, from=${from}, to=${to}, actor=${actor})}" class="pagination__prev">← Zurück</a>
+                    </span>
+                    <span th:unless="${page > 0}">
+                        <span class="pagination__prev pagination--disabled" aria-disabled="true">← Zurück</span>
+                    </span>
+                    <span class="pagination__indicator" th:text="${page + 1} + ' von ' + ${totalPages}">1 von 1</span>
+                    <span th:if="${page < totalPages - 1}">
+                        <a th:href="@{/audit(page=${page + 1}, from=${from}, to=${to}, actor=${actor})}" class="pagination__next">Weiter →</a>
+                    </span>
+                    <span th:unless="${page < totalPages - 1}">
+                        <span class="pagination__next pagination--disabled" aria-disabled="true">Weiter →</span>
+                    </span>
+                </nav>
+            </div>
+        </div>
+
+        <script>
+            function auditRowText(row) {
+                const cells = row.querySelectorAll('td');
+                const parts = [];
+                for (let i = 1; i < cells.length; i++) {
+                    if (cells[i].querySelector('button')) continue;
+                    parts.push(cells[i].innerText.trim());
+                }
+                return parts.join(' | ');
+            }
+
+            function copyRow(btn) {
+                const row = btn.closest('tr');
+                const text = auditRowText(row);
+                const originalHtml = btn.innerHTML;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.innerHTML = 'Kopiert';
+                    btn.classList.add('btn--primary');
+                    setTimeout(() => { btn.innerHTML = originalHtml; btn.classList.remove('btn--primary'); }, 1500);
+                }).catch(() => {
+                    btn.innerHTML = 'Fehler';
+                    setTimeout(() => { btn.innerHTML = originalHtml; }, 1500);
+                });
+            }
+
+            function toggleAll(master) {
+                document.querySelectorAll('.audit-select').forEach(cb => cb.checked = master.checked);
+            }
+
+            function xsrfToken() {
+                const meta = document.querySelector('meta[name="_csrf"]');
+                return meta ? meta.content : '';
+            }
+
+            function exportSelected() {
+                const ids = Array.from(document.querySelectorAll('.audit-select:checked')).map(cb => cb.value);
+                const message = document.getElementById('export-message');
+                if (ids.length === 0) {
+                    message.style.display = 'inline-block';
+                    message.innerText = 'Bitte wählen Sie mindestens einen Eintrag aus.';
+                    return;
+                }
+                message.style.display = 'none';
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/audit/export';
+                ids.forEach(id => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids';
+                    input.value = id;
+                    form.appendChild(input);
+                });
+                const csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = '_csrf';
+                csrf.value = xsrfToken();
+                form.appendChild(csrf);
+                document.body.appendChild(form);
+                form.submit();
+                form.remove();
+            }
+        </script>
+    </th:block>
+</body>
+</html>

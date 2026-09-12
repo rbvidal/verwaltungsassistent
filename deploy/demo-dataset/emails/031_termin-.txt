@@ -1,0 +1,15 @@
+From: Anke Dörr <anke.doerr@example.de>
+To: kontakt@verwaltungs-demo.de
+Subject: Termin im Bürgeramt wahrgenommen
+Date: 2026-08-29T18:00:00+02:00
+Message-ID: demo-catalog-31
+
+--- body ab hier ---
+Betreff: Termin wahrgenommen
+
+Sehr geehrte Damen und Herren,
+
+meinen Termin im Bürgeramt habe ich wahrgenommen und alle Unterlagen sind vollständig. Vielen Dank.
+
+Mit freundlichen Grüßen
+Anke Dörr

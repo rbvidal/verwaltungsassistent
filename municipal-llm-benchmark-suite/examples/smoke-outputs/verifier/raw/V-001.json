@@ -1,0 +1,35 @@
+{
+  "messages": [
+    {
+      "role": "system",
+      "content": "Du bist ein sachlicher Verifikator fuer kommunale Verwaltungsaussagen in Deutschland. Du erhaeltst eine BEHAUPTUNG und dazu BELEGE (Auszuege aus amtlichen Texten).\nBewerte die Behauptung ausschliesslich anhand der BELEGE:\n- \"SUPPORTED\": die Belege stuetzen die Behauptung inhaltlich.\n- \"CONTRADICTED\": die Belege widersprechen der Behauptung.\n- \"UNSUPPORTED\": die Belege reichen nicht aus - weder Stuetze noch Widerspruch.\nZiehe kein Vorwissen heran; nur die Belege zaehlen. Bei Teil-Unterstuetzung entscheide, ob die Kernaussage der Behauptung durch die Belege getragen wird.\nAntworte NUR mit einem JSON-Objekt der Form {\"verdict\": \"SUPPORTED|CONTRADICTED|UNSUPPORTED\", \"reason\": \"kurze deutsche Begruendung\"}."
+    },
+    {
+      "role": "user",
+      "content": "BEHAUPTUNG:\nDie Anmeldung einer Wohnung muss innerhalb von zwei Wochen nach dem Einzug erfolgen.\n\nBELEGE:\n1) Die Anmeldung einer Wohnung ist innerhalb von zwei Wochen nach dem Einzug bei der Meldebehörde vorzunehmen."
+    }
+  ],
+  "result": {
+    "case_id": "V-001",
+    "category": "direct-support",
+    "adversarial": false,
+    "expected": "SUPPORTED",
+    "input_reference": "data/verifier/cases.jsonl#V-001",
+    "predicted": "SUPPORTED",
+    "correct": true,
+    "parse_error": false,
+    "error": null,
+    "raw_response": "{\"verdict\": \"SUPPORTED\", \"reason\": \"Der erste Beleg stützt die Behauptung direkt.\"}",
+    "meta": {
+      "model": "qwen2.5:7b",
+      "prompt_eval_count": 291,
+      "eval_count": 27,
+      "prompt_eval_duration_ms": 441.1,
+      "eval_duration_ms": 747.1,
+      "total_duration_ms": 9666.7,
+      "load_duration_ms": 8470.7,
+      "wall_s": 11.717,
+      "tokens_per_s": 36.14
+    }
+  }
+}

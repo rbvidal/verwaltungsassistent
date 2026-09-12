@@ -1,0 +1,13 @@
+From: Bernd Becker <bernd.becker@example.de>
+To: info@verwaltungs-demo.de
+Subject: Baugenehmigung für ein Carport – Antrag
+Date: 2026-08-06T09:00:00+02:00
+Message-ID: demo-seed:baugenehmigungcarport@verwaltungsassistent.local
+
+--- body ab hier ---
+Sehr geehrte Damen und Herren,
+
+Antrag auf Baugenehmigung für ein Carport – fehlende Unterlagen.
+
+Mit freundlichen Grüßen
+Bernd Becker

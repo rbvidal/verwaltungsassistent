@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+    Generic progress panel for long-running AI operations (decision analysis,
+    corpus case evaluation). Renders the semantic stage messages and a
+    polling element that replaces the whole block until the operation
+    finishes (the poll endpoint then returns the final result markup).
+    The assistant has its own specialized fragment; this one is parameterized
+    so additional operations can reuse it without duplicating the pattern.
+-->
+<th:block th:fragment="progressPanel(title, messages, pollUrl, hint, emptyMessage, error, nodes)">
+    <div class="progress-block">
+        <div th:if="${error != null}" class="message message--error" role="alert"
+             th:text="${error}" style="margin-bottom: 1rem;"></div>
+
+        <th:block th:unless="${error != null}">
+            <!-- Gemeinsame Pipeline-Visualisierung: echte Laufzeit-Stufen aus
+                 dem Job-Fortschritt (nur wenn der Aufrufer Knoten liefert).
+                 Die Guard-Bedingung muss auf einem EIGENEN Element stehen:
+                 th:replace hat Vorrang vor th:if auf demselben Element und
+                 würde das Diagramm auch ohne Knoten rendern. -->
+            <th:block th:if="${nodes != null}">
+                <th:block th:replace="~{fragments/pipeline :: diagram(${nodes})}"></th:block>
+            </th:block>
+
+            <div class="progress-panel" role="status" aria-live="polite">
+                <div class="progress-panel__title" th:text="${title}">…</div>
+
+                <div class="progress-terminal">
+                    <div th:each="m, iter : ${messages}"
+                         class="progress-terminal__line"
+                         th:classappend="${iter.last} ? 'progress-terminal__line--active' : ''">
+                        <span class="progress-terminal__prompt material-symbols-outlined" aria-hidden="true"
+                              th:text="${iter.last} ? 'radio_button_checked' : 'check_circle'">check_circle</span>
+                        <span class="progress-terminal__message" th:text="${m}"></span>
+                    </div>
+                    <div th:if="${messages == null or messages.isEmpty()}"
+                         class="progress-terminal__line progress-terminal__line--active">
+                        <span class="progress-terminal__prompt material-symbols-outlined" aria-hidden="true">radio_button_checked</span>
+                        <span class="progress-terminal__message" th:text="${emptyMessage}">…</span>
+                    </div>
+                </div>
+
+                <p class="progress-panel__hint" th:if="${hint != null}" th:text="${hint}"></p>
+            </div>
+
+            <!-- Polling: replaces this whole block until the response swaps in the final result -->
+            <div th:attr="hx-get=${pollUrl}"
+                 hx-trigger="every 1s"
+                 hx-target="closest .progress-block"
+                 hx-swap="outerHTML"></div>
+        </th:block>
+    </div>
+</th:block>
+
+</html>

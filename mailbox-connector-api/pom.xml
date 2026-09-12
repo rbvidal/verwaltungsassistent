@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>reasoning</groupId>
+        <artifactId>verwaltungsassistent</artifactId>
+        <version>1.0.0-RC2</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>mailbox-connector-api</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Mailbox Connector API</name>
+    <description>Provider-neutral inbound mailbox connector contract (fetch-only) — no GreenMail, no Jakarta Mail, no application domain dependencies</description>
+
+    <dependencies>
+        <!-- Zero platform / framework dependencies by design: plain Java
+             interface + records only. The API is permanently inbound-only. -->
+    </dependencies>
+</project>

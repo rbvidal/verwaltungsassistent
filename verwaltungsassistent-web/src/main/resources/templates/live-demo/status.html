@@ -1,0 +1,21 @@
+<!-- Live-demo banner: shared event demo indicator below the main navigation.
+     The root element carries the htmx poll attributes; hx-swap="outerHTML"
+     keeps the polling alive after each refresh. -->
+<div th:fragment="banner" th:if="${liveDemo != null}"
+     class="live-demo-banner"
+     th:classappend="${liveDemo.level.name() == 'RED'} ? 'live-demo-banner--red' : (${liveDemo.level.name() == 'YELLOW'} ? 'live-demo-banner--yellow' : 'live-demo-banner--green')"
+     hx-get="/live-demo/status" hx-trigger="every 60s" hx-swap="outerHTML">
+    <span class="status-dot"
+          th:classappend="${liveDemo.level.name() == 'RED'} ? 'status-dot--red' : (${liveDemo.level.name() == 'YELLOW'} ? 'status-dot--amber' : 'status-dot--green')"></span>
+    <span class="live-demo-banner__title">LIVE-DEMO</span>
+    <span th:if="${liveDemo.level.name() == 'RED'}" class="live-demo-banner__count">· derzeit stark ausgelastet</span>
+    <span th:if="${liveDemo.level.name() != 'RED'}" class="live-demo-banner__count"
+          th:text="'· ' + ${liveDemo.count} + ' Nutzer aktiv'">· 3 Nutzer aktiv</span>
+    <span class="live-demo-banner__text">
+        <th:block th:switch="${liveDemo.level.name()}">
+            <th:block th:case="'RED'">Viele Teilnehmer nutzen die AI Engine gleichzeitig. Dadurch kann es momentan zu längeren Antwortzeiten kommen.</th:block>
+            <th:block th:case="'YELLOW'">Derzeit nutzen mehrere Teilnehmer gleichzeitig die AI Engine. Da die Demo während der Veranstaltung von mehreren Teilnehmern gleichzeitig genutzt wird, kann es zeitweise zu längeren Antwortzeiten kommen.</th:block>
+            <th:block th:case="'GREEN'">Derzeit nutzen mehrere Teilnehmer gleichzeitig die AI Engine.</th:block>
+        </th:block>
+    </span>
+</div>

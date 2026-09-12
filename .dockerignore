@@ -1,0 +1,45 @@
+# ── Build output (any module) ──
+**/target/
+**/node_modules/
+**/dist/
+**/build/
+
+# ── VCS / IDE / env ──
+.git/
+.idea/
+.vscode/
+.settings/
+.project
+.classpath
+.env
+.env.local
+.env.*.local
+
+# ── Logs & temp ──
+*.log
+*.tmp
+tmp_pdfcheck/
+test-results/
+**/test-results/
+
+# ── Runtime data (large; never needed to build the app) ──
+**/uploads/
+backups/
+**/backups/
+deploy/
+e2e-tests/
+k6-scripts/
+model-verifier-benchmark/
+municipal-llm-benchmark-suite/
+fine-tunning/
+confidential-runtime/
+QA/
+
+# ── Docs and non-build artifacts ──
+docs/
+*.md
+!docs/*.md
+*.zip
+*.tar
+*.tar.gz
+*.qcow2

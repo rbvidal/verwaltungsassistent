@@ -1,0 +1,48 @@
+Verwaltungsassistent VM Appliance — Image-Manifest
+=================================
+Build date:            2026-08-16
+Image file:            verwaltungsassistent-ubuntu-22.04.qcow2
+Image format:          QCOW2 (compat 1.1, zlib compression)
+Virtual disk size:     30 GiB
+Disk usage on disk:    10.1 GiB
+Filesystem:            ext4 (root, 30 GiB) + EFI partition
+SHA-256:               077a63918f21384c9da267e941c827947af12b05073b01dfe97229567f9561b6
+
+Operating system:      Ubuntu 22.04.5 LTS (jammy-server-cloudimg-amd64)
+Kernel:                5.15.0-187-generic
+Java runtime:          OpenJDK 21.0.11 (21.0.11+10-1-22.04.2-Ubuntu)
+Docker:                docker.io 29.1.3 (docker-compose-v2 2.40.3)
+Ollama:                v0.32.13 (host service, models NOT included)
+
+Verwaltungsassistent application:      verwaltungsassistent-web 1.0.0-RC2
+                       (JAR: /opt/verwaltungsassistent/current/verwaltungsassistent.jar,
+                        symlink-managed releases 1.0.0 / 1.0.1-test)
+
+Runtime dependencies:  PostgreSQL 16 (pgvector, Docker), Qdrant (Docker),
+                       Neo4j 5-community (Docker), Ollama (host)
+
+Model weights:         NOT included — separate asset.
+                       Install via: sudo /opt/verwaltungsassistent/bin/verwaltungsassistent-model-import.sh
+                       Verified during build: qwen2.5:7b (4.7 GB),
+                       nomic-embed-text (274 MB)
+
+Demo corpus in image:  3 representative PDFs, indexed through the real
+                       ingestion pipeline (BRKG, AV zu §55 LHO Berlin,
+                       BauO Bln) — PostgreSQL chunks + Qdrant vectors +
+                       Neo4j graph verified.
+
+Full demo corpus:      separate package verwaltungsassistent-demo-corpus-1.0.0.tar.zst
+                       (18 PDFs + manifest), SHA-256:
+                       e5752f1cf634f75a963c8a6787fc282ee06a8045a3ae8094a00d7ff1e537b01d
+                       Import via: sudo /opt/verwaltungsassistent/bin/verwaltungsassistent-corpus-import.sh
+
+Customer data:         NOT included. Persistent data root /var/lib/verwaltungsassistent
+                       (postgres/, qdrant/, neo4j/, uploads/, corpus/,
+                       backups/) is supplied per customer.
+
+Secrets:               generated at build time in /etc/verwaltungsassistent/verwaltungsassistent.env
+                       (0640 root:verwaltungsassistent); no production credentials baked in.
+Build SSH key:         REMOVED from the image before distribution.
+
+Firewall:              ufw active — incoming 22/tcp (SSH), 8081/tcp (Verwaltungsassistent).
+SSH:                   key-only, root login disabled, password auth off.
